@@ -11,7 +11,7 @@ const IconButton = ({type, onPressOut, id}) => {
     }
 
     return(
-        <Pressable onPressOut={onPressOut}>
+        <Pressable onPressOut={_onPressOut}>
             <Image source={type} style={iconStyles.icon}/>
         </Pressable>
     );

@@ -2,7 +2,7 @@ import React from "react";
 import { Dimensions, StyleSheet, TextInput } from "react-native";
 import { theme } from "../theme";
 
-const Input = ({value, onChangeText, onSubmitEditing}) => {
+const Input = ({value, onChangeText, onSubmitEditing, onBlur}) => {
     return (
         <TextInput style={inputStyles.textInput}
             placeholder="+ Add a task"
@@ -11,7 +11,8 @@ const Input = ({value, onChangeText, onSubmitEditing}) => {
             keyboardAppearance="light"
             value={value}
             onChangeText={onChangeText}
-            onSubmitEditing={onSubmitEditing}> 
+            onSubmitEditing={onSubmitEditing}
+            onBlur = {onBlur}> 
         </TextInput>
     );
 };

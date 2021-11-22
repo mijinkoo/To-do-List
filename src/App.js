@@ -2,6 +2,7 @@ import React,{useState} from "react";
 import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView } from "react-native"
 import IconButton from "./components/IconButton";
 import Input from "./components/Input";
+import Search from "./components/Search";
 import Task from "./components/Task";
 import { images } from "./image";
 import { ViewStyles, textStyles, barStyles } from './styles';
@@ -57,7 +58,7 @@ export default function App() {
         <SafeAreaView style={ViewStyles.container}>
             <StatusBar barStyle="light-content" style={barStyles.statusbar}/>
             <Text style={textStyles.title}>TODO List</Text>
-            <Input value={newTask} onChangeText={_handleTextChange} onSubmitEditing={_addTask} onBlur={_onBlur}/>
+            <Search></Search>
             <ScrollView width={width-20}>
                 {Object.values(tasks).reverse().map(item => (
                     <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask}/>
@@ -66,3 +67,5 @@ export default function App() {
         </SafeAreaView>
     );
 };
+
+//<Input value={newTask} onChangeText={_handleTextChange} onSubmitEditing={_addTask} onBlur={_onBlur}/>

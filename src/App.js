@@ -57,8 +57,10 @@ export default function App() {
     return (
         <SafeAreaView style={ViewStyles.container}>
             <StatusBar barStyle="light-content" style={barStyles.statusbar}/>
-            <Text style={textStyles.title}>TODO List</Text>
-            <Search></Search>
+            <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center'}}>
+                <Text style={textStyles.title}>TODO List</Text>
+                <Search></Search>
+            </View>
             <ScrollView width={width-20}>
                 {Object.values(tasks).reverse().map(item => (
                     <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask}/>

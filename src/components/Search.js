@@ -24,7 +24,7 @@ const Search = () => {
                     <Input value={text} onChangeText={text=>setText(text)}/>
                     </View>
             }
-            <Pressable onPressOut={_onSearch} style={{ position:'absolute', top:6.5, right:10,}}>
+            <Pressable onPressOut={_onSearch} style={{ position:'absolute',  right:0,}}>
                 <Image source={images.search} style={searchStyles.searchicon}/>
             </Pressable>
         </View>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Calendario } from '../screens/Calendario';
-import { Add } from '../screens/AddTaskScreen';
 import { Home } from '../screens/Home';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 
@@ -17,14 +16,12 @@ const TabNavigation = () => {
         <Tab.Navigator>
             <Tab.Screen name="TODO List" component={Home}
                         options={{
+                            headerShown: false,
                             tabBarIcon: props => TabIcon({ ...props, name: 'home'}),
-                        }}/>
-            <Tab.Screen name="Add a task" component={Add}
-                        options={{
-                            tabBarIcon: props => TabIcon({ ...props, name: 'plus'}),
                         }}/>
             <Tab.Screen name="Calendar" component={Calendario}
                         options={{
+                            headerShown: false,
                             tabBarIcon: props => TabIcon({ ...props, name: 'calendar'}),
                         }}/>
         </Tab.Navigator>

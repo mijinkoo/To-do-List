@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Calendario } from '../screens/Calendario';
+import { MonthlyCalendar } from '../screens/MonthlyCalendar';
 import { Home } from '../screens/Home';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 
@@ -17,11 +17,11 @@ const TabNavigation = () => {
             <Tab.Screen name="TODO List" component={Home}
                         options={{
                             headerShown: false,
-                            tabBarIcon: props => TabIcon({ ...props, name: 'home'}),
+                            tabBarIcon: props => TabIcon({ ...props, name: 'calendar-check'}),
                         }}/>
-            <Tab.Screen name="Calendar" component={Calendario}
+            <Tab.Screen name="Calendar" component={MonthlyCalendar}
                         options={{
-                            headerShown: false,
+                            //headerShown: false,
                             tabBarIcon: props => TabIcon({ ...props, name: 'calendar'}),
                         }}/>
         </Tab.Navigator>

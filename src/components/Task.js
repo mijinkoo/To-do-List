@@ -7,7 +7,7 @@ import { Image } from "react-native";
 import { images } from "../image";
 import Input from "./Input";
 
-const Task = ({item, deleteTask, toggleTask, updateTask}) => {
+const Task = ({item, deleteTask, toggleTask, updateTask, select}) => {
     
     const [isEditing, setIsEditing] = useState(false);
     const [text, setText] = useState(item.text);
@@ -28,20 +28,36 @@ const Task = ({item, deleteTask, toggleTask, updateTask}) => {
             setText(item.text);
         }
     }
+
+    const _handleUpdateSelect = () => {
+        SetIsSelected((prev) => !prev)
+    }
+
+    // select
+    const [isSelected, SetIsSelected] = useState(false);
+
     return isEditing ?(
         <Input value={text} onChangeText={text=>setText(text)} onSubmitEditing={_onSubmitEditing} onBlur={_onBlur}/>
         ):(
-        <View style={taskStyles.container}>
-            <Pressable><Image source={images.drag} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable> 
-            <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
+        <Pressable onPressOut={_handleUpdateSelect} style={[taskStyles.container, {backgroundColor: (select && isSelected) ? theme.main : theme.itemBackground}]}>
+            {select ||
+                <>
+                <Pressable><Image source={images.drag} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable> 
+                <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
+                </>
+            }
             <Text style={[taskStyles.contents, 
                 {color: (item.completed ? theme.done : theme.text)},
                 {textDecorationLine: (item.completed? 'line-through': 'none')}]}>
                 {item.text}</Text>
             <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>11/26</Text>
-            {item.completed || (<IconButton type={images.update} onPressOut={_handleUpdateButtonPress}/>)}
+            {select ||
+                <>
+                {item.completed || (<IconButton type={images.update} onPressOut={_handleUpdateButtonPress}/>)}
             <IconButton type={images.delete} id={item.id} onPressOut={deleteTask} completed={item.completed}/>
-        </View>
+                </>
+            }
+        </Pressable>
     );
 };
 
@@ -49,7 +65,9 @@ const taskStyles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: theme.itemBackground,
+        width:'100%',
+        height:60,
+        //backgroundColor: theme.itemBackground,
         borderRadius: 10,
         padding: 5,
         marginTop: 3,

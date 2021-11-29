@@ -27,6 +27,8 @@ const iconStyles = StyleSheet.create({
         width: 30,
         height: 30,
         margin: 10,
+        padding: 0,
+        marginHorizontal: 3,
     },
 });
 

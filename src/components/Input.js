@@ -5,7 +5,7 @@ import { theme } from "../theme";
 const Input = ({value, onChangeText, onSubmitEditing, onBlur}) => {
     return (
         <TextInput style={inputStyles.textInput}
-            placeholder="+ Add a task"
+            placeholder="Enter a search word"
             placeholderTextColor= {theme.main}
             maxLength={20}
             keyboardAppearance="light"
@@ -20,12 +20,12 @@ const Input = ({value, onChangeText, onSubmitEditing, onBlur}) => {
 const inputStyles = StyleSheet.create({
     textInput: {
         fontSize: 25,
-        width: Dimensions.get('window').width-20,
+        width: Dimensions.get('window').width-100,
         height: 30,
-        marginTop: 10,
-        marginLeft: 3,
-        paddingLeft: 15,
-        paddingTop: 2,
+        //marginTop: 10,
+        //marginLeft: 3,
+        //paddingLeft: 15,
+        //paddingTop: 2,
         borderRadius: 10,
         backgroundColor: theme.itemBackground,
         color: theme.text,

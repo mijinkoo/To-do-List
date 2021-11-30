@@ -26,3 +26,15 @@ export const barStyles = StyleSheet.create({
         backgroundColor: theme.background,
     }
 })
+
+export const CalendarStyles = StyleSheet.create({
+    date: {
+        fontSize: 20,
+        fontWeight: '300',
+        margin: 15
+    },
+    day: {
+        color: '#00adf5',
+        fontWeight: '500',
+    }
+})

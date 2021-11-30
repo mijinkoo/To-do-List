@@ -27,7 +27,7 @@ const TabNavigation = () => {
                         }}/>
             <Tab.Screen name="AddTask" component={AddTask}
                         options={{
-                            //headerShown: false,
+                            headerShown: false,
                             tabBarIcon: props => TabIcon({ ...props, name: 'calendar'}),
                         }}/>
         </Tab.Navigator>

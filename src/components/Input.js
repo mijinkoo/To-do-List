@@ -2,10 +2,10 @@ import React from "react";
 import { Dimensions, StyleSheet, TextInput } from "react-native";
 import { theme } from "../theme";
 
-const Input = ({value, onChangeText, onSubmitEditing, onBlur}) => {
+const Input = ({value, onChangeText, onSubmitEditing, onBlur, placeholder}) => {
     return (
         <TextInput style={inputStyles.textInput}
-            placeholder="Enter a search word"
+            placeholder={placeholder}
             placeholderTextColor= {theme.main}
             maxLength={20}
             keyboardAppearance="light"

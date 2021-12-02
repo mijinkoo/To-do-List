@@ -10,9 +10,9 @@ import { ViewStyles, textStyles, barStyles } from '../styles';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AddTask from "./AddTask";
 
-
-export const Home = () => {
+export const Home = ({navigation}) => {
 
     const width = Dimensions.get('window').width;
 
@@ -131,7 +131,9 @@ export const Home = () => {
                 </View>
             </ScrollView>
             <View style={{position:'absolute', bottom: 0, flexDirection:'row', justifyContent:'space-between', paddingBottom: 20}} width={width-60}>
-                <Pressable style={{alignItems:'center', justifyContent:'center',borderWidth: 2, borderRadius:90 ,borderColor:theme.text, padding:8, margin:0}}>
+                <Pressable 
+                    onPress={()=>navigation.navigate('Add')}
+                    style={{alignItems:'center', justifyContent:'center',borderWidth: 2, borderRadius:90 ,borderColor:theme.text, padding:8, margin:0}}>
                     <Image source={images.add} style={{tintColor: theme.text, width: 40, height: 40,padding:0, margin:0}}/>
                 </Pressable>
             </View>

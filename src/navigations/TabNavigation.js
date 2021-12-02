@@ -1,9 +1,8 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MonthlyCalendar } from '../screens/MonthlyCalendar';
 import { Home } from '../screens/Home';
-import {AddTask} from '../screens/AddTask';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
+import { CalendarPickerScreen } from '../screens/CalendarPickerScreen';
 
 
 const TabIcon = ({ name, size, color }) => {
@@ -20,12 +19,7 @@ const TabNavigation = () => {
                             headerShown: false,
                             tabBarIcon: props => TabIcon({ ...props, name: 'calendar-check'}),
                         }}/>
-            <Tab.Screen name="Calendar" component={MonthlyCalendar}
-                        options={{
-                            //headerShown: false,
-                            tabBarIcon: props => TabIcon({ ...props, name: 'calendar'}),
-                        }}/>
-            <Tab.Screen name="AddTask" component={AddTask}
+            <Tab.Screen name="Calendar" component={CalendarPickerScreen}
                         options={{
                             headerShown: false,
                             tabBarIcon: props => TabIcon({ ...props, name: 'calendar'}),

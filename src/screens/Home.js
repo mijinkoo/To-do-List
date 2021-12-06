@@ -2,6 +2,7 @@ import React,{useEffect, useState} from "react";
 import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable } from "react-native"
 import IconButton from "../components/IconButton";
 import Input from "../components/Input";
+import CategoryPicker from "../components/CategoryPicker";
 import Search from "../components/Search";
 import Task from "../components/Task";
 import { images } from "../image";
@@ -17,7 +18,8 @@ export const Home = ({navigation}) => {
     const width = Dimensions.get('window').width;
 
     const [tasks, setTasks] = useState({});
-
+    const [searchedtasks, setSearchedTasks] = useState([]);
+    const [text, setText] = useState("");
     const [isReady, SetIsReady] = useState(false);
 
     const _saveTasks = async tasks => {
@@ -32,33 +34,23 @@ export const Home = ({navigation}) => {
     const _deleteTask = id => {
         const currentTasks = Object.assign({}, tasks);
         delete currentTasks[id];
-        //setTasks(currentTasks);
+        setTasks(currentTasks);
         _saveTasks(currentTasks);
     };
 
     const _toggleTask = id => {
         const currentTasks = Object.assign({}, tasks);
         currentTasks[id]['completed'] = !currentTasks[id]['completed'];
-        //setTasks(currentTasks);
+        setTasks(currentTasks);
         _saveTasks(currentTasks);
     }
 
     const _updateTask = item => {
         const currentTasks = Object.assign({}, tasks);
         currentTasks[item.id] = item;
-        //setTasks(currentTasks);
+        setTasks(currentTasks);
         _saveTasks(currentTasks);
     };
-
-    //Category Dropdown
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
-        {label: 'All', value: 'all'},
-        {label: 'Study', value: 'study'},
-        {label: 'Appointment', value: 'appointment'},
-        {label: 'Project', value: 'project'}
-    ]);
 
     //Select
     const [select, setSelect] = useState(false);
@@ -74,6 +66,18 @@ export const Home = ({navigation}) => {
         setSort((prev) => !prev);
     }
 
+    /*const _ChangeOrderUp = (item) =>{
+        
+        const id = item.id;
+        const prev = (parseInt(id) - 1).toString();
+        tasks[id].id = prev;
+        tasks[prev].id = id;
+
+        const result = Object.values(tasks).sort((a, b) => parseInt(a.id) - parseInt(b.id));
+        _saveTasks(result);
+        console.warn(tasks[id].id);
+    };*/
+
     //Load Data
     const _loadTasks =  async () => {
         const loadedTasks = await AsyncStorage.getItem('tasks');
@@ -81,22 +85,28 @@ export const Home = ({navigation}) => {
     }
 
     useEffect(()=>{
+        const i = Object.values(tasks).filter(item =>(
+            item.title.toLowerCase().includes(text.toLowerCase()) //검색text, item text 모두 소문자로 바꿔서 대소문자 상관없이 검색 
+        ))
+        setSearchedTasks(i);
+    },[text])
+
+    useEffect(()=>{
         _loadTasks();
-    },)
+        //console.warn(Object.assign({}, tasks)[0].title)
+    },[tasks])
+
 
     return isReady ? (
         <SafeAreaView style={ViewStyles.container} >
             <StatusBar barStyle="light-content" style={barStyles.statusbar}/>
             <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center'}}>
                 <Text style={textStyles.title}>TODO List</Text>
-                <Search></Search>
+                <Search  setText={setText} ></Search>
             </View>
-            <View style={{flexDirection:'column', zIndex: 1, zindex: 1}}>
-                <View style={{flexDirection:'row', marginBottom:5, justifyContent:'space-between', }} width={width-20}>
-                    <DropDownPicker 
-                        placeholder="Category" placeholderStyle={{fontSize: 13}} containerStyle={{width:110,}} listItemLabelStyle={{fontSize:13}} selectedItemContainerStyle={{backgroundColor:'#cdcdcd'}} showTickIcon={false}
-                        open={open} value={value} items={items} setOpen={setOpen} setValue={setValue} setItems={setItems}
-                    />
+            <View style={{flexDirection:'column', zIndex: 2}}>
+                <View style={{flexDirection:'row', marginBottom:5, justifyContent:'space-between', height:40}} width={width-20}>
+                    <CategoryPicker canModify="false" />
                     <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
                         {select && 
                             <Pressable style={{ alignItems:'center',justifyContent:'center', paddingRight:10}}>
@@ -121,15 +131,19 @@ export const Home = ({navigation}) => {
                             </View>
                 }
             </View>
-            <ScrollView width={width-20} style={{zIndex:0,}}>
-                {Object.values(tasks).reverse().map(item => (
-                    <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select}/>
-                ))}
-                <View>
-                    <Text style={{ color:theme.text,fontSize:20 ,borderColor:theme.text, borderTopWidth: 3, marginTop:15, paddingTop:10,}}>    Completed(0)</Text>
-                    <Text></Text>
-                </View>
-            </ScrollView>
+            { text ? 
+                <ScrollView width={width-20}>
+                    {Object.values(searchedtasks).map((item)=>(
+                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask}/>
+                    ))}
+                 </ScrollView>
+                :
+                <ScrollView width={width-20}>
+                    {Object.values(tasks).reverse().map(item => (
+                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask}/>
+                    ))}
+                </ScrollView>
+            }
             <View style={{position:'absolute', bottom: 0, flexDirection:'row', justifyContent:'space-between', paddingBottom: 20}} width={width-60}>
                 <Pressable 
                     onPress={()=>navigation.navigate('Add')}
@@ -147,7 +161,7 @@ export const Home = ({navigation}) => {
             onError = {console.error}
         />
     );
-};
+}
 
 /*
 <Pressable style={{alignItems:'center', justifyContent:'center',borderWidth: 2, borderRadius:90 ,borderColor:theme.text, padding:8, margin:0}}>

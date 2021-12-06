@@ -1,6 +1,8 @@
 import React, {useState} from 'react'
-import { View, Button, TouchableOpacity, StyleSheet, TextInput } from 'react-native'
+import { View, Button, TouchableOpacity, StyleSheet, TextInput, Dimensions } from 'react-native'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { theme } from "../theme";
+
 export default function DatePicker({setDate}) {
     
     const [text, onChangeText] = useState("");
@@ -49,7 +51,7 @@ export default function DatePicker({setDate}) {
                     pointerEvents="none"
                     style={styles.textInput}
                     placeholder="Due date"
-                    placeholderTextColor="#000000"
+                    placeholderTextColor={theme.main}
                     underlineColorAndroid="transparent"
                     editable={false}
                     value={text}
@@ -72,14 +74,18 @@ export default function DatePicker({setDate}) {
 const styles = StyleSheet.create({ 
     container: {
         //flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white',
+        width:Dimensions.get('window').width-100,
+        height:40,
+        //justifyContent: 'center',
+        //alignItems: 'center',
+        backgroundColor: '#eeeeee',
+        paddingLeft:10,
+        marginTop: 50,
     },
     textInput: {
-        fontSize: 16,
-        color: '#000000',
-        height: 50, 
-        width: 200,        
+        fontSize: 25,
+        color: theme.main,
+        height: 40, 
+        //width: 200,        
     }
 })

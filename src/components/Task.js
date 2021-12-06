@@ -7,7 +7,7 @@ import { Image } from "react-native";
 import { images } from "../image";
 import Input from "./Input";
 
-const Task = ({item, deleteTask, toggleTask, updateTask, select}) => {
+const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp}) => {
     
     const [isEditing, setIsEditing] = useState(false);
     const [text, setText] = useState(item.text);
@@ -33,6 +33,11 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select}) => {
         SetIsSelected((prev) => !prev)
     }
 
+    const _ChangeOrderUp = () =>{
+        ChangeOrderUp(item);
+    };
+    
+
     // select
     const [isSelected, SetIsSelected] = useState(false);
 
@@ -42,7 +47,10 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select}) => {
         <Pressable onPressOut={_handleUpdateSelect} style={[taskStyles.container, {backgroundColor: (select && isSelected) ? theme.main : theme.itemBackground}]}>
             {select ||
                 <>
-                <Pressable><Image source={images.drag} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable> 
+                <View style={{flexDirection:'column'}}>
+                    <Pressable onPressOut={_ChangeOrderUp}><Image source={images.up} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable> 
+                    <Pressable><Image source={images.down} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable>
+                </View>
                 <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
                 </>
             }

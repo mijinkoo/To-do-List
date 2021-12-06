@@ -2,6 +2,7 @@ import React,{useEffect, useState} from "react";
 import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable } from "react-native"
 import IconButton from "../components/IconButton";
 import Input from "../components/Input";
+import CategoryPicker from "../components/CategoryPicker";
 import Search from "../components/Search";
 import Task from "../components/Task";
 import { images } from "../image";
@@ -50,16 +51,6 @@ export const Home = () => {
         _saveTasks(currentTasks);
     };
 
-    //Category Dropdown
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
-        {label: 'All', value: 'all'},
-        {label: 'Study', value: 'study'},
-        {label: 'Appointment', value: 'appointment'},
-        {label: 'Project', value: 'project'}
-    ]);
-
     //Select
     const [select, setSelect] = useState(false);
 
@@ -74,6 +65,18 @@ export const Home = () => {
         setSort((prev) => !prev);
     }
 
+    /*const _ChangeOrderUp = (item) =>{
+        
+        const id = item.id;
+        const prev = (parseInt(id) - 1).toString();
+        tasks[id].id = prev;
+        tasks[prev].id = id;
+
+        const result = Object.values(tasks).sort((a, b) => parseInt(a.id) - parseInt(b.id));
+        _saveTasks(result);
+        console.warn(tasks[id].id);
+    };*/
+
     //Load Data
     const _loadTasks =  async () => {
         const loadedTasks = await AsyncStorage.getItem('tasks');
@@ -82,7 +85,9 @@ export const Home = () => {
 
     useEffect(()=>{
         _loadTasks();
-    },)
+        //console.warn(Object.assign({}, tasks)[0].title)
+    },[tasks])
+
 
     return isReady ? (
         <SafeAreaView style={ViewStyles.container} >
@@ -91,12 +96,9 @@ export const Home = () => {
                 <Text style={textStyles.title}>TODO List</Text>
                 <Search></Search>
             </View>
-            <View style={{flexDirection:'column', zIndex: 1, zindex: 1}}>
-                <View style={{flexDirection:'row', marginBottom:5, justifyContent:'space-between', }} width={width-20}>
-                    <DropDownPicker 
-                        placeholder="Category" placeholderStyle={{fontSize: 13}} containerStyle={{width:110,}} listItemLabelStyle={{fontSize:13}} selectedItemContainerStyle={{backgroundColor:'#cdcdcd'}} showTickIcon={false}
-                        open={open} value={value} items={items} setOpen={setOpen} setValue={setValue} setItems={setItems}
-                    />
+            <View style={{flexDirection:'column', zIndex: 2}}>
+                <View style={{flexDirection:'row', marginBottom:5, justifyContent:'space-between', height:40}} width={width-20}>
+                    <CategoryPicker canModify="false" />
                     <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
                         {select && 
                             <Pressable style={{ alignItems:'center',justifyContent:'center', paddingRight:10}}>
@@ -121,7 +123,7 @@ export const Home = () => {
                             </View>
                 }
             </View>
-            <ScrollView width={width-20} style={{zIndex:0,}}>
+            <ScrollView width={width-20} style={{zIndex:0, }}>
                 {Object.values(tasks).reverse().map(item => (
                     <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select}/>
                 ))}

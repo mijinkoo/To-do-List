@@ -10,6 +10,8 @@ import SelectAll from '../assets/outline_select_all_black_24.png';
 import Sort from '../assets/outline_import_export_black_24.png';
 import Calendar from '../assets/outline_calendar_today_black_24.png';
 import Add from '../assets/outline_add_black_24.png';
+import Up from '../assets/outline_arrow_drop_up_black_24.png';
+import Down from '../assets/outline_arrow_drop_down_black_24.png';
 
 export const images = {
     uncompleted: UncheckedBox,
@@ -24,4 +26,6 @@ export const images = {
     sort: Sort,
     calendar: Calendar,
     add: Add,
+    up: Up,
+    down: Down,
 }

@@ -7,6 +7,7 @@ import { ViewStyles, textStyles, barStyles } from '../styles';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DatePicker from "../components/DatePicker";
 import DropDownPicker from 'react-native-dropdown-picker';
+import CategoryPicker from "../components/CategoryPicker";
 
 export const AddTask = () => {
 
@@ -27,12 +28,12 @@ export const AddTask = () => {
         }
     }
 
-    const [isloading, SetIsLoading] = useState(false);
+    const [isLoading, SetIsLoading] = useState(false);
 
     useEffect(()=>{
         _loadTasks();
         SetIsLoading(true);
-    })
+    },[])
     
     const _loadTasks =  async () => {
         const loadedTasks = await AsyncStorage.getItem('tasks');
@@ -41,47 +42,40 @@ export const AddTask = () => {
 
     const _addTask = async() => {
         await _loadTasks();
-        alert('Add:'+ title);
-        const ID = Date.now().toString();
-        const titleObject = {
+        alert('Add:'+ category);
+        //const ID = Date.now().toString();
+        const ID = Object.keys(tasks).length.toString();
+        const taskObject = {
             [ID]: {id: ID, title: title, date: date, category: category, comment: comment, completed: false},
         };
         setTitle('');
-        //setTasks({...tasks, ...titleObject});
-        _saveTasks({...tasks, ...titleObject});
+        _saveTasks({...tasks, ...taskObject});
     };
-
-    const [open, setOpen] = useState(false);
-    const [items, setItems] = useState([
-        {label: 'All', value: 'all'},
-        {label: 'Study', value: 'study'},
-        {label: 'Appointment', value: 'appointment'},
-        {label: 'Project', value: 'project'}
-    ]);
     
-    return ( isloading ?
+    const width = Dimensions.get('window').width
+
+    return ( isLoading ?
         <SafeAreaView style={ViewStyles.container}>
             <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center'}}>
                 <Text style={textStyles.title}>Add a task</Text>
             </View>
-            <View style={{alignItems:'center', alignContent:'flex-end'}}>
+            <View style={{position:'absolute', top:100, height: 300,}}>
                 <TextInput name="title" value={title} onChangeText={text => setTitle(text)} placeholder="  Title" placeholderTextColor= {theme.main}
-                    maxLength={20} keyboardAppearance="light"style={[boxStyles.textInput,{height:40}]}>
+                    maxLength={20} keyboardAppearance="light"style={[boxStyles.textInput,{height:40, marginBottom:50}]}>
                 </TextInput>
+
+                <CategoryPicker canModify="true" setCategory={setCategory}/>
 
                 <DatePicker name="date" setDate={setDate}/>
 
-                <DropDownPicker name="category" placeholder="Category" placeholderStyle={{fontSize: 13}} containerStyle={{width:110,}} listItemLabelStyle={{fontSize:13}} selectedItemContainerStyle={{backgroundColor:'#cdcdcd'}} showTickIcon={false}
-                    open={open} value={category} items={items} setOpen={setOpen} setValue={setCategory} setItems={setItems}> 
-                </DropDownPicker>
-
                 <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= {theme.main}
-                    maxLength={20} keyboardAppearance="light"style={[boxStyles.textInput,{height:40}]}>
+                    maxLength={20} keyboardAppearance="light"style={boxStyles.textInput}>
                 </TextInput>
+
+                <Pressable onPressOut={_addTask}>
+                    <Text style={[boxStyles.textInput, {color:theme.main, paddingLeft:10}]}>Submit</Text>
+                </Pressable>
             </View>
-            <Pressable onPressOut={_addTask}>
-                <Text style={{borderWidth:2, borderColor: "white", color:'white'}}>Submit</Text>
-            </Pressable>
         </SafeAreaView>
        :
        <Text>Loading</Text>     
@@ -93,14 +87,15 @@ const boxStyles = StyleSheet.create({
     textInput: {
         fontSize: 25,
         width: Dimensions.get('window').width-100,
-        height: 30,
+        height: 40,
         //marginTop: 10,
         //marginLeft: 3,
         //paddingLeft: 15,
         //paddingTop: 2,
-        //borderRadius: 10,
-        backgroundColor: theme.itemBackground,
-        color: theme.text,
+        marginTop: 50,
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        backgroundColor: '#eeeeee',
     },
 });
 

@@ -46,17 +46,23 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select}) => {
                 <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
                 </>
             }
-            <Text style={[taskStyles.contents, 
-                {color: (item.completed ? theme.done : theme.text)},
-                {textDecorationLine: (item.completed? 'line-through': 'none')}]}>
-                {item.text}</Text>
-            <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>11/26</Text>
-            {select ||
-                <>
-                {item.completed || (<IconButton type={images.update} onPressOut={_handleUpdateButtonPress}/>)}
-            <IconButton type={images.delete} id={item.id} onPressOut={deleteTask} completed={item.completed}/>
-                </>
-            }
+            <View>
+                <Text style={[taskStyles.contents, 
+                    {color: (item.completed ? theme.done : theme.text)},
+                    {textDecorationLine: (item.completed? 'line-through': 'none')}]}>
+                    {item.title}</Text>
+                <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.date}</Text>
+                <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.category}</Text>
+                <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.comment}</Text>
+            </View>
+            <View style={{position:'absolute', right:0,flexDirection:'row'}}>
+                {select ||
+                    <>
+                    {item.completed || (<IconButton type={images.update} onPressOut={_handleUpdateButtonPress}/>)}
+                <IconButton type={images.delete} id={item.id} onPressOut={deleteTask} completed={item.completed}/>
+                    </>
+                }
+            </View>
         </Pressable>
     );
 };
@@ -66,7 +72,7 @@ const taskStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         width:'100%',
-        height:60,
+        //height:60,
         //backgroundColor: theme.itemBackground,
         borderRadius: 10,
         padding: 5,

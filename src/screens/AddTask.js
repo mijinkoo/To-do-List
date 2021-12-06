@@ -1,15 +1,20 @@
-import React,{useState} from "react";
-import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable } from "react-native"
+import React,{useEffect, useState} from "react";
+import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable, StyleSheet, TextInput } from "react-native"
 import IconButton from "../components/IconButton";
-import Input from "../components/Input";
 import { images } from "../image";
 import { theme } from "../theme";
 import { ViewStyles, textStyles, barStyles } from '../styles';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import DatePicker from "../components/DatePicker";
+import DropDownPicker from 'react-native-dropdown-picker';
 
 export const AddTask = () => {
 
-    const [newTask, setNewTask] = useState('');
+    // data to store in AsyncStorage
+    const [title, setTitle] = useState('');
+    const [date, setDate] = useState('');
+    const [category, setCategory] = useState('');
+    const [comment, setComment] = useState('');
 
     const [tasks, setTasks] = useState({});
 
@@ -22,30 +27,81 @@ export const AddTask = () => {
         }
     }
 
-    const _addTask = () => {
-        alert('Add:'+ newTask);
+    const [isloading, SetIsLoading] = useState(false);
+
+    useEffect(()=>{
+        _loadTasks();
+        SetIsLoading(true);
+    })
+    
+    const _loadTasks =  async () => {
+        const loadedTasks = await AsyncStorage.getItem('tasks');
+        setTasks(JSON.parse(loadedTasks || '{}'));
+    }
+
+    const _addTask = async() => {
+        await _loadTasks();
+        alert('Add:'+ title);
         const ID = Date.now().toString();
-        const newTaskObject = {
-            [ID]: {id: ID, text: newTask, completed: false},
+        const titleObject = {
+            [ID]: {id: ID, title: title, date: date, category: category, comment: comment, completed: false},
         };
-        setNewTask('');
-        //setTasks({...tasks, ...newTaskObject});
-        _saveTasks({...tasks, ...newTaskObject});
+        setTitle('');
+        //setTasks({...tasks, ...titleObject});
+        _saveTasks({...tasks, ...titleObject});
     };
 
-    const _onBlur = () => {
-        setNewTask('');
-    }
-
-    const _handleTextChange = text =>{
-        setNewTask(text);
-    }
+    const [open, setOpen] = useState(false);
+    const [items, setItems] = useState([
+        {label: 'All', value: 'all'},
+        {label: 'Study', value: 'study'},
+        {label: 'Appointment', value: 'appointment'},
+        {label: 'Project', value: 'project'}
+    ]);
     
-    return (
-       <View>
-           <Input value={newTask} onChangeText={_handleTextChange} onSubmitEditing={_addTask} onBlur={_onBlur}/>
-       </View>
+    return ( isloading ?
+        <SafeAreaView style={ViewStyles.container}>
+            <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center'}}>
+                <Text style={textStyles.title}>Add a task</Text>
+            </View>
+            <View style={{alignItems:'center', alignContent:'flex-end'}}>
+                <TextInput name="title" value={title} onChangeText={text => setTitle(text)} placeholder="  Title" placeholderTextColor= {theme.main}
+                    maxLength={20} keyboardAppearance="light"style={[boxStyles.textInput,{height:40}]}>
+                </TextInput>
+
+                <DatePicker name="date" setDate={setDate}/>
+
+                <DropDownPicker name="category" placeholder="Category" placeholderStyle={{fontSize: 13}} containerStyle={{width:110,}} listItemLabelStyle={{fontSize:13}} selectedItemContainerStyle={{backgroundColor:'#cdcdcd'}} showTickIcon={false}
+                    open={open} value={category} items={items} setOpen={setOpen} setValue={setCategory} setItems={setItems}> 
+                </DropDownPicker>
+
+                <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= {theme.main}
+                    maxLength={20} keyboardAppearance="light"style={[boxStyles.textInput,{height:40}]}>
+                </TextInput>
+            </View>
+            <Pressable onPressOut={_addTask}>
+                <Text style={{borderWidth:2, borderColor: "white", color:'white'}}>Submit</Text>
+            </Pressable>
+        </SafeAreaView>
+       :
+       <Text>Loading</Text>     
     );
 };
+
+
+const boxStyles = StyleSheet.create({
+    textInput: {
+        fontSize: 25,
+        width: Dimensions.get('window').width-100,
+        height: 30,
+        //marginTop: 10,
+        //marginLeft: 3,
+        //paddingLeft: 15,
+        //paddingTop: 2,
+        //borderRadius: 10,
+        backgroundColor: theme.itemBackground,
+        color: theme.text,
+    },
+});
 
 export default AddTask;

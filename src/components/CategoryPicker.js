@@ -97,13 +97,13 @@ const CategoryPicker = ({canModify, setCategory,}) => {
     },[items])
 
     return  isLoading ? (
-        <View style={pickerStyles.container}>
+        <View >
             <Pressable style={pickerStyles.item} onPressOut={(_onPressOutCategoryPicker)}>
                 <Text style={pickerStyles.text}>{label}</Text>
             </Pressable>
         
             {open ? 
-            <View style={{position:'absolute', top:40, zIndex:2}}>
+            <View style={{position:'absolute', top:40, width:'100%'}}>
                     {Object.values(items).map(item =>(
                         <Category key={item.id} item={item} deleteCategory={_deleteCategory} updateCategory={_updateCategory} setLabel={setLabel} canModify={canModify}/>
                     ))}
@@ -126,20 +126,20 @@ const CategoryPicker = ({canModify, setCategory,}) => {
 };
 
 const pickerStyles = StyleSheet.create({
-    container: {
+    
+    item: {
         backgroundColor: '#eeeeee',
         color: theme.main,
-    },
-    item: {
         flexDirection:'row',
         justifyContent: 'center',
         alignItems:'center',
-        fontSize: 25,
+        width: '100%',
         height: 40,
         paddingLeft:10
     },
     text: {
         color: theme.main,
+        fontSize: 25,
     }
 });
 

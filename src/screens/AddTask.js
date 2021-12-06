@@ -64,7 +64,9 @@ export const AddTask = () => {
                     maxLength={20} keyboardAppearance="light"style={[boxStyles.textInput,{height:40, marginBottom:50}]}>
                 </TextInput>
 
-                <CategoryPicker canModify="true" setCategory={setCategory}/>
+                <View style={{zIndex: 1}}>
+                    <CategoryPicker canModify="true" setCategory={setCategory} style={{zIndex: 1}}/>
+                </View>
 
                 <DatePicker name="date" setDate={setDate}/>
 

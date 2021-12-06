@@ -4,14 +4,21 @@ import { theme } from "../theme";
 import { images } from "../image";
 import Input from "./Input";
 
-const Search = () => {
+const Search = ({setText}) => {
 
-    const width = Dimensions.get('window').width;
     const [search, setSearch] = useState(false);
-    const [text, setText] = useState("");
+    const [word, setWord] = useState("");
 
     const _onSearch = () =>{
         setSearch((prev) => !prev); //전 상태를 불러와서 false면 true, true면 false로 변경
+    }
+
+    const _onChangeSearchWord = word => {
+        setWord(word);
+    }
+    
+    const _onSubmitSearchword = (e) =>{
+        setText(word);
     }
 
     return(
@@ -21,7 +28,7 @@ const Search = () => {
                     <Pressable >
                         <Image source={images.close} style={searchStyles.icon}/>
                     </Pressable> 
-                    <Input value={text} onChangeText={text=>setText(text)} placeholder="  Enter a search word" />
+                    <Input value={word} onChangeText={_onChangeSearchWord} onSubmitEditing={_onSubmitSearchword}/>
                     </View>
             }
             <Pressable onPressOut={_onSearch} style={{ position:'absolute',  right:0,}}>

@@ -49,8 +49,8 @@ const Category = ({item, deleteCategory, updateCategory, canModify, setLabel}) =
         </>
         ):(
         <>
-            <Pressable style={pickerStyles.item} onPressOut={()=>setSelected(item.label)}>
-                <Text style={pickerStyles.text}>{item.label}</Text>
+            <Pressable style={listStyles.item} onPressOut={()=>setSelected(item.label)}>
+                <Text style={listStyles.text}>{item.label}</Text>
                 {(canModify === "true") ?<>
                 <IconButton type={images.update} id={item.id} onPressOut={_handleUpdateButtonPress}/>
                 <IconButton type={images.delete} id={item.id} onPressOut={deleteCategory}/></>
@@ -61,11 +61,7 @@ const Category = ({item, deleteCategory, updateCategory, canModify, setLabel}) =
     )
 }
 
-const pickerStyles = StyleSheet.create({
-    container: {
-        backgroundColor: '#eeeeee',
-        width: 300,
-    },
+const listStyles = StyleSheet.create({
     item: {
         backgroundColor: '#eeeeee',
         flexDirection:'row',
@@ -76,6 +72,7 @@ const pickerStyles = StyleSheet.create({
     },
     text: {
         color: theme.main,
+        fontSize: 25,
     }
 });
 

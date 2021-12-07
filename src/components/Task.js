@@ -7,7 +7,7 @@ import { Image } from "react-native";
 import { images } from "../image";
 import Input from "./Input";
 
-const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp}) => {
+const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, calendarMode}) => {
     
     const [isEditing, setIsEditing] = useState(false);
     const [text, setText] = useState(item.text);
@@ -37,11 +37,10 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp})
         ChangeOrderUp(item);
     };
     
-
     // select
     const [isSelected, SetIsSelected] = useState(false);
 
-    return isEditing ?(
+    return isEditing ? (
         <Input value={text} onChangeText={text=>setText(text)} onSubmitEditing={_onSubmitEditing} onBlur={_onBlur}/>
         ):(
         <Pressable onPressOut={_handleUpdateSelect} style={[taskStyles.container, {backgroundColor: (select && isSelected) ? theme.main : theme.itemBackground}]}>
@@ -63,13 +62,15 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp})
                 <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.category}</Text>
                 <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.comment}</Text>
             </View>
-            <View style={{position:'absolute', right:0,flexDirection:'row'}}>
-                {select ||
-                    <>
-                    {item.completed || (<IconButton type={images.update} onPressOut={_handleUpdateButtonPress}/>)}
-                <IconButton type={images.delete} id={item.id} onPressOut={deleteTask} completed={item.completed}/>
-                    </>
-                }
+            <View style={{position:'absolute', right:0,flexDirection:'row'}} calendarMode={calendarMode}>
+                {calendarMode === "false" ? 
+                    select ||
+                        <>
+                        {item.completed || (<IconButton type={images.update} onPressOut={_handleUpdateButtonPress}/>)}
+                    <IconButton type={images.delete} id={item.id} onPressOut={deleteTask} completed={item.completed}/>
+                        </>
+                 : 
+                    <></>}
             </View>
         </Pressable>
     );
@@ -98,8 +99,8 @@ const taskStyles = StyleSheet.create({
 
 Task.propTypes = {
     item: PropTypes.object.isRequired,
-    deleteTask: PropTypes.func.isRequired,
-    toggleTask: PropTypes.func.isRequired,
+    deleteTask: PropTypes.func,
+    toggleTask: PropTypes.func,
 };
 
 export default Task;

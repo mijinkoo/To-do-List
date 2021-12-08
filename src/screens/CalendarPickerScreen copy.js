@@ -22,10 +22,9 @@ const styles = StyleSheet.create({
         marginTop: 50,
     },
     box: {
-        margin: 20,
+        marginTop: 20,
+        marginLeft: 20,
         marginBottom: 10,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
     },
     datetext: {
         fontSize: 20,
@@ -35,9 +34,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '200',
     },
-    sucess: {
-        alignItems: 'flex-end',
-    }
 });
 
 export const CalendarPickerScreen = ({ navigation }) => {
@@ -51,8 +47,6 @@ export const CalendarPickerScreen = ({ navigation }) => {
     const [isReady, SetIsReady] = useState(false);
     const [taskObject, setTaskObject] = useState({});
 
-    const [success, setSuccess] = useState(0);
-
     const _saveTasks = async tasks => {
         try {
             await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
@@ -65,37 +59,21 @@ export const CalendarPickerScreen = ({ navigation }) => {
     const _loadTasks = async () => {
         const loadedTasks = await AsyncStorage.getItem('tasks');
         setTasks(JSON.parse(loadedTasks || '{}'));
-
-        //const loadedTaskObject = await AsyncStorage.getItem('taskObject');
-        //setTaskObject(JSON.parse(loadedTaskObject || '{}'));
-
+        const loadedTaskObject = await AsyncStorage.getItem('taskObject');
+        setTaskObject(JSON.parse(loadedTaskObject || '{}'));
         //const due_date = await AsyncStorage.getItem('date');
         //setDueDate(due_date.format('YYYYMMDD'));
-        console.log('loadTask');
+        console.log("loadTask");
     };
 
     // dueDate와 선택한 날짜가 같으면 true를 반환
     const [sameDate, setSameDate] = useState(false);
     const _cmpDate = id => {
-        const currentTasks = Object.assign({}, tasks);
-        setDueDate((currentTasks[id]['date'].parseInt).format('YYYYMMDD'));
-
-        //const currentTaskObject = Object.assign({}, taskObject);
-        //setDueDate((currentTaskObject[id]['date'].parseInt).format('YYYYMMDD'));
-
-        if (dueDate === cmpDate) {
-            setSameDate(true);
-        } else {
-            setSameDate(false);
-        }
+        const currentTaskObject = Object.assign({}, taskObject);
+        setDueDate((currentTaskObject[id]['date'].parseInt).format('YYYYMMDD'));
+        ( dueDate === cmpDate ) ? setSameDate(true) : setSameDate(false);
         console.log("cmpdate");
     };
-
-    const _loadDate = id => {
-        const currentTasks = Object.assign({}, tasks);
-        setDueDate((currentTasks[id]['date'].parseInt).format('YYYYMMDD'));
-
-    }
 
     const _toggleTask = id => {
         const currentTasks = Object.assign({}, tasks);
@@ -104,7 +82,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
     }
 
     async function date_change(d) {
-        setDate(d.format('MMMM DD'));
+        setDate(d.format('MMMM DD, YYYY'));
         setCmpDate(d.format('YYYYMMDD'));
     }
 
@@ -114,12 +92,11 @@ export const CalendarPickerScreen = ({ navigation }) => {
             <CalendarPicker onDateChange={date_change}/>
             <View style={styles.box}>
                 <Text style={styles.text}>{date}</Text>
-                <Text style={[styles.text, styles.success]}>Success {success}%</Text>
             </View>
             <View></View>
             <List width={width}>
                 {Object.values(tasks).reverse().map(item => (
-                    //sameDate && 
+                    sameDate && 
                     <Task 
                         key={item.id} item={item}
                         toggleTask={_toggleTask}
@@ -131,7 +108,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
     ) : (
         <AppLoading
             startAsync = {_loadTasks}
-            onFinish = {() => SetIsReady(true)}
+            onFinish = {_cmpDate, () => SetIsReady(true)}
             onError = {console.error}
         />
     );

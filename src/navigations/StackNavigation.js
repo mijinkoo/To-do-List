@@ -19,6 +19,7 @@ const StackNavigation = () => {
                 name = "Add"
                 component={AddTask} 
                 options={{
+                    headerShown: false, // 헤더 감추기
                     headerTitle:'Add a task',
                     headerBackTitleVisible: true,
                     headerBackTitle: 'TODO',

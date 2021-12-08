@@ -13,7 +13,7 @@ import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AddTask from "./AddTask";
 
-export const Home = ({navigation}) => {
+export const Home = ({ navigation }) => {
 
     const width = Dimensions.get('window').width;
 
@@ -134,19 +134,23 @@ export const Home = ({navigation}) => {
             { text ? 
                 <ScrollView width={width-20}>
                     {Object.values(searchedtasks).map((item)=>(
-                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select}/>
+
+                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false"/>
+
                     ))}
                  </ScrollView>
                 :
                 <ScrollView width={width-20}>
                     {Object.values(tasks).reverse().map(item => (
-                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select}/>
+
+                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false"/>
+
                     ))}
                 </ScrollView>
             }
             <View style={{position:'absolute', bottom: 0, flexDirection:'row', justifyContent:'space-between', paddingBottom: 20}} width={width-60}>
                 <Pressable 
-                    onPress={()=>navigation.navigate('Add')}
+                    onPress={() => navigation.navigate('Add')}
                     style={{alignItems:'center', justifyContent:'center',borderWidth: 2, borderRadius:90 ,borderColor:theme.text, padding:8, margin:0}}>
                     <Image source={images.add} style={{tintColor: theme.text, width: 40, height: 40,padding:0, margin:0}}/>
                 </Pressable>

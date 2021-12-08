@@ -134,33 +134,15 @@ export const Home = ({ navigation }) => {
             { text ? 
                 <ScrollView width={width-20}>
                     {Object.values(searchedtasks).map((item)=>(
-<<<<<<< HEAD
-<<<<<<< HEAD
-                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} calendarMode="false"/>
-=======
-                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select}/>
->>>>>>> 64c38f36e55dcb21515324c38b5040f49de60511
-=======
 
                         <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false"/>
 
->>>>>>> 7a14780c7755758e2aeb8fdcbc58b9a042724705
                     ))}
                  </ScrollView>
                 :
                 <ScrollView width={width-20}>
                     {Object.values(tasks).reverse().map(item => (
-<<<<<<< HEAD
-<<<<<<< HEAD
-                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} calendarMode="false"/>
-=======
-                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select}/>
->>>>>>> 64c38f36e55dcb21515324c38b5040f49de60511
-=======
-
                         <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false"/>
-
->>>>>>> 7a14780c7755758e2aeb8fdcbc58b9a042724705
                     ))}
                 </ScrollView>
             }

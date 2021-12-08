@@ -21,14 +21,20 @@ const Search = ({setText}) => {
         setText(word);
     }
 
+    const _onSearchClose=()=>{
+        setSearch((prev) => !prev);
+        setWord('');
+        setText('');
+    }
+
     return(
         <View style={searchStyles.container}>
             {search && 
                 <View style={searchStyles.searchbar}>
-                    <Pressable >
+                    <Pressable onPressOut={_onSearchClose}>
                         <Image source={images.close} style={searchStyles.icon}/>
                     </Pressable> 
-                    <Input value={word} onChangeText={_onChangeSearchWord} onSubmitEditing={_onSubmitSearchword}/>
+                    <Input value={word} onChangeText={_onChangeSearchWord} onSubmitEditing={_onSubmitSearchword} placeholder={"  Enter a search word"}/>
                     </View>
             }
             <Pressable onPressOut={_onSearch} style={{ position:'absolute',  right:0,}}>

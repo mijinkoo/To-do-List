@@ -134,13 +134,17 @@ export const Home = ({ navigation }) => {
             { text ? 
                 <ScrollView width={width-20}>
                     {Object.values(searchedtasks).map((item)=>(
-                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} calendarMode="false"/>
+
+                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false"/>
+
                     ))}
                  </ScrollView>
                 :
                 <ScrollView width={width-20}>
                     {Object.values(tasks).reverse().map(item => (
-                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} calendarMode="false"/>
+
+                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false"/>
+
                     ))}
                 </ScrollView>
             }

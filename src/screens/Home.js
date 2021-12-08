@@ -142,9 +142,7 @@ export const Home = ({ navigation }) => {
                 :
                 <ScrollView width={width-20}>
                     {Object.values(tasks).reverse().map(item => (
-
                         <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false"/>
-
                     ))}
                 </ScrollView>
             }

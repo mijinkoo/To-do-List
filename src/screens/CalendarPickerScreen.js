@@ -44,12 +44,10 @@ export const CalendarPickerScreen = ({ navigation }) => {
 
     const width = Dimensions.get('window').width;
 
-    const [dueDate, setDueDate] = useState('');
     const [cmpDate, setCmpDate] = useState(''); // dueDate와 동일한 포맷의 선택한 날짜
     const [date, setDate] = useState('');       // 선택한 날짜
     const [tasks, setTasks] = useState({});
     const [isReady, SetIsReady] = useState(false);
-    const [taskObject, setTaskObject] = useState({});
 
     const [success, setSuccess] = useState(0);
 
@@ -65,37 +63,8 @@ export const CalendarPickerScreen = ({ navigation }) => {
     const _loadTasks = async () => {
         const loadedTasks = await AsyncStorage.getItem('tasks');
         setTasks(JSON.parse(loadedTasks || '{}'));
-
-        //const loadedTaskObject = await AsyncStorage.getItem('taskObject');
-        //setTaskObject(JSON.parse(loadedTaskObject || '{}'));
-
-        //const due_date = await AsyncStorage.getItem('date');
-        //setDueDate(due_date.format('YYYYMMDD'));
         console.log('loadTask');
     };
-
-    // dueDate와 선택한 날짜가 같으면 true를 반환
-    const [sameDate, setSameDate] = useState(false);
-    const _cmpDate = id => {
-        const currentTasks = Object.assign({}, tasks);
-        setDueDate((currentTasks[id]['date'].parseInt).format('YYYYMMDD'));
-
-        //const currentTaskObject = Object.assign({}, taskObject);
-        //setDueDate((currentTaskObject[id]['date'].parseInt).format('YYYYMMDD'));
-
-        if (dueDate === cmpDate) {
-            setSameDate(true);
-        } else {
-            setSameDate(false);
-        }
-        console.log("cmpdate");
-    };
-
-    const _loadDate = id => {
-        const currentTasks = Object.assign({}, tasks);
-        setDueDate((currentTasks[id]['date'].parseInt).format('YYYYMMDD'));
-
-    }
 
     const _toggleTask = id => {
         const currentTasks = Object.assign({}, tasks);
@@ -103,15 +72,14 @@ export const CalendarPickerScreen = ({ navigation }) => {
         _saveTasks(currentTasks);
     }
 
-    async function date_change(d) {
+    async function _dateChange(d) {
         setDate(d.format('MMMM DD'));
-        setCmpDate(d.format('YYYYMMDD'));
+        setCmpDate(d.format('YYYY / MM / DD'));  
     }
-
 
     return isReady ? (
         <View style={styles.container}>
-            <CalendarPicker onDateChange={date_change}/>
+            <CalendarPicker onDateChange={_dateChange}/>
             <View style={styles.box}>
                 <Text style={styles.text}>{date}</Text>
                 <Text style={[styles.text, styles.success]}>Success {success}%</Text>
@@ -119,12 +87,15 @@ export const CalendarPickerScreen = ({ navigation }) => {
             <View></View>
             <List width={width}>
                 {Object.values(tasks).reverse().map(item => (
-                    //sameDate && 
-                    <Task 
-                        key={item.id} item={item}
-                        toggleTask={_toggleTask}
-                        calendarMode="true"
-                    />
+                    (item.date == cmpDate) ? (
+                        <Task
+                            key={item.id} item={item}
+                            toggleTask={_toggleTask}
+                            calendarMode="true"
+                        />
+                    ) : (
+                        <></>
+                    )                   
                 ))}
             </List>
         </View>

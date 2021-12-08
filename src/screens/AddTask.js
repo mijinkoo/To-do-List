@@ -20,6 +20,10 @@ export const AddTask = ({navigation}) => {
 
     const [tasks, setTasks] = useState({});
 
+    async function _dateChange(d) {
+        setDate(d.format('YYYYMMDD'));  
+    }
+
     const _saveTasks = async tasks => {
         try {
             await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
@@ -71,7 +75,7 @@ export const AddTask = ({navigation}) => {
                     <CategoryPicker canModify="true" setCategory={setCategory} style={{zIndex: 1}}/>
                 </View>
 
-                <DatePicker name="date" setDate={setDate}/>
+                <DatePicker name="date" setDate={setDate} dateChange={_dateChange}/>
 
                 <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= {theme.main}
                     maxLength={20} keyboardAppearance="light"style={boxStyles.textInput}>

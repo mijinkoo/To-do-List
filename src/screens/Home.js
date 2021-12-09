@@ -34,21 +34,18 @@ export const Home = ({navigation}) => {
     const _deleteTask = id => {
         const currentTasks = Object.assign({}, tasks);
         delete currentTasks[id];
-        setTasks(currentTasks);
         _saveTasks(currentTasks);
     };
 
     const _toggleTask = id => {
         const currentTasks = Object.assign({}, tasks);
         currentTasks[id]['completed'] = !currentTasks[id]['completed'];
-        setTasks(currentTasks);
         _saveTasks(currentTasks);
     }
 
     const _updateTask = item => {
         const currentTasks = Object.assign({}, tasks);
         currentTasks[item.id] = item;
-        setTasks(currentTasks);
         _saveTasks(currentTasks);
     };
 
@@ -66,6 +63,15 @@ export const Home = ({navigation}) => {
         setSort((prev) => !prev);
     }
 
+    const _sortByDueDate = () =>{
+        const currentTasks = Object.entries(tasks).sort(([, a],[ ,b])=>{
+            return a.date - b.date;
+        });
+        console.warn(currentTasks);
+        //_saveTasks(currentTasks);
+        //console.warn(Object.assign({},tasks));
+    }
+
     /*const _ChangeOrderUp = (item) =>{
         
         const id = item.id;
@@ -77,6 +83,7 @@ export const Home = ({navigation}) => {
         _saveTasks(result);
         console.warn(tasks[id].id);
     };*/
+
 
     //Load Data
     const _loadTasks =  async () => {
@@ -126,23 +133,27 @@ export const Home = ({navigation}) => {
                 </View>
                 {sort && 
                             <View style={{position:'absolute', top:50, right:0, borderWidth:1, borderColor:'#ffffff', backgroundColor:theme.background}}>
-                                <Pressable><Text style={{fontSize:15, color:'#ffffff', borderBottomWidth: 1, borderBottomColor:'#ffffff', padding:2}}> Sort by due date</Text></Pressable>
+                                <Pressable onPressOut={_sortByDueDate}><Text style={{fontSize:15, color:'#ffffff', borderBottomWidth: 1, borderBottomColor:'#ffffff', padding:2}}> Sort by due date</Text></Pressable>
                                 <Pressable><Text style={{fontSize:15, color:'#ffffff', padding:2}}> Sort by date added</Text></Pressable>
                             </View>
                 }
             </View>
-            { text ? 
-                <ScrollView width={width-20}>
-                    {Object.values(searchedtasks).map((item)=>(
-                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask}/>
-                    ))}
-                 </ScrollView>
+            { text ?
+                
+                    <ScrollView width={width-20}>
+                        {Object.values(searchedtasks).map((item)=>(
+                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select}/>
+                        ))}
+                    </ScrollView>
+                
                 :
-                <ScrollView width={width-20}>
-                    {Object.values(tasks).reverse().map(item => (
-                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask}/>
-                    ))}
-                </ScrollView>
+                
+                    <ScrollView width={width-20}>
+                        {Object.values(tasks).reverse().map(item => (
+                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select}/>
+                        ))}
+                    </ScrollView>
+                
             }
             <View style={{position:'absolute', bottom: 0, flexDirection:'row', justifyContent:'space-between', paddingBottom: 20}} width={width-60}>
                 <Pressable 

@@ -42,7 +42,7 @@ export const AddTask = () => {
 
     const _addTask = async() => {
         await _loadTasks();
-        alert('Add:'+ category);
+        alert('Add:'+ title);
         //const ID = Date.now().toString();
         const ID = Object.keys(tasks).length.toString();
         const taskObject = {

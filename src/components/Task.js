@@ -35,8 +35,7 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp})
 
     const _ChangeOrderUp = () =>{
         ChangeOrderUp(item);
-    };
-    
+    };    
 
     // select
     const [isSelected, SetIsSelected] = useState(false);
@@ -59,7 +58,7 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp})
                     {color: (item.completed ? theme.done : theme.text)},
                     {textDecorationLine: (item.completed? 'line-through': 'none')}]}>
                     {item.title}</Text>
-                <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.date}</Text>
+                <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.date.substring(0,4)+" / "+ item.date.substring(4,6)+" / "+item.date.substring(6,8)}</Text>
                 <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.category}</Text>
                 <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.comment}</Text>
             </View>

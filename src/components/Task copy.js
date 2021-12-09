@@ -35,8 +35,8 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, 
 
     const _ChangeOrderUp = () =>{
         ChangeOrderUp(item);
-    };    
-
+    };
+    
     // select
     const [isSelected, SetIsSelected] = useState(false);
 
@@ -45,7 +45,6 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, 
         ):(
         <Pressable onPressOut={_handleUpdateSelect} style={[taskStyles.container, {backgroundColor: (select && isSelected) ? theme.main : theme.itemBackground}]}>
             {select ||
-                (calendarMode === false) ? (
                 <>
                 <View style={{flexDirection:'column'}}>
                     <Pressable onPressOut={_ChangeOrderUp}><Image source={images.up} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable> 
@@ -53,32 +52,16 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, 
                 </View>
                 <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
                 </>
-            ) : (
-                <>
-                <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
-                </>
-            )
             }
-                {calendarMode === "false" ? (
-                    <View>
-                        <Text style={[taskStyles.contents, 
-                        {color: (item.completed ? theme.done : theme.text)},
-                        {textDecorationLine: (item.completed? 'line-through': 'none')}]}>
-                        {item.title}</Text>
-                        <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.date}</Text>
-                        <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.category}</Text>
-                        <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.comment}</Text>
-                    </View>
-                ) : (
-                    <View>
-                        <Text style={[taskStyles.contents, 
-                        {color: (item.completed ? theme.done : theme.text)},
-                        {textDecorationLine: (item.completed? 'line-through': 'none')}]}>
-                        {item.title}</Text>
-                        <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.date}</Text>
-                    </View>
-                )
-                }
+            <View>
+                <Text style={[taskStyles.contents, 
+                    {color: (item.completed ? theme.done : theme.text)},
+                    {textDecorationLine: (item.completed? 'line-through': 'none')}]}>
+                    {item.title}</Text>
+                <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.date}</Text>
+                <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.category}</Text>
+                <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.comment}</Text>
+            </View>
             <View style={{position:'absolute', right:0,flexDirection:'row'}} calendarMode={calendarMode}>
                 {calendarMode === "false" ? 
                     select ||

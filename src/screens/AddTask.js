@@ -8,8 +8,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import DatePicker from "../components/DatePicker";
 import DropDownPicker from 'react-native-dropdown-picker';
 import CategoryPicker from "../components/CategoryPicker";
+import { NavigationContainer } from "@react-navigation/native";
 
-export const AddTask = () => {
+export const AddTask = ({navigation}) => {
 
     // data to store in AsyncStorage
     const [title, setTitle] = useState('');
@@ -18,6 +19,10 @@ export const AddTask = () => {
     const [comment, setComment] = useState('');
 
     const [tasks, setTasks] = useState({});
+
+    async function _dateChange(d) {
+        setDate(d.format('YYYYMMDD'));  
+    }
 
     const _saveTasks = async tasks => {
         try {
@@ -50,6 +55,8 @@ export const AddTask = () => {
         };
         setTitle('');
         _saveTasks({...tasks, ...taskObject});
+        await AsyncStorage.setItem('taskObject', JSON.stringify(taskObject));
+        //await AsyncStorage.setItem('date', JSON.stringify(taskObject.date)); // 데이터 저장하기
     };
     
     const width = Dimensions.get('window').width
@@ -68,13 +75,13 @@ export const AddTask = () => {
                     <CategoryPicker canModify="true" setCategory={setCategory} style={{zIndex: 1}}/>
                 </View>
 
-                <DatePicker name="date" setDate={setDate}/>
+                <DatePicker name="date" setDate={setDate} dateChange={_dateChange}/>
 
                 <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= {theme.main}
                     maxLength={20} keyboardAppearance="light"style={boxStyles.textInput}>
                 </TextInput>
 
-                <Pressable onPressOut={_addTask}>
+                <Pressable onPress={_addTask} onPressOut={() => navigation.goBack()}>
                     <Text style={[boxStyles.textInput, {color:theme.main, paddingLeft:10}]}>Submit</Text>
                 </Pressable>
             </View>

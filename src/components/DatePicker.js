@@ -40,7 +40,7 @@ export default function DatePicker({setDate}) {
         const day  =date.toString().substring(8,10)
         const data = year+month+day
         onChangeText(year+" / "+month+" / "+day)
-        setDate(data)
+        setDate(year+" / "+month+" / "+day)
         hideDatePicker();
     };
 

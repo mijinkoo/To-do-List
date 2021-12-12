@@ -6,8 +6,9 @@ import IconButton from "./IconButton";
 import { Image } from "react-native";
 import { images } from "../image";
 import Input from "./Input";
+import { NavigationContainer } from "@react-navigation/native";
 
-const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, calendarMode}) => {
+const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, calendarMode, navigation}) => {
     
     const [isEditing, setIsEditing] = useState(false);
     const [text, setText] = useState(item.text);
@@ -40,10 +41,8 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, 
     // select
     const [isSelected, SetIsSelected] = useState(false);
 
-    return isEditing ? (
-        <Input value={text} onChangeText={text=>setText(text)} onSubmitEditing={_onSubmitEditing} onBlur={_onBlur}/>
-        ):(
-        <Pressable onPressOut={_handleUpdateSelect} style={[taskStyles.container, {backgroundColor: (select && isSelected) ? theme.main : theme.itemBackground}]}>
+    return (
+        <Pressable onPressOut={() => select ? _handleUpdateSelect : navigation.navigate('Show', {item: item})} style={[taskStyles.container, {backgroundColor: (select && isSelected) ? theme.main : theme.itemBackground}]}>
             {select ||
                 (calendarMode === false) ? (
                 <>

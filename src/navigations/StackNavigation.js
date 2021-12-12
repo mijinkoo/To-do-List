@@ -2,6 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Home from '../screens/Home';
 import AddTask from '../screens/AddTask';
+import ShowTask from '../screens/ShowTask';
 import { NavigationContainer } from '@react-navigation/native';
 import { CalendarPickerScreen } from '../screens/CalendarPickerScreen';
 import TabNavigation from './TabNavigation';
@@ -21,6 +22,18 @@ const StackNavigation = () => {
                 options={{
                     headerShown: false, // 헤더 감추기
                     headerTitle:'Add a task',
+                    headerBackTitleVisible: true,
+                    headerBackTitle: 'TODO',
+                    headerTitleStyle: {fontSize: 24},
+                    headerTitleAlign: 'center',
+                }}
+            />
+            <Stack.Screen 
+                name = "Show"
+                component={ShowTask} 
+                options={{
+                    headerShown: false, // 헤더 감추기
+                    headerTitle:'Show a task',
                     headerBackTitleVisible: true,
                     headerBackTitle: 'TODO',
                     headerTitleStyle: {fontSize: 24},

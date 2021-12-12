@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from "react";
+import React,{useEffect, useState, Component} from "react";
 import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable } from "react-native"
 import IconButton from "../components/IconButton";
 import Input from "../components/Input";
@@ -103,6 +103,10 @@ export const Home = ({ navigation }) => {
         //console.warn(Object.assign({}, tasks)[0].title)
     },[tasks])
 
+    const _showTaskScreen = (item) =>{
+        this.props.navigation.navigate('Show', {item:item});
+    }
+
 
     return isReady ? (
         <SafeAreaView style={ViewStyles.container} >
@@ -141,15 +145,13 @@ export const Home = ({ navigation }) => {
             { text ? 
                 <ScrollView width={width-20}>
                     {Object.values(searchedtasks).map((item)=>(
-
-                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false"/>
-
+                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
                     ))}
                  </ScrollView>
                 :
                 <ScrollView width={width-20}>
                     {Object.values(tasks).reverse().map(item => (
-                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false"/>
+                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
                     ))}
                 </ScrollView>
             }

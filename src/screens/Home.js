@@ -107,7 +107,6 @@ export const Home = ({ navigation }) => {
         this.props.navigation.navigate('Show', {item:item});
     }
 
-
     return isReady ? (
         <SafeAreaView style={ViewStyles.container} >
             <StatusBar barStyle="light-content" style={barStyles.statusbar}/>

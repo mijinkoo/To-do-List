@@ -8,10 +8,11 @@ import { images } from "../image";
 import IconButton from "./IconButton";
 import Category from "./Category";
 
-const CategoryPicker = ({canModify, setCategory,}) => {
+const CategoryPicker = ({canModify, setCategory}) => {
 
     const [newValue, setNewValue] = useState('');
     const [label, setLabel] = useState('Category');
+    //const [isEditing, setEditing] = useState(false);
 
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState({

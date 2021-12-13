@@ -82,7 +82,8 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, 
                 {calendarMode === "false" ? 
                     select ||
                         <>
-                        {item.completed || (<IconButton type={images.update} onPressOut={_handleUpdateButtonPress}/>)}
+                        {item.completed || (<IconButton type={images.update} onPressOut={_handleUpdateButtonPress
+                        , () => select ? _handleUpdateSelect : navigation.navigate('Edit', {item: item})} />)}
                     <IconButton type={images.delete} id={item.id} onPressOut={deleteTask} completed={item.completed}/>
                         </>
                  : 

@@ -38,9 +38,9 @@ export default function DatePicker({setDate}) {
         const year = date.toString().substring(11,15)
         const month = _toNumber(date.toString().substring(4,7))
         const day  =date.toString().substring(8,10)
-        const data = year+" / "+month+" / "+day
-        onChangeText(data)
-        setDate(data)
+        const data = year+month+day
+        onChangeText(year+" / "+month+" / "+day)
+        setDate(year+" / "+month+" / "+day)
         hideDatePicker();
     };
 

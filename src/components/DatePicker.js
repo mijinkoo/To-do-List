@@ -3,9 +3,9 @@ import { View, Button, TouchableOpacity, StyleSheet, TextInput, Dimensions } fro
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { theme } from "../theme";
 
-export default function DatePicker({setDate}) {
+export default function DatePicker({setDate, item}) {
     
-    const [text, onChangeText] = useState("");
+    const [text, onChangeText] = useState(item.date);
     
     const _toNumber = (string) => {
         switch(string){
@@ -24,6 +24,7 @@ export default function DatePicker({setDate}) {
         }
     }
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    //const [isEditing, setEditing] = useState(false);
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -53,7 +54,7 @@ export default function DatePicker({setDate}) {
                     placeholder="Due date"
                     placeholderTextColor={theme.main}
                     underlineColorAndroid="transparent"
-                    editable={false}
+                    editable={true}
                     value={text}
                 />
                 <DateTimePickerModal
@@ -67,7 +68,6 @@ export default function DatePicker({setDate}) {
                 />
             </TouchableOpacity>	
         </View>	
-
   );
 }
 

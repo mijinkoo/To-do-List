@@ -8,15 +8,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import DatePicker from "../components/DatePicker";
 import DropDownPicker from 'react-native-dropdown-picker';
 import CategoryPicker from "../components/CategoryPicker";
-import { NavigationContainer } from "@react-navigation/native";
+import AppLoading from "expo-app-loading";
 
-export const AddTask = ({navigation}) => {
+export const EditTask = ({route, navigation}) => {
+
+    const {item} = route.params;
 
     // data to store in AsyncStorage
-    const [title, setTitle] = useState('');
-    const [date, setDate] = useState('');
-    const [category, setCategory] = useState('');
-    const [comment, setComment] = useState('');
+    const [title, setTitle] = useState(item.title);
+    const [date, setDate] = useState(item.date);
+    const [category, setCategory] = useState(item.category);
+    const [comment, setComment] = useState(item.comment);
 
     const [tasks, setTasks] = useState({});
 
@@ -28,6 +30,7 @@ export const AddTask = ({navigation}) => {
         try {
             await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
             setTasks(tasks);
+            alert('Edit:'+ title);
         } catch (e) {
             console.error(e);
         }
@@ -45,11 +48,10 @@ export const AddTask = ({navigation}) => {
         setTasks(JSON.parse(loadedTasks || '{}'));
     }
 
-    const _addTask = async() => {
+    const _editTask = async() => {
         await _loadTasks();
-        alert('Add:'+ title);
-        //const ID = Date.now().toString();
-        const ID = Object.keys(tasks).length.toString();
+        alert('Edit:'+ title);
+        const ID = item.id;
         const taskObject = {
             [ID]: {id: ID, title: title, date: date, category: category, comment: comment, completed: false},
         };
@@ -63,30 +65,34 @@ export const AddTask = ({navigation}) => {
     return ( isLoading ?
         <SafeAreaView style={ViewStyles.container}>
             <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center'}}>
-                <Text style={textStyles.title}>Add a task</Text>
+                <Text style={textStyles.title}>Edit a task</Text>
             </View>
             <View style={{position:'absolute', top:100, height: 300,}}>
                 <TextInput name="title" value={title} onChangeText={text => setTitle(text)} placeholder="  Title" placeholderTextColor= {theme.main}
-                    maxLength={20} keyboardAppearance="light"style={[boxStyles.textInput,{height:40, marginBottom:50}]}>
+                    maxLength={20} keyboardAppearance="light" style={[boxStyles.textInput,{height:40, marginBottom:50}]}>
                 </TextInput>
 
                 <View style={{zIndex: 1}}>
-                    <CategoryPicker canModify="true" item={''} setCategory={setCategory} style={{zIndex: 1}}/>
+                    <CategoryPicker value={category} item={item} canModify="true" setCategory={setCategory} style={{zIndex: 1}}/>
                 </View>
 
-                <DatePicker name="date" item={''} /*이래도 괜찮은가..?*/ setDate={setDate} dateChange={_dateChange}/>
+                <DatePicker name="date" item={item} setDate={setDate} dateChange={_dateChange}/>
 
                 <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= {theme.main}
                     maxLength={20} keyboardAppearance="light"style={boxStyles.textInput}>
                 </TextInput>
 
-                <Pressable onPress={_addTask} onPressOut={() => navigation.goBack()}>
-                    <Text style={[boxStyles.textInput, {color:theme.main, paddingLeft:10}]}>Submit</Text>
+                <Pressable onPress={_editTask} onPressOut={() => navigation.goBack()}>
+                    <Text style={[boxStyles.textInput, {color:theme.main, paddingLeft:10}]}>Edit</Text>
                 </Pressable>
             </View>
         </SafeAreaView>
        :
-       <Text>Loading</Text>     
+       <AppLoading
+            startAsync = {_saveTasks}
+            onFinish = {() => SetIsReady(true)}
+            onError = {console.error}
+        />   
     );
 };
 
@@ -107,4 +113,4 @@ const boxStyles = StyleSheet.create({
     },
 });
 
-export default AddTask;
+export default EditTask;

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Button, StyleSheet, Text, View, TextInput, Pressable, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CalendarPicker from 'react-native-calendar-picker';
@@ -8,13 +8,13 @@ import AppLoading from "expo-app-loading";
 import { Dimensions } from 'react-native';
 import styled from 'styled-components';
 
-const List = styled.View`
+const List = styled.ScrollView`
     width: ${({ width }) => width - 40}px;
     flex: 1;
-    align-items: center;
-    justify-content: flex-start;
     margin-left: 20;
 `;
+//align-items: center;
+//justify-content: flex-start;
 
 const styles = StyleSheet.create({
     container: {
@@ -51,10 +51,38 @@ export const CalendarPickerScreen = ({ navigation }) => {
 
     const [success, setSuccess] = useState(0);
 
+    const _successRate = tasks => {
+        var totalCount = 0;          // 선택한 날짜의 총 task 수 => 제대로 구해짐
+        var completedCount = 0;      // 선택한 날짜의 completed task 수 => 제대로 안 구해짐**
+        
+        Object.values(tasks).map(item =>
+            {
+                if (item.date == cmpDate || item.date == "D-day") {
+                    totalCount += 1;
+                    if (item.completed) {
+                        completedCount += 1;
+                    }  
+                }        
+            }
+        )
+        if (totalCount == 0) {
+            setSuccess(0);
+        }
+        else if (totalCount > 0) {
+            setSuccess((completedCount/totalCount)*100);
+        }
+    }
+
+    useEffect(()=>{
+        _successRate(tasks);
+        //_saveItems(items);
+    },[date])
+
     const _saveTasks = async tasks => {
         try {
             await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
             setTasks(tasks);
+            _successRate(tasks);
         } catch (e) {
             console.error(e);
         }
@@ -64,6 +92,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
         const loadedTasks = await AsyncStorage.getItem('tasks');
         setTasks(JSON.parse(loadedTasks || '{}'));
         console.log('loadTask');
+        //_successRate(tasks);
     };
 
     const _toggleTask = id => {
@@ -73,8 +102,9 @@ export const CalendarPickerScreen = ({ navigation }) => {
     }
 
     async function _dateChange(d) {
-        setDate(d.format('MMMM DD'));
-        setCmpDate(d.format('YYYY / MM / DD'));  
+        setDate(d.format('YYYY / MM / DD'));
+        setCmpDate(d.format('YYYY / MM / DD'));
+        //_successRate(tasks);
     }
 
     return isReady ? (

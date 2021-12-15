@@ -118,7 +118,7 @@ const taskStyles = StyleSheet.create({
         alignItems: 'center',
         width:'100%',
         //height:60,
-        //backgroundColor: theme.itemBackground,
+        backgroundColor: theme.itemBackground,
         borderRadius: 10,
         padding: 5,
         marginTop: 3,

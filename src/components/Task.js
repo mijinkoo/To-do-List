@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import IconButton from "./IconButton";
 import { Image } from "react-native";
 import { images } from "../image";
-import Input from "./Input";
-import { NavigationContainer } from "@react-navigation/native";
+import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist";
+
 
 const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, calendarMode, navigation}) => {
     
@@ -44,9 +44,9 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, 
     let time = {
       year: today.getFullYear(),  //현재 년도
       month: today.getMonth() + 1, // 현재 월
-      date: today.getDate(), // 현제 날짜
+      date: today.getDate(), // 현재 날짜
     };
-    let timestring = `${time.year} / ${time.month} / ${time.date}`;
+    let timestring = ""+time.year+time.month+time.date;
 
     // select
     const [isSelected, SetIsSelected] = useState(false);
@@ -78,7 +78,7 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, 
                         {( timestring == item.date ) ? (
                             <Text style={{fontSize: 15, color: 'red', marginRight:5,}}>D-day</Text>
                            ) : (
-                            <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.date}</Text>
+                            <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}</Text>
                             )}
                         <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.category}</Text>
                         <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.comment}</Text>

@@ -7,6 +7,7 @@ import Task from '../components/Task';
 import AppLoading from "expo-app-loading";
 import { Dimensions } from 'react-native';
 import styled from 'styled-components';
+import { theme } from '../theme';
 
 const List = styled.ScrollView`
     width: ${({ width }) => width - 40}px;
@@ -20,6 +21,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: 50,
+        backgroundColor: 'white',
     },
     box: {
         margin: 20,
@@ -33,11 +35,14 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 20,
-        fontWeight: '200',
+        fontWeight: '400',
     },
     sucess: {
         alignItems: 'flex-end',
-    }
+    },
+    emoji: {
+        alignItems: 'center',
+    },
 });
 
 export const CalendarPickerScreen = ({ navigation }) => {
@@ -50,6 +55,8 @@ export const CalendarPickerScreen = ({ navigation }) => {
     const [isReady, SetIsReady] = useState(false);
 
     const [success, setSuccess] = useState(0);
+    
+    const [emoji, setEmoji] = useState('');
 
     const _successRate = tasks => {
         var totalCount = 0;          // 선택한 날짜의 총 task 수 => 제대로 구해짐
@@ -73,8 +80,25 @@ export const CalendarPickerScreen = ({ navigation }) => {
         }
     }
 
+    const _setEmoji = () => { //이거 왜 제대로 작동이 안 될까...? 렌더링이 너무 느린 건가...?
+        //_successRate(tasks);
+
+        if(success >= 80) {
+            setEmoji('😍');
+        } else if(success >= 60) {
+            setEmoji('😚');
+        } else if(success >= 40) {
+            setEmoji('🙂');
+        } else if(success >= 20) {
+            setEmoji('🤔');
+        } else if(success > 0){
+            setEmoji('😔');
+        }
+    }
+
     useEffect(()=>{
         _successRate(tasks);
+        //_setEmoji();
         //_saveItems(items);
     },[date])
 
@@ -103,15 +127,17 @@ export const CalendarPickerScreen = ({ navigation }) => {
 
     async function _dateChange(d) {
         setDate(d.format('YYYY / MM / DD'));
-        setCmpDate(d.format('YYYY / MM / DD'));
+        setCmpDate(d.format('YYYYMMDD'));
         //_successRate(tasks);
     }
 
     return isReady ? (
         <View style={styles.container}>
-            <CalendarPicker onDateChange={_dateChange}/>
+            <CalendarPicker onDateChange={_dateChange}
+                            selectedDayColor={theme.main} todayBackgroundColor={theme.main} todayBackgroundColor='yellow'/>
             <View style={styles.box}>
                 <Text style={styles.text}>{date}</Text>
+                {/* <Text style={[styles.text, styles.emoji]}>{emoji}</Text> */}
                 <Text style={[styles.text, styles.success]}>Success {success}%</Text>
             </View>
             <View></View>

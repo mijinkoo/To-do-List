@@ -110,7 +110,7 @@ const CategoryPicker = ({canModify, setCategory}) => {
                     ))}
                     {addCategory ? 
                         <View style={pickerStyles.item}>
-                        <TextInput value={newValue} onChangeText={value=>setNewValue(value)} onSubmitEditing={_addCategory} onBlur={_onBlur} style={{backgroundColor:'#3c5c5a', height: 40,}}/>
+                            <TextInput value={newValue} onChangeText={value=>setNewValue(value)} onSubmitEditing={_addCategory} onBlur={_onBlur} style={{backgroundColor:'#3c5c5a', height: 40, width: 100}}/>
                         </View>
                         :
                         (canModify === "true") ? <Pressable style={pickerStyles.item} onPressOut={_onPressOutAdd} >

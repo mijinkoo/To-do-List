@@ -9,18 +9,18 @@ export default function DatePicker({setDate, item}) {
     
     const _toNumber = (string) => {
         switch(string){
-            case "Jan": return 1;
-            case "Feb": return 2;
-            case "Mar": return 3;
-            case "Apr": return 4;
-            case "May": return 5;
-            case "Jun": return 6;
-            case "Jul": return 7;
-            case "Aug": return 8;
-            case "Sep": return 9;
-            case "Oct": return 10;
-            case "Nov": return 11;
-            case "Dec": return 12;
+            case "Jan": return "01";
+            case "Feb": return "02";
+            case "Mar": return "03";
+            case "Apr": return "04";
+            case "May": return "05";
+            case "Jun": return "06";
+            case "Jul": return "07";
+            case "Aug": return "08";
+            case "Sep": return "09";
+            case "Oct": return "10";
+            case "Nov": return "11";
+            case "Dec": return "12";
         }
     }
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -41,7 +41,7 @@ export default function DatePicker({setDate, item}) {
         const day  =date.toString().substring(8,10)
         const data = year+month+day
         onChangeText(year+" / "+month+" / "+day)
-        setDate(year+" / "+month+" / "+day)
+        setDate(""+year+month+day)
         hideDatePicker();
     };
 

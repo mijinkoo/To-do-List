@@ -13,28 +13,6 @@ import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DragSortableView from "../components/DragSortableView";
 
-    const parentWidth = width 
-    const childrenWidth = width
-    const childrenHeight = 48
-
-export class DragSort extends Component {
-    // https://github.com/mochixuan/react-native-drag-sort/blob/master/Example/app/container/OneRowsPage.js
-
-
-    constructor(props) {
-        super()
-
-        this.state = {
-            data: TEST_DATA,
-            scrollEnabled: true,
-        }
-    }
-
-    //************* DragSortableView를 위한 코드 *************//
-    
-
-}
-
 export const Home = ({ navigation }) => {
 
     const width = Dimensions.get('window').width;
@@ -43,11 +21,16 @@ export const Home = ({ navigation }) => {
     const [searchedtasks, setSearchedTasks] = useState([]);
     const [text, setText] = useState("");
     const [isReady, SetIsReady] = useState(false);
+    const [scrollEnabled, setScrollEnabled] = useState(true);
+    const [data, setData] = useState(Object.entries(tasks)); //2차원 배열로
+
+    const childrenHeight = 60
 
     const _saveTasks = async tasks => {
         try {
             await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
             setTasks(tasks);
+            //setOrderTask(tasks);
         } catch (e) {
             console.error(e);
         }
@@ -55,8 +38,11 @@ export const Home = ({ navigation }) => {
 
     const _deleteTask = id => {
         const currentTasks = Object.assign({}, tasks);
+        const currentOrderTasks = Object.assign([], orderTask);
         delete currentTasks[id];
+        delete currentOrderTasks[id];
         _saveTasks(currentTasks);
+        //_saveTasks(currentOrderTasks);
     };
 
     const _toggleTask = id => {
@@ -86,7 +72,7 @@ export const Home = ({ navigation }) => {
     }
 
     const _sortByDueDate = () =>{
-        const currentTasks = Object.entries(tasks).sort(([, a],[ ,b])=>{
+        const currentTasks = Object.entries(tasks).sort(([, a],[ ,b]) => {
             return a.date - b.date;
         });
         console.warn(currentTasks);
@@ -111,6 +97,7 @@ export const Home = ({ navigation }) => {
     const _loadTasks =  async () => {
         const loadedTasks = await AsyncStorage.getItem('tasks');
         setTasks(JSON.parse(loadedTasks || '{}'));
+        //setOrderTask(tasks);
     }
 
     useEffect(()=>{
@@ -125,8 +112,17 @@ export const Home = ({ navigation }) => {
         //console.warn(Object.assign({}, tasks)[0].title)
     },[tasks])
 
-    const _showTaskScreen = (item) =>{
+    const _showTaskScreen = (item) => {
         this.props.navigation.navigate('Show', {item:item});
+    }
+
+    const renderItem = (item, index) => {
+        return (
+            Object.values(tasks).reverse().map(item => (
+            <Task key={item.id} item={item} deleteTask={_deleteTask} 
+            toggleTask={_toggleTask} updateTask={_updateTask} 
+            select={select} calendarMode="false" navigation={navigation}/>))
+        )
     }
 
     return isReady ? (
@@ -170,10 +166,25 @@ export const Home = ({ navigation }) => {
                     ))}
                  </ScrollView>
                 :
-                <ScrollView width={width-20}>
-                    {Object.values(tasks).reverse().map(item => (
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                    ))}
+                <ScrollView width={width-20} scrollEnabled={scrollEnabled}>
+                    <DragSortableView
+                        dataSource = {data}
+                        //dataSource = {Object.values(tasks).reverse().map(item => (
+                        //    <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>))}
+                        parentWidth={width-20}
+                        childrenWidth= {width-20}
+                        childrenHeight={childrenHeight}
+                        scaleStatus={'scaleY'}
+                        onDragStart={(startIndex, endIndex)=>{ setScrollEnabled(false) }}
+                        onDragEnd={(startIndex)=>{ setScrollEnabled(true) }}
+                        onDataChange = {(data)=>{
+                            if (data.length != this.props.data.length) {
+                                setData = data;
+                            }
+                        }}
+                        keyExtractor={(item)=> item.id}
+                        renderItem={(item, index)=> renderItem(item, index)}
+                    /> 
                 </ScrollView>
             }
             <View style={{position:'absolute', bottom: 0, flexDirection:'row', justifyContent:'space-between', paddingBottom: 20}} width={width-60}>

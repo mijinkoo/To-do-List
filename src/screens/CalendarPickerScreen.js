@@ -137,7 +137,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
                             selectedDayColor={theme.main} todayBackgroundColor={theme.main} todayBackgroundColor='yellow'/>
             <View style={styles.box}>
                 <Text style={styles.text}>{date}</Text>
-                {/* <Text style={[styles.text, styles.emoji]}>{emoji}</Text> */}
+                <Text style={[styles.text, styles.emoji]}>{emoji}</Text>
                 <Text style={[styles.text, styles.success]}>Success {success}%</Text>
             </View>
             <View></View>

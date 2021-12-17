@@ -24,7 +24,7 @@ export const ShowTask = ({route, navigation}) => {
                     <Text style={boxStyles.text}>{item.title}</Text>
                 </View>
                 <View style={[boxStyles.container, ]}>
-                    <Text style={boxStyles.text}>{item.date}</Text>
+                    <Text style={boxStyles.text}>{item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}</Text>
                 </View>
                 <View style={[boxStyles.container, ]}>
                     <Text style={boxStyles.text}>{item.category}</Text>

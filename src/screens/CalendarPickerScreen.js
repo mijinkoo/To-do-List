@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '400',
     },
-    sucess: {
+    success: {
         alignItems: 'flex-end',
     },
     emoji: {
@@ -80,7 +80,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
         }
     }
 
-    const _setEmoji = () => { //이거 왜 제대로 작동이 안 될까...? 렌더링이 너무 느린 건가...?
+    const _setEmoji = async() => { //이거 왜 제대로 작동이 안 될까...? 렌더링이 너무 느린 건가...?
         //_successRate(tasks);
 
         if(success >= 80) {
@@ -91,16 +91,19 @@ export const CalendarPickerScreen = ({ navigation }) => {
             setEmoji('🙂');
         } else if(success >= 20) {
             setEmoji('🤔');
-        } else if(success > 0){
+        } else if(success >= 0){
             setEmoji('😔');
         }
     }
 
     useEffect(()=>{
         _successRate(tasks);
-        //_setEmoji();
-        //_saveItems(items);
+        _setEmoji();
     },[date])
+
+    useEffect(()=>{
+        _setEmoji();
+    },[success])
 
     const _saveTasks = async tasks => {
         try {
@@ -130,6 +133,10 @@ export const CalendarPickerScreen = ({ navigation }) => {
         setCmpDate(d.format('YYYYMMDD'));
         //_successRate(tasks);
     }
+
+    useEffect(()=>{
+        _loadTasks();
+    },[tasks])
 
     return isReady ? (
         <View style={styles.container}>

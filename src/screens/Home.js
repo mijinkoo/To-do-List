@@ -103,10 +103,13 @@ export const Home = ({ navigation }) => {
         //console.warn(Object.assign({}, tasks)[0].title)
     },[tasks])
 
-    const _showTaskScreen = (item) =>{
-        this.props.navigation.navigate('Show', {item:item});
-    }
+    const [sortedByDueDate, SetSortedByDueDate] = useState(false);
 
+    const Fn =(a, b)=>{
+        if (a.date < b.date) return -1;
+        else if (a.date > b.date) return 1;
+        else return 0;
+    }
     return isReady ? (
         <SafeAreaView style={ViewStyles.container} >
             <StatusBar barStyle="light-content" style={barStyles.statusbar}/>
@@ -136,22 +139,38 @@ export const Home = ({ navigation }) => {
                 </View>
                 {sort && 
                             <View style={{position:'absolute', top:50, right:0, borderWidth:1, borderColor:'#ffffff', backgroundColor:theme.background}}>
-                                <Pressable onPressOut={_sortByDueDate}><Text style={{fontSize:15, color:'#ffffff', borderBottomWidth: 1, borderBottomColor:'#ffffff', padding:2}}> Sort by due date</Text></Pressable>
-                                <Pressable><Text style={{fontSize:15, color:'#ffffff', padding:2}}> Sort by date added</Text></Pressable>
+                                <Pressable onPressOut={()=> SetSortedByDueDate(false)}>
+                                    <Text style={{fontSize:15, color:'#ffffff', borderBottomWidth: 1, borderBottomColor:'#ffffff', padding:2}}> Sort by due date</Text>
+                                </Pressable>
+                                <Pressable onPressOut={()=> SetSortedByDueDate(true)}>
+                                    <Text style={{fontSize:15, color:'#ffffff', padding:2}}> Sort by added date</Text>
+                                </Pressable>
                             </View>
                 }
             </View>
             { text ? 
                 <ScrollView width={width-20}>
-                    {Object.values(searchedtasks).map((item)=>(
+                    { sortedByDueDate ?
+                    Object.values(searchedtasks).map((item)=>(
                             <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                    ))}
+                    ))
+                    :
+                    Object.values(searchedtasks).sort(Fn).map(item => (
+                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    ))
+                    }
                  </ScrollView>
                 :
                 <ScrollView width={width-20}>
-                    {Object.values(tasks).reverse().map(item => (
+                    { sortedByDueDate ?
+                    Object.values(tasks).map((item)=>(
                             <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                    ))}
+                    ))
+                    :
+                    Object.values(tasks).sort(Fn).map(item => (
+                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    ))
+                    }
                 </ScrollView>
             }
             <View style={{position:'absolute', bottom: 0, flexDirection:'row', justifyContent:'space-between', paddingBottom: 20}} width={width-60}>

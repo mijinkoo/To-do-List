@@ -42,7 +42,7 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, 
     //const [todayDate, setTodayDate] = useState(today.format('YYYY / MM / DD'));
     let today = new Date(); // today 객체에 Date()의 결과를 넣어줬다
     let time = {
-      year: today.getFullYear(),  //현재 년도
+      year: today.getFullYear(),  //현재 년
       month: today.getMonth() + 1, // 현재 월
       date: today.getDate(), // 현재 날짜
     };

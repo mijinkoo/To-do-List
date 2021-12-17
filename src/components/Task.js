@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import IconButton from "./IconButton";
 import { Image } from "react-native";
 import { images } from "../image";
-import Input from "./Input";
-import { NavigationContainer } from "@react-navigation/native";
+import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist";
+
 
 const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, calendarMode, navigation}) => {
     
@@ -44,7 +44,7 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, 
     let time = {
       year: today.getFullYear(),  //현재 년
       month: today.getMonth() + 1, // 현재 월
-      date: today.getDate(), // 현제 날짜
+      date: today.getDate(), // 현재 날짜
     };
     let timestring = ""+time.year+time.month+time.date;
 

@@ -8,7 +8,7 @@ import { images } from "../image";
 /*import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist";*/
 
 
-const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, navigation}) => {
+const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, navigation, drag, isActive}) => {
     
     const [isEditing, setIsEditing] = useState(false);
     const [text, setText] = useState(item.text);
@@ -49,6 +49,7 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, n
 
     return (
         <Pressable onPressOut={() => select ? _handleUpdateSelect : navigation.navigate('Show', {item: item})} 
+                onLongPress={drag} disabled={isActive}
                 style={[taskStyles.container, {backgroundColor: (select && isSelected) ? theme.main : theme.itemBackground}]}>
             {select ||
                 (calendarMode === false) ? (

@@ -16,7 +16,7 @@ const Category = ({item, deleteCategory, updateCategory, canModify, setLabel}) =
 
     const _onSubmitEditing = () => {
         if (isEditing) {
-            const label = value;
+            const label = (value === "Category") ? All : value;
             const editedCategory = Object.assign({}, item, {value}, {label});
             setIsEditing(false);
             updateCategory(editedCategory);

@@ -5,10 +5,10 @@ import PropTypes from 'prop-types';
 import IconButton from "./IconButton";
 import { Image } from "react-native";
 import { images } from "../image";
-import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist";
+/*import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist";*/
 
 
-const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, calendarMode, navigation}) => {
+const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, navigation}) => {
     
     const [isEditing, setIsEditing] = useState(false);
     const [text, setText] = useState(item.text);
@@ -34,10 +34,6 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, 
         SetIsSelected((prev) => !prev)
     }
 
-    const _ChangeOrderUp = () =>{
-        ChangeOrderUp(item);
-    };
-
     //let today = (new Date()).format('YYYY / MM / DD'); // 현재 날짜 및 시간
     //const [todayDate, setTodayDate] = useState(today.format('YYYY / MM / DD'));
     let today = new Date(); // today 객체에 Date()의 결과를 넣어줬다
@@ -57,7 +53,7 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, 
                 (calendarMode === false) ? (
                 <>
                 <View style={{flexDirection:'column'}}>
-                    <Pressable onPressOut={_ChangeOrderUp}><Image source={images.up} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable> 
+                    <Pressable><Image source={images.up} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable> 
                     <Pressable><Image source={images.down} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable>
                 </View>
                 <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
@@ -92,7 +88,7 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, ChangeOrderUp, 
                             {( timestring == item.date ) ? (
                                 <Text style={{fontSize: 15, color: 'red', marginRight:5,}}>D-day</Text>
                             ) : (
-                                <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.date}</Text>
+                                <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}</Text>
                             )}
                     </View>
                 )

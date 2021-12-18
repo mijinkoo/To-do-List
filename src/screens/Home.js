@@ -186,6 +186,7 @@ export const Home = ({ navigation }) => {
                     ))
                     :
                     Object.values(searchedtasks).sort(Fn).map(item => (
+<<<<<<< HEAD
                             <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
                     ))
                     }
@@ -231,6 +232,22 @@ export const Home = ({ navigation }) => {
                         )
                     :
                     null
+=======
+                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    ))
+                    }
+                 </ScrollView>
+                :
+                <ScrollView width={width-20}>
+                    { sortedByDueDate ?
+                    Object.values(tasks).map((item)=>(
+                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    ))
+                    :
+                    Object.values(tasks).sort(Fn).map(item => (
+                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    ))
+>>>>>>> dbf6481810c37736da693225f0400a8e64233abf
                     }
                 </ScrollView>
             }*/

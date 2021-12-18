@@ -7,6 +7,7 @@ import Input from "./Input";
 import { images } from "../image";
 import IconButton from "./IconButton";
 import Category from "./Category";
+import AppLoading from "expo-app-loading";
 
 const CategoryPicker = ({canModify, setCategory}) => {
 
@@ -66,11 +67,6 @@ const CategoryPicker = ({canModify, setCategory}) => {
 
     const [isLoading, SetIsLoading] = useState(false);
 
-    useEffect(()=>{
-        _loadCategories();
-        SetIsLoading(true);
-    },[])
-
     const [addCategory, setAddCategory] = useState(false);
     
     const _onPressOutAdd = () =>{
@@ -105,6 +101,10 @@ const CategoryPicker = ({canModify, setCategory}) => {
         
             {open ? 
             <View style={{position:'absolute', top:40, width:'100%'}}>
+                <Pressable style={pickerStyles.item} onPressOut={()=>setLabel("All")}>
+                <Text style={pickerStyles.text}>All</Text>
+                </Pressable>
+
                     {Object.values(items).map(item =>(
                         <Category key={item.id} item={item} deleteCategory={_deleteCategory} updateCategory={_updateCategory} setLabel={setLabel} canModify={canModify}/>
                     ))}
@@ -123,7 +123,11 @@ const CategoryPicker = ({canModify, setCategory}) => {
         </View>
 
     ): 
-    <Text>Loading</Text>
+    <AppLoading
+            startAsync = {_loadCategories}
+            onFinish = {() => SetIsLoading(true)}
+            onError = {console.error}
+    />
 };
 
 const pickerStyles = StyleSheet.create({

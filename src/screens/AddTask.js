@@ -75,7 +75,7 @@ export const AddTask = ({navigation}) => {
                     <CategoryPicker canModify="true" item={''} setCategory={setCategory} style={{zIndex: 1}}/>
                 </View>
 
-                <DatePicker name="date" item={''} /*이래도 괜찮은가..?*/ setDate={setDate} /*dateChange={_dateChange}*//>
+                <DatePicker name="date" setDate={setDate} /*dateChange={_dateChange}*//>
 
                 <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= {theme.main}
                     maxLength={20} keyboardAppearance="light"style={boxStyles.textInput}>

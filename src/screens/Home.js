@@ -43,6 +43,12 @@ export const Home = ({ navigation }) => {
         _saveTasks(currentTasks);
     }
 
+    const _toggleSelect = id => {
+        const currentTasks = Object.assign({}, tasks);
+        currentTasks[id]['selected'] = !currentTasks[id]['selected'];
+        _saveTasks(currentTasks);
+    }
+
     const completed_false=(item)=>{
         if(item.completed===false) return item;
     }
@@ -64,6 +70,23 @@ export const Home = ({ navigation }) => {
         setSelect((prev) => !prev);
     }
 
+    const _selectAllTask = () => {
+        const currentTasks = Object.assign({}, tasks);
+        for(id=0; id< Object.values(tasks).length; id++){
+            currentTasks[id]['selected'] = !currentTasks[id]['selected'];
+        }
+        _saveTasks(currentTasks);
+    }
+
+    const _deleteSelectedTask = () => {
+        const currentTasks = Object.assign({}, tasks);
+        for(id=0; id< Object.values(tasks).length; id++){
+            if(currentTasks[id]['selected'] === true) {
+                delete currentTasks[id]
+            }
+        }
+        _saveTasks(currentTasks);
+    }
     //Sort
     const [sort, setSort] = useState(false); //sort 상자 열고 닫기
 
@@ -79,15 +102,12 @@ export const Home = ({ navigation }) => {
     }
 
     //category
-
     const [category, setCategory] = useState("All");
 
     const sortedByCategory =(item)=>{
         if(category === "All" | category === "Category") return item;
         else return item.category === category;
     }
-
-
 
     //Load Data
     const _loadTasks =  async () => {
@@ -97,7 +117,7 @@ export const Home = ({ navigation }) => {
 
     useEffect(()=>{
         const i = Object.values(tasks).filter(item =>(
-            item.title.toLowerCase().includes(text.toLowerCase())
+            item.title.toLowerCase().includes(text.toLowerCase())||item.date.includes(text)
         ))
         setSearchedTasks(i);
     },[text])
@@ -105,8 +125,6 @@ export const Home = ({ navigation }) => {
     useEffect(()=>{
         _loadTasks();
     },[tasks])
-
-   
     
     return isReady ? (
         <SafeAreaView style={ViewStyles.container} >
@@ -119,11 +137,12 @@ export const Home = ({ navigation }) => {
                 <View style={{flexDirection:'row', marginBottom:5, justifyContent:'space-between', height:40}} width={width-20}>
                     <CategoryPicker canModify="false" setCategory={setCategory}/>
                     <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
-                        {select && 
-                            <Pressable style={{ alignItems:'center',justifyContent:'center', paddingRight:10}}>
+                        {select &&
+                            <Pressable onPressOut={_selectAllTask} style={{ alignItems:'center',justifyContent:'center', paddingRight:10}}>
                                 <Image source={images.selectAll} style={{tintColor: theme.text, width: 30, height: 30,}}></Image>
                                 <Text style={{color:theme.text, fontSize: 8.5, paddingTop:2}}>Select All</Text>
                             </Pressable>
+                        
                         }
                         <Pressable onPressOut={_selectTask} style={{ alignItems:'center',justifyContent:'center', paddingRight:10}}>
                             <Image source={images.select} style={{tintColor: theme.text, width: 30, height: 30}}></Image>
@@ -150,11 +169,11 @@ export const Home = ({ navigation }) => {
             <ScrollView width={width-20}>
             <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color:theme.text, fontSize:25,padding:5}}>----uncompleted----</Text>
                 {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_false).filter(sortedByCategory).map((item)=>(
-                    <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    <Task key={item.id} item={item} toggleSelect={_toggleSelect} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
                 ))}
             <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color:theme.text, fontSize:25,padding:5}}>----completed----</Text>
                 {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_true).filter(sortedByCategory).map((item)=>(
-                    <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    <Task key={item.id} item={item} toggleSelect={_toggleSelect} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
                 ))}
             </ScrollView>
 
@@ -166,7 +185,9 @@ export const Home = ({ navigation }) => {
                 </Pressable>
             </View>
             {select &&
-                <Text width={width} style={{position:'absolute', bottom: 0, textAlign:'center',textAlignVertical:'center',backgroundColor:'#2c2c2c', color:theme.text, fontSize:45, width:'100%', height:80, padding:0, margin:0}}>Delete</Text>
+            <Pressable onPressOut={_deleteSelectedTask} style={{position:'absolute', bottom: 0, textAlign:'center', backgroundColor:'#2c2c2c', width:'100%', height:80, padding:12, margin:0}}>
+                <Text width={width} style={{ textAlign:'center', color:theme.text, fontSize:45 ,textAlignVertical:'center'}}>Delete</Text>
+            </Pressable>
             }
         </SafeAreaView>) : (
         <AppLoading
@@ -186,53 +207,6 @@ export const Home = ({ navigation }) => {
                     ))
                     :
                     Object.values(searchedtasks).sort(Fn).map(item => (
-<<<<<<< HEAD
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                    ))
-                    }
-                    <View>
-                        <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color:theme.text, fontSize:25,padding:5}}>----completed----</Text>
-                    </View>
-                 </ScrollView>
-                :
-                <ScrollView width={width-20}>
-                    {isCompleted ?
-                    ( sortedByDueDate ?
-                        Object.values(tasks).map((item)=>(
-                                <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        :
-                        Object.values(tasks).sort(Fn).map(item => (
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        )
-                    :
-                    ( sortedByDueDate ?
-                        Object.values(tasks).map((item)=>(
-                                <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        :
-                        Object.values(tasks).sort(Fn).map(item => (
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        )
-                    }
-                    <View>
-                        <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color:theme.text, fontSize:25,padding:5}}>----completed----</Text>
-                    </View>
-                    {isCompleted ?
-                    ( sortedByDueDate ?
-                        Object.values(tasks).map((item)=>(
-                                <Task key={item.id} completed={item.completed} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        :
-                        Object.values(tasks).sort(Fn).map(item => (
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        )
-                    :
-                    null
-=======
                         <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
                     ))
                     }
@@ -247,7 +221,6 @@ export const Home = ({ navigation }) => {
                     Object.values(tasks).sort(Fn).map(item => (
                         <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
                     ))
->>>>>>> dbf6481810c37736da693225f0400a8e64233abf
                     }
                 </ScrollView>
             }*/

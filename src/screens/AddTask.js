@@ -50,7 +50,7 @@ export const AddTask = ({navigation}) => {
         //const ID = Date.now().toString();
         const ID = Object.keys(tasks).length.toString();
         const taskObject = {
-            [ID]: {id: ID, title: title, date: date, category: category, comment: comment, completed: false},
+            [ID]: {id: ID, title: title, date: date, category: category, comment: comment, completed: false, selected: false},
         };
         setTitle('');
         _saveTasks({...tasks, ...taskObject});
@@ -75,14 +75,14 @@ export const AddTask = ({navigation}) => {
                     <CategoryPicker canModify="true" item={''} setCategory={setCategory} style={{zIndex: 1}}/>
                 </View>
 
-                <DatePicker name="date" item={''} /*이래도 괜찮은가..?*/ setDate={setDate} /*dateChange={_dateChange}*//>
+                <DatePicker name="date" /*이래도 괜찮은가..?*/ setDate={setDate} /*dateChange={_dateChange}*//>
 
                 <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= {theme.main}
                     maxLength={20} keyboardAppearance="light"style={boxStyles.textInput}>
                 </TextInput>
 
                 <Pressable onPress={_addTask} >
-                    <Text style={[boxStyles.textInput, {color:theme.main, paddingLeft:10}]}>Submit</Text>
+                    <Text style={[boxStyles.textInput, {color:theme.main, padding :5 }]}> Submit</Text>
                 </Pressable>
             </View>
         </SafeAreaView>

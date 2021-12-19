@@ -1,20 +1,22 @@
-import React,{useState} from "react";
+import React,{useCallback, useState} from "react";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import { theme } from "../theme";
 import PropTypes from 'prop-types';
 import IconButton from "./IconButton";
 import { Image } from "react-native";
 import { images } from "../image";
+
 /*import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist";*/
 
-
-const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, navigation}) => {
+const Task = ({item, deleteTask, toggleTask, toggleSelect, updateTask, select, calendarMode, navigation}) => {
     
     const [isEditing, setIsEditing] = useState(false);
     const [text, setText] = useState(item.text);
+
     const _handleUpdateButtonPress = () => {
         setIsEditing(true);
     }
+
     const _onSubmitEditing = () => {
         if (isEditing) {
             const editedTask = Object.assign({}, item, {text});
@@ -31,7 +33,7 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, n
     }
 
     const _handleUpdateSelect = () => {
-        SetIsSelected((prev) => !prev)
+        SetIsSelected((pre)=>!pre);
     }
 
     //let today = (new Date()).format('YYYY / MM / DD'); // 현재 날짜 및 시간
@@ -48,16 +50,17 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, n
     const [isSelected, SetIsSelected] = useState(false);
 
     return (
-        <Pressable onPressOut={() => select ? _handleUpdateSelect : navigation.navigate('Show', {item: item})} style={[taskStyles.container, {backgroundColor: (select && isSelected) ? theme.main : theme.itemBackground}]}>
+        <Pressable onPressOut={() => select ? _handleUpdateSelect()&&toggleSelect(item.id) : navigation.navigate('Show', {item: item})} style={[taskStyles.container, 
+        {backgroundColor: (select && isSelected) ? theme.main : theme.itemBackground}]}>
             {select ||
                 (calendarMode === false) ? (
-                <>
-                <View style={{flexDirection:'column'}}>
-                    <Pressable><Image source={images.up} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable> 
-                    <Pressable><Image source={images.down} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable>
-                </View>
-                <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
-                </>
+                    <>
+                    <View style={{flexDirection:'column'}}>
+                        <Pressable><Image source={images.up} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable> 
+                        <Pressable><Image source={images.down} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable>
+                    </View>
+                    <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed} />
+                    </>
             ) : (
                 <>
                 <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>

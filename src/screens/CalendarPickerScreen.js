@@ -97,22 +97,6 @@ export const CalendarPickerScreen = ({ navigation }) => {
         }
     }
 
-    /**
-    const _itemExist = tasks => {
-        setTaskList(Object.entries(tasks))
-        for(let i=0; i<taskList.length; i++){
-            if(taskList[i].date == cmpDate || taskList[i].date == "D-day"){
-                //return true;
-                setItemExist(true);
-                break;
-            }
-        }
-        //return false;
-        setItemExist(false);
-    } 
-     */
-    
-
     const _setEmoji = async() => {
         //_successRate(tasks);
 

@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../context/ThemeContext";
 import ThemeToggle from "../components/ThemeToggle";
 import styled from 'styled-components/native';
+import { SuccessRate } from "../components/SuccessRate";
 
 export const Home = ({ navigation }) => {
 
@@ -110,6 +111,58 @@ export const Home = ({ navigation }) => {
 
    // themeProvider
    const [ThemeMode, toggleTheme] = useTheme();
+
+    const [itemExist, setItemExist] = useState(false);
+    const [emoji, setEmoji] = useState('');
+    const [success, setSuccess] = useState(0);
+    
+    const _setEmoji = () => {
+        //_successRate(tasks);
+
+        if(success >= 80) {
+            setEmoji('😍');
+        } else if(success >= 60) {
+            setEmoji('😚');
+        } else if(success >= 40) {
+            setEmoji('🙂');
+        } else if(success >= 20) {
+            setEmoji('🤔');
+        } else if(success >= 0){
+            setEmoji('😔');
+        }
+    }
+
+    const _successRate = tasks => {
+        var totalCount = 0;          // 선택한 카테고리의 총 task 수
+        var completedCount = 0;      // 선택한 카테고리의 completed task 수
+        
+        Object.values(tasks).map(item =>
+            {
+                if (item.category == category) {
+                    totalCount += 1;
+                    setItemExist(true);
+                    if (item.completed) {
+                        completedCount += 1;
+                    }  
+                }        
+            }
+        )
+        if (totalCount == 0) {
+            setSuccess(0);
+        }
+        else if (totalCount > 0) {
+            setSuccess((completedCount/totalCount)*100);
+        }
+    }
+
+    useEffect(()=>{
+        setItemExist(false);
+        _successRate(tasks);
+    }, [category]);
+
+    useEffect(()=>{
+        _setEmoji();
+    },[success])
     
     return isReady ? (
             <Container>
@@ -167,6 +220,15 @@ export const Home = ({ navigation }) => {
                 {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_true).filter(sortedByCategory).map((item)=>(
                     <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
                 ))}
+            </View>
+            <View style={{padding: 5}}>
+                {itemExist ? (
+                    <>
+                    <Text>{emoji}</Text>
+                    <Text>Success {success}%</Text>
+                    </>
+                ) : ( <>
+                </> ) }
             </View>
             </ScrollView>
 

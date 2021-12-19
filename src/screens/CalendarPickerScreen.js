@@ -47,20 +47,31 @@ const styles = StyleSheet.create({
 
 export const CalendarPickerScreen = ({ navigation }) => {
 
+    let today = new Date(); // today 객체에 Date()의 결과를 넣어줬다
+    let time = {
+      year: today.getFullYear(),  //현재 년
+      month: today.getMonth() + 1, // 현재 월
+      date: today.getDate(), // 현재 날짜
+    };
+    let cmpDateString = ""+time.year+time.month+time.date;
+    let dateString = ""+time.year+" / "+time.month+" / "+time.date;
+
     const width = Dimensions.get('window').width;
 
-    const [cmpDate, setCmpDate] = useState(''); // dueDate와 동일한 포맷의 선택한 날짜
-    const [date, setDate] = useState('');       // 선택한 날짜
+    const [cmpDate, setCmpDate] = useState(cmpDateString); // dueDate와 동일한 포맷의 선택한 날짜
+    const [date, setDate] = useState(dateString);       // 선택한 날짜
     const [tasks, setTasks] = useState({});
+    const [taskList, setTaskList] = useState([]);
     const [isReady, SetIsReady] = useState(false);
+    const [itemExist, setItemExist] = useState(false);
 
     const [success, setSuccess] = useState(0);
     
     const [emoji, setEmoji] = useState('');
 
     const _successRate = tasks => {
-        var totalCount = 0;          // 선택한 날짜의 총 task 수 => 제대로 구해짐
-        var completedCount = 0;      // 선택한 날짜의 completed task 수 => 제대로 안 구해짐**
+        var totalCount = 0;          // 선택한 날짜의 총 task 수
+        var completedCount = 0;      // 선택한 날짜의 completed task 수
         
         Object.values(tasks).map(item =>
             {
@@ -80,7 +91,20 @@ export const CalendarPickerScreen = ({ navigation }) => {
         }
     }
 
-    const _setEmoji = async() => { //이거 왜 제대로 작동이 안 될까...? 렌더링이 너무 느린 건가...?
+    const _itemExist = tasks => {
+        setTaskList(Object.entries(tasks))
+        for(var i=0; i<taskList.length; i++){
+            if(taskList[i].date == cmpDate || taskList[i].date == "D-day"){
+                //return true;
+                setItemExist(true);
+                break;
+            }
+        }
+        //return false;
+        setItemExist(false);
+    }
+
+    const _setEmoji = async() => {
         //_successRate(tasks);
 
         if(success >= 80) {
@@ -98,6 +122,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
 
     useEffect(()=>{
         _successRate(tasks);
+        _itemExist(tasks);
         _setEmoji();
     },[date])
 
@@ -131,6 +156,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
     async function _dateChange(d) {
         setDate(d.format('YYYY / MM / DD'));
         setCmpDate(d.format('YYYYMMDD'));
+        _itemExist(tasks);
         //_successRate(tasks);
     }
 
@@ -140,12 +166,16 @@ export const CalendarPickerScreen = ({ navigation }) => {
 
     return isReady ? (
         <View style={styles.container}>
-            <CalendarPicker onDateChange={_dateChange}
+            <CalendarPicker onDateChange={_dateChange} //initialDate={new Date()}
                             selectedDayColor={theme.main} todayBackgroundColor={theme.main} todayBackgroundColor='yellow'/>
             <View style={styles.box}>
                 <Text style={styles.text}>{date}</Text>
-                <Text style={[styles.text, styles.emoji]}>{emoji}</Text>
-                <Text style={[styles.text, styles.success]}>Success {success}%</Text>
+                {itemExist ? (
+                    <>
+                    <Text style={[styles.text, styles.emoji]}>{emoji}</Text>
+                    <Text style={[styles.text, styles.success]}>Success {success}%</Text>
+                    </>
+                ) : ( <></> ) }
             </View>
             <View></View>
             <List width={width}>
@@ -154,7 +184,8 @@ export const CalendarPickerScreen = ({ navigation }) => {
                         <Task
                             key={item.id} item={item}
                             toggleTask={_toggleTask}
-                            calendarMode="true"
+                            calendarMode="true" 
+                            navigation={navigation}
                         />
                     ) : (
                         <></>

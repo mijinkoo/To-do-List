@@ -1,14 +1,14 @@
 import React,{useState} from "react";
 import { StyleSheet, View, Text, Pressable } from "react-native";
+import { theme } from "../theme";
 import PropTypes from 'prop-types';
 import IconButton from "./IconButton";
 import { Image } from "react-native";
 import { images } from "../image";
-import styled from "styled-components/native";
 /*import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist";*/
 
 
-const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, navigation}) => {
+const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, navigation, drag, isActive}) => {
     
     const [isEditing, setIsEditing] = useState(false);
     const [text, setText] = useState(item.text);
@@ -48,27 +48,53 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, n
     const [isSelected, SetIsSelected] = useState(false);
 
     return (
-        <Container onPressOut={() => select ? _handleUpdateSelect() : navigation.navigate('Show', {item: item})}>
-            {select || (calendarMode === false) ? (
+        <Pressable onPressOut={() => select ? _handleUpdateSelect : navigation.navigate('Show', {item: item})} 
+                onLongPress={drag} disabled={isActive}
+                style={[taskStyles.container, {backgroundColor: (select && isSelected) ? theme.main : theme.itemBackground}]}>
+            {select ||
+                (calendarMode === false) ? (
                 <>
                 <View style={{flexDirection:'column'}}>
-                    <Pressable><Image source={images.up} style={{tintColor: '#1185b4', width: 30, height: 30}}></Image></Pressable> 
-                    <Pressable><Image source={images.down} style={{tintColor: '#1185b4', width: 30, height: 30}}></Image></Pressable>
+                    <Pressable><Image source={images.up} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable> 
+                    <Pressable><Image source={images.down} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable>
                 </View>
                 <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
                 </>
             ) : (
+                <>
                 <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
+                </>
             )
             }
-            <View style={{flexDirection:'row', alignItems:'center', width:'75%', }}>
-                <Text style={[taskStyles.contents, 
-                    {color: (item.completed ? 'black' : 'grey')},
-                    {textDecorationLine: (item.completed? 'line-through': 'none')}]}>
-                    {item.title}
-                </Text>          
-                <Text style={{fontSize: 15, color: ( timestring === item.date ) ? 'red' : 'blue' , marginRight:5,}}> {( timestring === item.date ) ? 'D-day' : item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}</Text>           
-            </View>
+                {calendarMode === "false" ? (
+                    <View>
+                        <Text style={[taskStyles.contents, 
+                            {color: (item.completed ? theme.done : theme.text)},
+                            {textDecorationLine: (item.completed? 'line-through': 'none')}]}>
+                            {item.title}
+                        </Text>
+                        {( timestring == item.date ) ? (
+                            <Text style={{fontSize: 15, color: 'red', marginRight:5,}}>D-day</Text>
+                           ) : (
+                            <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}</Text>
+                            )}
+                        <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.category}</Text>
+                        <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.comment}</Text>
+                    </View>
+                ) : (
+                    <View>
+                        <Text style={[taskStyles.contents, 
+                            {color: (item.completed ? theme.done : theme.text)},
+                            {textDecorationLine: (item.completed? 'line-through': 'none')}]}>
+                            {item.title}</Text>
+                            {( timestring == item.date ) ? (
+                                <Text style={{fontSize: 15, color: 'red', marginRight:5,}}>D-day</Text>
+                            ) : (
+                                <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}</Text>
+                            )}
+                    </View>
+                )
+                }
             <View style={{position:'absolute', right:0,flexDirection:'row'}} calendarMode={calendarMode}>
                 {calendarMode === "false" ? 
                     select ||
@@ -80,23 +106,9 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, n
                  : 
                     <></>}
             </View>
-        </Container>
+        </Pressable>
     );
 };
-
-const Container = styled.Pressable`
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-    height: 70px;
-    background: ${({theme}) => theme.taskBackground};
-    border-radius: 5px;
-    box-shadow: 0px 0px 3px #bfbfc1;
-    shadow-offset: {width: 0, height: 2};
-    padding: 5px;
-    margin-top: 10px;
-    margin-left: 0px;
-`;
 
 const taskStyles = StyleSheet.create({
     container: {
@@ -104,7 +116,7 @@ const taskStyles = StyleSheet.create({
         alignItems: 'center',
         width:'100%',
         //height:60,
-        backgroundColor:'#fffff1',
+        backgroundColor: theme.itemBackground,
         borderRadius: 10,
         padding: 5,
         marginTop: 3,
@@ -114,7 +126,7 @@ const taskStyles = StyleSheet.create({
     contents: {
         flex: 1,
         fontSize: 24,
-        color: '#fffff1',
+        color: theme.text,
         marginLeft: 5,
     }
 });

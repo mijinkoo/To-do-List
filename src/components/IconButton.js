@@ -1,6 +1,5 @@
 import React from "react";
 import { Pressable, StyleSheet, View, Image } from "react-native";
-import { theme } from "../theme";
 import PropTypes from 'prop-types';
 import { images } from "../image";
 
@@ -23,9 +22,9 @@ IconButton.defaultProps = {
 
 const iconStyles = StyleSheet.create({
     icon: {
-        tintColor: theme.text,
-        width: 30,
-        height: 30,
+        tintColor: '#1185b4',
+        width: 25,
+        height: 25,
         margin: 10,
         padding: 0,
         marginHorizontal: 3,

@@ -1,4 +1,4 @@
-import React,{useEffect, useState, Component, useContext} from "react";
+import React,{useEffect, useState, Component} from "react";
 import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable } from "react-native"
 import IconButton from "../components/IconButton";
 import Input from "../components/Input";
@@ -6,27 +6,25 @@ import CategoryPicker from "../components/CategoryPicker";
 import Search from "../components/Search";
 import Task from "../components/Task";
 import { images } from "../image";
-import { ViewStyles, textStyles, barStyles,  } from '../styles';
+import { theme } from "../theme";
+import { ViewStyles, textStyles, barStyles } from '../styles';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import AddTask from "./AddTask";
-import { ThemeContext } from "../context/ThemeContext";
-import styled from "styled-components/native";
-import ThemeToggle from "../components/ThemeToggle";
-import { useTheme } from "../context/ThemeContext";
-
+//import DragSortableView from "../components/DragSortableView";
+import DraggableFlatList from "react-native-draggable-flatlist";
 
 export const Home = ({ navigation }) => {
 
     const width = Dimensions.get('window').width;
 
-    const [ThemeMode, toggleTheme] = useTheme();
-
     const [tasks, setTasks] = useState({});
     const [searchedtasks, setSearchedTasks] = useState([]);
     const [text, setText] = useState("");
-    const [isReady, setIsReady] = useState(false);
+    const [isReady, SetIsReady] = useState(false);
+    const [data, setData] = useState([]);
+
+    const childrenHeight = 60;
 
     const _saveTasks = async tasks => {
         try {
@@ -42,19 +40,11 @@ export const Home = ({ navigation }) => {
         delete currentTasks[id];
         _saveTasks(currentTasks);
     };
-    
+
     const _toggleTask = id => {
         const currentTasks = Object.assign({}, tasks);
         currentTasks[id]['completed'] = !currentTasks[id]['completed'];
         _saveTasks(currentTasks);
-    }
-
-    const completed_false=(item)=>{
-        if(item.completed===false) return item;
-    }
-
-    const completed_true=(item)=>{
-        if(item.completed===true) return item;
     }
 
     const _updateTask = item => {
@@ -99,11 +89,20 @@ export const Home = ({ navigation }) => {
     const _loadTasks =  async () => {
         const loadedTasks = await AsyncStorage.getItem('tasks');
         setTasks(JSON.parse(loadedTasks || '{}'));
+        setData(Object.entries(tasks));
+    }
+
+    const renderItem = () => {
+        return (
+            Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(sortedByCategory).map((item)=>(
+                <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+        ))
+        )
     }
 
     useEffect(()=>{
         const i = Object.values(tasks).filter(item =>(
-            item.title.toLowerCase().includes(text.toLowerCase())
+            item.title.toLowerCase().includes(text.toLowerCase()) //검색text, item text 모두 소문자로 바꿔서 대소문자 상관없이 검색 
         ))
         setSearchedTasks(i);
     },[text])
@@ -111,15 +110,9 @@ export const Home = ({ navigation }) => {
     useEffect(()=>{
         _loadTasks();
     },[tasks])
-
-    const [darkMode, setDarkMode] = useState(false); 
-    const _toggleTheme = () => {
-        setDarkMode((prev)=> !prev);
-        setThemeMode(darkMode ? 'light' : 'dark');
-    }
-
+    
     return isReady ? (
-        <Container>
+        <SafeAreaView style={ViewStyles.container} >
             <StatusBar barStyle="light-content" style={barStyles.statusbar}/>
             <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center'}}>
                 <Text style={textStyles.title}>TODO List</Text>
@@ -136,14 +129,14 @@ export const Home = ({ navigation }) => {
                             </Pressable>
                         }
                         <Pressable onPressOut={_selectTask} style={{ alignItems:'center',justifyContent:'center', paddingRight:10}}>
-                            <Image source={images.select} style={{tintColor: '#fffff1', width: 30, height: 30}}></Image>
+                            <Image source={images.select} style={{tintColor: theme.text, width: 30, height: 30}}></Image>
                             <Text style={{color:'#fffff1', fontSize: 10}}>Select</Text>
                         </Pressable>
                         <Pressable onPressOut={()=>setSort((prev) => !prev)} style={{ flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
-                            <Image source={images.sort} style={{tintColor: '#fffff1', width: 30, height: 30}}></Image>
-                            <Text style={{color:'#fffff1', fontSize: 10}}>Sort</Text>
+                            <Image source={images.sort} style={{tintColor: theme.text, width: 30, height: 30}}></Image>
+                            <Text style={{color:theme.text, fontSize: 10}}>Sort</Text>
                             {sort && 
-                            <View style={{position:'absolute', top:50, right:0, width:150, height:50, borderWidth:1, borderColor:'#ffffff', backgroundColor:'#fffff1'}}>
+                            <View style={{position:'absolute', top:50, right:0, width:150, height:50, borderWidth:1, borderColor:'#ffffff', backgroundColor:theme.background}}>
                                 <Pressable onPressOut={()=> SetIsSortedByDueDate(true)}>
                                     <Text style={{fontSize:15, color:'#ffffff', borderBottomWidth: 1, borderBottomColor:'#ffffff', padding:2}}> Sort by due date</Text>
                                 </Pressable>
@@ -156,50 +149,54 @@ export const Home = ({ navigation }) => {
                     </View>
                 </View>
             </View>
-
             <ScrollView width={width-20}>
-            <Pressable onPressOut={_toggleTheme}>
-            <ThemeToggle toggle={toggleTheme} mode={ThemeMode}>
-                DarkMode
-            </ThemeToggle>
-            <Text style={{width:50, color: 'red'}}> | {darkMode ? '🌚' :'🌞'}</Text>
-            </Pressable>
-            <View style={{padding: 5, paddingBottom: 10}}>
-                <Text width={width} style={{color:'#474747', fontSize:16,padding:5}}>uncompleted</Text>
-                {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_false).filter(sortedByCategory).map((item)=>(
-                    <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                ))}
-            </View>
-            <View style={{padding: 5}}>
-                <Text width={width} style={{ color:'#474747', fontSize:16,padding:5}}>completed</Text>
-                {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_true).filter(sortedByCategory).map((item)=>(
-                    <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                ))}
-            </View>
+                <DragSortableView 
+                    dataSource={data} renderItem={renderItem}
+                    parentWidth={width-20} childrenHeight={childrenHeight} scaleStatus={'scaleY'}
+                />
             </ScrollView>
-
-            <View style={{position:'absolute', bottom: -12, left:((width-64)/2), flexDirection:'row', justifyContent:'space-between', paddingBottom: 20 }}>
+            <View style={{position:'absolute', bottom: 0, flexDirection:'row', justifyContent:'space-between', paddingBottom: 20}} width={width-60}>
                 <Pressable 
                     onPress={() => navigation.navigate('Add')}
-                    style={{alignItems:'center', justifyContent:'center',backgroundColor: '#1185b4',borderWidth: 2, borderRadius:90 ,borderColor:'#1185b4',shadowColor:'#bfbfc1', shadowOffset:{width: 0, height: 6}, shadowOpacity: 0.7, shadowRadius: 2.7, padding:8, margin:0}}>
-                    <Image source={images.add} style={{tintColor: '#ffffff', width: 40, height: 40,padding:0, margin:0}}/>
+                    style={{alignItems:'center', justifyContent:'center',borderWidth: 2, borderRadius:90 ,borderColor:theme.text, padding:8, margin:0}}>
+                    <Image source={images.add} style={{tintColor: theme.text, width: 40, height: 40,padding:0, margin:0}}/>
                 </Pressable>
             </View>
             {select &&
-                <Text width={width} style={{position:'absolute', bottom: 0, textAlign:'center',textAlignVertical:'center',backgroundColor:'#2c2c2c', color:'#fffff1', fontSize:45, width:'100%', height:80, padding:0, margin:0}}>Delete</Text>
+                <Text width={width} style={{position:'absolute', bottom: 0, textAlign:'center',textAlignVertical:'center',backgroundColor:'#2c2c2c', color:theme.text, fontSize:45, width:'100%', height:80, padding:0, margin:0}}>Delete</Text>
             }
-        </Container>) : (
+        </SafeAreaView>) : (
         <AppLoading
             startAsync = {_loadTasks}
-            onFinish = {() => setIsReady(true)}
+            onFinish = {() => SetIsReady(true)}
             onError = {console.error}
         />
     );
 }
 
-const Container = styled.SafeAreaView`
-    flex: 1;
-    background: ${({theme})=> theme.background};
-    align-items: center;
-    justify-content: flex-start;
-`;
+/*
+{ text ? 
+                <ScrollView width={width-20}>
+                    { sortedByDueDate ?
+                    Object.values(searchedtasks).map((item)=>(
+                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    ))
+                    :
+                    Object.values(searchedtasks).sort(Fn).map(item => (
+                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    ))
+                    }
+                 </ScrollView>
+                :
+                <ScrollView width={width-20}>
+                    { sortedByDueDate ?
+                    Object.values(tasks).map((item)=>(
+                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    ))
+                    :
+                    Object.values(tasks).sort(Fn).map(item => (
+                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    ))
+                    }
+                </ScrollView>
+            }*/

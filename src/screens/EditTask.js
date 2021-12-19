@@ -2,7 +2,6 @@ import React,{useEffect, useState} from "react";
 import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable, StyleSheet, TextInput } from "react-native"
 import IconButton from "../components/IconButton";
 import { images } from "../image";
-import { theme } from "../theme";
 import { ViewStyles, textStyles, barStyles } from '../styles';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DatePicker from "../components/DatePicker";
@@ -49,6 +48,7 @@ export const EditTask = ({route, navigation}) => {
         setTitle('');
         _saveTasks({...tasks, ...taskObject});
         await AsyncStorage.setItem('taskObject', JSON.stringify(taskObject));
+        navigation.navigate("TODO List")
     };
     
     const width = Dimensions.get('window').width
@@ -59,7 +59,7 @@ export const EditTask = ({route, navigation}) => {
                 <Text style={textStyles.title}>Edit a task</Text>
             </View>
             <View style={{position:'absolute', top:100, height: 300,}}>
-                <TextInput name="title" value={title} onChangeText={text => setTitle(text)} placeholder="  Title" placeholderTextColor= {theme.main}
+                <TextInput name="title" value={title} onChangeText={text => setTitle(text)} placeholder="  Title" placeholderTextColor= '#fffff1'
                     maxLength={20} keyboardAppearance="light" style={[boxStyles.textInput,{height:40, marginBottom:50}]}>
                 </TextInput>
 
@@ -69,12 +69,12 @@ export const EditTask = ({route, navigation}) => {
 
                 <DatePicker name="date" item={item} setDate={setDate}/>
 
-                <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= {theme.main}
+                <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= '#fffff1'
                     maxLength={20} keyboardAppearance="light"style={boxStyles.textInput}>
                 </TextInput>
 
-                <Pressable onPress={_editTask} onPressOut={() => navigation.goBack()}>
-                    <Text style={[boxStyles.textInput, {color:theme.main, paddingLeft:10}]}>Edit</Text>
+                <Pressable onPress={_editTask}>
+                    <Text style={[boxStyles.textInput, {color:'#fffff1', paddingLeft:10}]}>Edit</Text>
                 </Pressable>
             </View>
         </SafeAreaView>

@@ -1,12 +1,12 @@
 import React from "react";
 import { Dimensions, StyleSheet, TextInput } from "react-native";
-import { theme } from "../theme";
+
 
 const Input = ({value, onChangeText, onSubmitEditing, onBlur, placeholder}) => {
     return (
         <TextInput style={inputStyles.textInput}
             placeholder={placeholder}
-            placeholderTextColor= {theme.main}
+            placeholderTextColor= '#fffff1'
             maxLength={20}
             keyboardAppearance="light"
             value={value}
@@ -27,8 +27,8 @@ const inputStyles = StyleSheet.create({
         //paddingLeft: 15,
         //paddingTop: 2,
         borderRadius: 10,
-        backgroundColor: theme.itemBackground,
-        color: theme.text,
+        backgroundColor: '#fffff1',
+        color: '#fffff1',
     },
 });
 

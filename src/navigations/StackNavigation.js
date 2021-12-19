@@ -16,7 +16,8 @@ const StackNavigation = () => {
             <Stack.Screen 
                 name = "TODO" 
                 component={TabNavigation}
-                options={{headerShown: false}} />
+                options={{headerShown: false}} 
+            />
             <Stack.Screen 
                 name = "Add"
                 component={AddTask} 

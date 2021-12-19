@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import { View, Button, TouchableOpacity, StyleSheet, TextInput, Dimensions } from 'react-native';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { theme } from "../theme";
+import DateTimePickerModal from "react-native-modal-datetime-picker";'#fffff1'
 
 export default function DatePicker({setDate, item}) {
     
@@ -52,7 +51,7 @@ export default function DatePicker({setDate, item}) {
                     pointerEvents="none"
                     style={styles.textInput}
                     placeholder="Due date"
-                    placeholderTextColor={theme.main}
+                    placeholderTextColor='#fffff1'
                     underlineColorAndroid="transparent"
                     editable={true}
                     value={text}
@@ -84,7 +83,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         fontSize: 25,
-        color: theme.main,
+        color: '#fffff1',
         height: 40, 
         //width: 200,        
     }

@@ -2,7 +2,6 @@ import React,{useEffect, useState, Component} from "react";
 import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable, StyleSheet, TextInput } from "react-native"
 import IconButton from "../components/IconButton";
 import { images } from "../image";
-import { theme } from "../theme";
 import { ViewStyles, textStyles, barStyles } from '../styles';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DatePicker from "../components/DatePicker";
@@ -55,7 +54,7 @@ const boxStyles = StyleSheet.create({
         backgroundColor: '#eeeeee',
     },
     text: {
-        color: theme.main,
+        color: '#fffff1',
         fontSize: 25,
     }
 });

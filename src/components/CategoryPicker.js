@@ -1,7 +1,6 @@
 import React,{useState, useEffect} from "react";
 import { Pressable, StyleSheet, View, Image, Text, Dimensions, TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { theme } from "../theme";
 import PropTypes from 'prop-types';
 import Input from "./Input";
 import { images } from "../image";
@@ -134,7 +133,7 @@ const pickerStyles = StyleSheet.create({
     
     item: {
         backgroundColor: '#eeeeee',
-        color: theme.main,
+        color: '#fffff1',
         flexDirection:'row',
         justifyContent: 'center',
         alignItems:'center',
@@ -143,7 +142,7 @@ const pickerStyles = StyleSheet.create({
         paddingLeft:10
     },
     text: {
-        color: theme.main,
+        color: '#fffff1',
         fontSize: 25,
     }
 });

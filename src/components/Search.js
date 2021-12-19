@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Pressable, Image, StyleSheet, View, Dimensions } from "react-native";
-import { theme } from "../theme";
 import { images } from "../image";
 import Input from "./Input";
 
@@ -50,7 +49,7 @@ const searchStyles = StyleSheet.create({
         position:'absolute', top:0, right:0,
         flexDirection: 'row',
         alignItems: 'center',
-        color: theme.main,
+        color: '#fffff1',
         width: '100%',
         height: 50,
         marginTop: 1.5,
@@ -60,9 +59,9 @@ const searchStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        backgroundColor: theme.background,
+        backgroundColor: '#fffff1',
         borderRadius: 10,
-        color: theme.main,
+        color: '#fffff1',
         width: '100%',
         height: 50,
         margin: 0,
@@ -71,13 +70,13 @@ const searchStyles = StyleSheet.create({
     },
 
     icon: {
-        tintColor: theme.text,
+        tintColor: '#fffff1',
         width: 40,
         height: 40,
     },
 
     searchicon: {
-        tintColor: theme.text,
+        tintColor: '#fffff1',
         width: 40,
         height: 40,
     },

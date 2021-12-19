@@ -1,7 +1,6 @@
 import React,{useEffect, useRef, useState,} from "react";
 import { Pressable, StyleSheet, View, Image, Text, Dimensions, TextInput, } from "react-native";
 import { images } from "../image";
-import { theme } from "../theme";
 import IconButton from "./IconButton";
 
 const Category = ({item, deleteCategory, updateCategory, canModify, setLabel}) =>{
@@ -45,7 +44,7 @@ const Category = ({item, deleteCategory, updateCategory, canModify, setLabel}) =
     return isEditing ?(
         <>
             <TextInput value={value} onChangeText={value=>setValue(value)} onSubmitEditing={_onSubmitEditing} onBlur={_onBlur}/>
-            <Text style={{color: theme.main,}}>{isEditing}</Text>
+            <Text style={{color: '#fffff1',}}>{isEditing}</Text>
         </>
         ):(
         <>
@@ -71,7 +70,7 @@ const listStyles = StyleSheet.create({
         height: 50,
     },
     text: {
-        color: theme.main,
+        color: '#fffff1',
         fontSize: 25,
     }
 });

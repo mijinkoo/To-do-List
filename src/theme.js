@@ -10,10 +10,13 @@ export const darkTheme = {
     main: '#778bdd', // 하늘색
     text: '#ffffff', //하얀색
     done: '#616161', //회색
-    shadow: '',
+    shadow: 'grey',
     //tabBackground: '',
     white: '#ffffff',
     opposite: '#ffffff', 
+    //CategoryPicker
+    categoryContainer: '#d2d4e1',
+    categoryText: '#6f717d',
 };
 
 export const lightTheme = {
@@ -27,4 +30,7 @@ export const lightTheme = {
     //tabBackground: '',
     white: '#ffffff',
     opposite: '#101010', 
+    //CategoryPicker
+    categoryContainer: '#d4d6e2',
+    categoryText: '#646672',
 };

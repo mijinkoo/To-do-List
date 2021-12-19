@@ -199,7 +199,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
                         <Task
                             key={item.id} item={item}
                             toggleTask={_toggleTask}
-                            calendarMode="true" 
+                            calendarMode={true} 
                             navigation={navigation}
                         />
                     ) : (

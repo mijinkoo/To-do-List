@@ -69,7 +69,7 @@ const listStyles = StyleSheet.create({
         height: 30,
     },
     text: {
-        color: '#fffff1',
+        color: '#646672',
         fontSize: 17,
     }
 });

@@ -45,13 +45,13 @@ const Search = ({setText}) => {
 
 const searchStyles = StyleSheet.create({
     container: {
-        position:'absolute', top:-3, right:0,
+        position:'absolute', top:-5, right:0,
         flexDirection: 'row',
         alignItems: 'center',
         color: '#868d95',
         width: '100%',
-        height: 65,
-        marginRight: 5
+        height: 70,
+        marginRight: 8
     },
 
     searchbar:{
@@ -61,7 +61,7 @@ const searchStyles = StyleSheet.create({
         borderRadius: 10,
         color: 'black',
         width: '100%',
-        height: 50,
+        height: 30,
         margin: 0,
         paddingLeft: 10,
 

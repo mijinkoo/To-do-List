@@ -45,12 +45,6 @@ export const Home = ({ navigation }) => {
         _saveTasks(currentTasks);
     }
 
-    const _toggleSelect = id => {
-        const currentTasks = Object.assign({}, tasks);
-        currentTasks[id]['selected'] = !currentTasks[id]['selected'];
-        _saveTasks(currentTasks);
-    }
-
     const completed_false=(item)=>{
         if(item.completed===false) return item;
     }
@@ -67,30 +61,39 @@ export const Home = ({ navigation }) => {
 
     //Select
     const [select, setSelect] = useState(false);
-    const [allselect, setAllSelect] = useState(false);
+    const [isSelectedAll, SetIsSelectedAll] = useState(false);
 
     const _selectTask = () => {
+        if(select){
+            Object.values(tasks).forEach(function(item){
+                item.selected = false;
+            })
+            SetIsSelectedAll(false);
+            const currentTasks = Object.assign({}, tasks);
+            _saveTasks(currentTasks);
+        } 
         setSelect((prev) => !prev);
     }
 
+    const _toggleSelect = id => {
+        const currentTasks = Object.assign({}, tasks);
+        currentTasks[id]['selected'] = !currentTasks[id]['selected'];
+        _saveTasks(currentTasks);
+    }
+    
+
     const _selectAllTask = () => {
-        Object.values(tasks).map(item => {
-            item.selected===true;
+        Object.values(tasks).forEach(function(item){
+            item.selected = !isSelectedAll;
         })
+        SetIsSelectedAll((prev)=> !prev);
+        const currentTasks = Object.assign({}, tasks);
+        _saveTasks(currentTasks);
     }
 
-    /*const _deleteSelectedTask = () => {
-        const currentTasks = Object.assign({}, tasks);
-        for(var i=0; i< Object.values(tasks).length; i++){
-            if(currentTasks[i]['selected'] === true) {
-                delete currentTasks[i]
-            }
-        }
-        _saveTasks(currentTasks);
-    }*/
 
     const _deleteSelectedTask =() => {
-        //const currentTasks = Object.assign({}, tasks);
+        const currentTasks = Object.assign({}, tasks);
         Object.values(tasks).map(item => {
             if(item.selected === true) {
                 _deleteTask(item.id)
@@ -120,8 +123,6 @@ export const Home = ({ navigation }) => {
         else return item.category === category;
     }
 
-
-
     //Load Data
     const _loadTasks =  async () => {
         const loadedTasks = await AsyncStorage.getItem('tasks');
@@ -141,13 +142,15 @@ export const Home = ({ navigation }) => {
 
    // themeProvider
    const [ThemeMode, toggleTheme] = useTheme();
+   const CurrentMode = ThemeMode[0] === 'light' ? 'light' : 'dark';
+   const textColor = CurrentMode === 'light' ? '#313131' : '#ffffff'
     
     return isReady ? (
             <Container>
             <StatusBar hidden={true} />
             <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center'}}>
                 <Header>My Task</Header>
-                <Search  setText={setText} ></Search>
+                <Search setText={setText} ></Search>
                 {/*<Switch value={isDark} onValueChange={_toggleSwitch}/>*/}
             </View>
             <View style={{flexDirection:'column', zIndex: 2}}>
@@ -158,9 +161,9 @@ export const Home = ({ navigation }) => {
                     </ThemeToggle>
                     <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
                         {select && 
-                            <Pressable onPressOut={_selectAllTask} style={{ alignItems:'center',justifyContent:'center', paddingRight:10}}>
-                                <Image source={images.selectAll} style={{tintColor: themeMode.text, width: 30, height: 30,}}></Image>
-                                <Text style={{color:'#868d95', fontSize: 8.5, paddingTop:2}}>Select All</Text>
+                            <Pressable onPressOut={_selectAllTask} style={{ alignItems:'center',justifyContent:'center', paddingRight:10, paddingTop:2}}>
+                                <Icon source={images.selectAll}></Icon>
+                                <Text style={{color:'#868d95', fontSize: 10,}}>Select All</Text>
                             </Pressable>
                         }
                         <Pressable onPressOut={_selectTask} style={{ alignItems:'center',justifyContent:'center', paddingRight:10}}>
@@ -189,13 +192,13 @@ export const Home = ({ navigation }) => {
             <View style={{padding: 5, paddingBottom: 10}}>
                 <Text width={width} style={{color:'#474747', fontSize:16,padding:5}}>uncompleted</Text>
                 {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_false).filter(sortedByCategory).map((item)=>(
-                    <Task key={item.id} item={item} toggleSelect={_toggleSelect} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} allselect={allselect} calendarMode="false" navigation={navigation}/>
+                    <Task key={item.id} item={item} toggleSelect={_toggleSelect} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode={false} navigation={navigation}/>
                 ))}
             </View>
             <View style={{padding: 5}}>
                 <Text width={width} style={{ color:'#474747', fontSize:16,padding:5}}>completed</Text>
                 {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_true).filter(sortedByCategory).map((item)=>(
-                    <Task key={item.id} item={item} toggleSelect={_toggleSelect} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} allselect={allselect} calendarMode="false" navigation={navigation}/>
+                    <Task key={item.id} item={item} toggleSelect={_toggleSelect} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode={false} navigation={navigation}/>
                 ))}
             </View>
             </ScrollView>

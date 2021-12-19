@@ -47,8 +47,8 @@ export const AddTask = ({navigation}) => {
             alert('Please choose the due date')
         }else{
         alert('Add:'+ title);
-        //const ID = Date.now().toString();
-        const ID = Object.keys(tasks).length.toString();
+        const ID = Date.now().toString();
+        //const ID = Object.keys(tasks).length.toString();
         const taskObject = {
             [ID]: {id: ID, title: title, date: date, category: category, comment: comment, completed: false, selected: false},
         };
@@ -72,10 +72,11 @@ export const AddTask = ({navigation}) => {
                 <TextInput name="title" value={title} onChangeText={text => setTitle(text)} placeholder="  Title" placeholderTextColor= 'blue'
                     maxLength={20} keyboardAppearance="light"style={[boxStyles.textInput,{height:40, marginBottom:50}]}>
                 </TextInput>
-                <View style={{zIndex: 10, height: '100%'}}> 
+                <View style={{zIndex: 10, /*height: '100%'*/}}> 
                     <CategoryPicker canModify="true" item={''} setCategory={setCategory} setIsCategoryOpen={setIsCategoryOpen}/>
                 </View>
                 <View style={{position:'absolute', top: 170}}>
+                    
                 <DatePicker name="date" setDate={setDate} /*dateChange={_dateChange}*//>
 
                 <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= 'blue'

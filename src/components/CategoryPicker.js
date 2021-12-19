@@ -7,6 +7,7 @@ import { images } from "../image";
 import IconButton from "./IconButton";
 import Category from "./Category";
 import AppLoading from "expo-app-loading";
+import styled from 'styled-components/native';
 
 const CategoryPicker = ({canModify, setCategory, width, setIsCategoryOpen}) => {
 
@@ -25,7 +26,7 @@ const CategoryPicker = ({canModify, setCategory, width, setIsCategoryOpen}) => {
 
     const _onPressOutCategoryPicker = () =>{
         setOpen((prev) => !prev);
-        setIsCategoryOpen(open);
+        /*setIsCategoryOpen(open);*/
     }
 
     const _updateCategory = item => {
@@ -96,9 +97,9 @@ const CategoryPicker = ({canModify, setCategory, width, setIsCategoryOpen}) => {
 
     return  isLoading ? (
         <View style={{width : _width ? _width : '100%' , position:'relative'}}>
-            <Pressable style={pickerStyles.item} onPressOut={(_onPressOutCategoryPicker)}>
+            <CategoryContainer onPressOut={(_onPressOutCategoryPicker)}>
                 <Text style={pickerStyles.text}>{label}</Text>
-            </Pressable>
+            </CategoryContainer>
         
             {open ? 
             <View style={{position:'absolute', top:30, width:'100%'}}>
@@ -135,7 +136,6 @@ const pickerStyles = StyleSheet.create({
     
     item: {
         backgroundColor: '#d4d6e2',
-        color: '#fffff1',
         flexDirection:'row',
         justifyContent: 'center',
         alignItems:'center',
@@ -143,9 +143,18 @@ const pickerStyles = StyleSheet.create({
         height: 30,
     },
     text: {
-        color: '#fffff1',
+        color: '#646672',
         fontSize: 17,
     }
 });
+
+export const CategoryContainer = styled.Pressable`
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+    background-color: ${props => props.theme.categoryContainer};
+`;
 
 export default CategoryPicker;

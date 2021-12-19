@@ -26,23 +26,13 @@ const Tab = createBottomTabNavigator();
 
 const TabNavigation = () => {
 
-    const [themeMode, setThemeMode] = useState(lightTheme);
-
-    const _loadTheme = async () => {
-        const loadedThemeMode = await AsyncStorage.getItem('themeMode');
-        setThemeMode(JSON.parse(loadedThemeMode));
-    }
-
-    useEffect(()=>{
-        _loadTheme();
-    },[])
 
     return (
         <ThemeProvider theme={themeMode}>
             <Tab.Navigator screenOptions={{
                 //tabBarActiveTintColor: theme.main,
                 tabBarStyle: {
-                    backgroundColor: themeMode.background
+                    backgroundColor: 'blue'
                 }
             }}>
                 <Tab.Screen name="TODO List" component={Home}

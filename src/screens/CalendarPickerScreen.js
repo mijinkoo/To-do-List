@@ -8,6 +8,7 @@ import AppLoading from "expo-app-loading";
 import { Dimensions } from 'react-native';
 import styled from 'styled-components';
 import { theme } from '../theme';
+import { TextStyle } from 'react-native';
 
 const List = styled.ScrollView`
     width: ${({ width }) => width - 40}px;
@@ -20,8 +21,8 @@ const List = styled.ScrollView`
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 50,
-        backgroundColor: 'white',
+        paddingTop: 50,
+        backgroundColor: theme.background,
     },
     box: {
         margin: 20,
@@ -36,6 +37,7 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 20,
         fontWeight: '400',
+        color: theme.text,
     },
     success: {
         alignItems: 'flex-end',
@@ -70,7 +72,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
     
     const [emoji, setEmoji] = useState('');
 
-    const _successRate = tasks => {
+    const _successRate = async tasks => {
         var totalCount = 0;          // 선택한 날짜의 총 task 수
         var completedCount = 0;      // 선택한 날짜의 completed task 수
         
@@ -126,6 +128,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
     }
 
     useEffect(()=>{
+        setItemExist(false);
         _successRate(tasks);
         //_itemExist(tasks);
         _setEmoji();
@@ -167,12 +170,14 @@ export const CalendarPickerScreen = ({ navigation }) => {
 
     useEffect(()=>{
         _loadTasks();
+        _successRate(tasks);
     },[tasks])
 
     return isReady ? (
         <View style={styles.container}>
             <CalendarPicker onDateChange={_dateChange} //initialDate={new Date()}
-                            selectedDayColor={theme.main} todayBackgroundColor={theme.main} todayBackgroundColor='yellow'/>
+                            selectedDayColor={theme.main} todayBackgroundColor={theme.main} todayBackgroundColor='yellow'
+                            textStyle={{color: theme.text}} />
             <View style={styles.box}>
                 <Text style={styles.text}>{date}</Text>
                 {itemExist ? (

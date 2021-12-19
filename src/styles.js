@@ -1,5 +1,9 @@
 import { StyleSheet } from "react-native";
 import { theme } from "./theme";
+import { lightTheme } from "./theme";
+import { useState } from "react";
+
+//const [theme, setTheme] = useState(lightTheme);
 
 export const ViewStyles = StyleSheet.create({
     container: {

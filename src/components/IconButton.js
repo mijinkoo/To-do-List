@@ -1,8 +1,12 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Pressable, StyleSheet, View, Image } from "react-native";
 import { theme } from "../theme";
 import PropTypes from 'prop-types';
 import { images } from "../image";
+import { ThemeProvider } from "@react-navigation/native";
+import { lightTheme, darkTheme } from "../theme";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const IconButton = ({type, onPressOut, id}) => {
 
@@ -10,9 +14,19 @@ const IconButton = ({type, onPressOut, id}) => {
         onPressOut(id);
     }
 
+    const [themeMode, setThemeMode] = useState(lightTheme);
+    const _loadTheme = async () => {
+        const loadedThemeMode = await AsyncStorage.getItem('themeMode');
+        setThemeMode(JSON.parse(loadedThemeMode));
+    }
+
+    useEffect(()=>{
+        _loadTheme();
+    },[])
+
     return(
         <Pressable onPressOut={_onPressOut}>
-            <Image source={type} style={iconStyles.icon}/>
+            <Image source={type} style={[iconStyles.icon, {tintColor: themeMode.text}]}/>
         </Pressable>
     );
 };
@@ -23,7 +37,7 @@ IconButton.defaultProps = {
 
 const iconStyles = StyleSheet.create({
     icon: {
-        tintColor: theme.text,
+        //tintColor: theme.text,
         width: 30,
         height: 30,
         margin: 10,

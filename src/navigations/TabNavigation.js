@@ -17,7 +17,6 @@ const TabStyles = ({
 const TabIcon = ({ name, size, color }) => {
     return <MaterialCommunityIcons name={name} size={size} color={color} />;
 };
-
 const Tab = createBottomTabNavigator();
 
 const TabNavigation = () => {
@@ -41,5 +40,4 @@ const TabNavigation = () => {
         </Tab.Navigator>
     );
 };
-
 export default TabNavigation;

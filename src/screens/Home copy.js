@@ -89,6 +89,8 @@ export const Home = ({ navigation }) => {
         else return item.category === category;
     }
 
+
+
     //Load Data
     const _loadTasks =  async () => {
         const loadedTasks = await AsyncStorage.getItem('tasks');
@@ -107,32 +109,18 @@ export const Home = ({ navigation }) => {
     },[tasks])
 
     useEffect(()=>{
-        //_loadTheme();
-        //_saveTheme(themeMode);
-        
+        _loadTheme();
+        _saveTheme(themeMode);
     },[isDark])
 
    // themeProvider
    const [isDark, setIsDark] = useState(false);
    const [themeMode, setThemeMode] = useState(lightTheme);
-  
-   const _toggleSwitch = () => {
-       
-       if(themeMode == lightTheme){
-           setThemeMode(darkTheme)
-           //_saveTheme(themeMode)
-       }
-       else if(themeMode == darkTheme){
-           setThemeMode(lightTheme)
-           //_saveTheme(themeMode)
-       }
-       setIsDark(!isDark);
-   }
+   const _toggleSwitch = () => setIsDark(!isDark);
 
    const _saveTheme = async themeMode => {
         try {
             await AsyncStorage.setItem('themeMode', JSON.stringify(themeMode));
-            setThemeMode(themeMode);
         } catch (error) {
             
         }   
@@ -140,17 +128,17 @@ export const Home = ({ navigation }) => {
 
    const _loadTheme = async () => {
        const loadedThemeMode = await AsyncStorage.getItem('themeMode');
-       setThemeMode(JSON.parse(loadedThemeMode));
+       setThemeMode(loadedThemeMode);
    }
     
     return isReady ? (
         <ThemeProvider theme={themeMode}>
-            <SafeAreaView style={[ViewStyles.container, {backgroundColor: themeMode.background}]} >
+            <SafeAreaView style={ViewStyles.container} >
             <StatusBar barStyle="light-content" style={barStyles.statusbar}/>
             <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center'}}>
                 <Text style={textStyles.title}>TODO List</Text>
                 <Search  setText={setText} ></Search>
-                
+                <Switch value={isDark} onValueChange={_toggleSwitch}/>
             </View>
             <View style={{flexDirection:'column', zIndex: 2}}>
                 <View style={{flexDirection:'row', marginBottom:5, justifyContent:'space-between', height:40}} width={width-20}>
@@ -158,24 +146,24 @@ export const Home = ({ navigation }) => {
                     <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
                         {select && 
                             <Pressable style={{ alignItems:'center',justifyContent:'center', paddingRight:10}}>
-                                <Image source={images.selectAll} style={{tintColor: themeMode.text, width: 30, height: 30,}}></Image>
-                                <Text style={{color:themeMode.text, fontSize: 8.5, paddingTop:2}}>Select All</Text>
+                                <Image source={images.selectAll} style={{tintColor: theme.text, width: 30, height: 30,}}></Image>
+                                <Text style={{color:theme.text, fontSize: 8.5, paddingTop:2}}>Select All</Text>
                             </Pressable>
                         }
                         <Pressable onPressOut={_selectTask} style={{ alignItems:'center',justifyContent:'center', paddingRight:10}}>
-                            <Image source={images.select} style={{tintColor: themeMode.text, width: 30, height: 30}}></Image>
-                            <Text style={{color:themeMode.text, fontSize: 10}}>Select</Text>
+                            <Image source={images.select} style={{tintColor: theme.text, width: 30, height: 30}}></Image>
+                            <Text style={{color:theme.text, fontSize: 10}}>Select</Text>
                         </Pressable>
                         <Pressable onPressOut={()=>setSort((prev) => !prev)} style={{ flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
                             <Image source={images.sort} style={{tintColor: theme.text, width: 30, height: 30}}></Image>
-                            <Text style={{color:themeMode.text, fontSize: 10}}>Sort</Text>
+                            <Text style={{color:theme.text, fontSize: 10}}>Sort</Text>
                             {sort && 
-                            <View style={{position:'absolute', top:50, right:0, width:150, height:50, borderWidth:1, borderColor: themeMode.opposite, backgroundColor: themeMode.background}}>
+                            <View style={{position:'absolute', top:50, right:0, width:150, height:50, borderWidth:1, borderColor:'#ffffff', backgroundColor:theme.background}}>
                                 <Pressable onPressOut={()=> SetIsSortedByDueDate(true)}>
-                                    <Text style={{fontSize:15, color: themeMode.text, borderBottomWidth: 1, borderBottomColor: themeMode.opposite, padding:2}}> Sort by due date</Text>
+                                    <Text style={{fontSize:15, color:'#ffffff', borderBottomWidth: 1, borderBottomColor:'#ffffff', padding:2}}> Sort by due date</Text>
                                 </Pressable>
                                 <Pressable onPressOut={()=> SetIsSortedByDueDate(false)}>
-                                    <Text style={{fontSize:15, color: themeMode.text, padding:2}}> Sort by added date</Text>
+                                    <Text style={{fontSize:15, color:'#ffffff', padding:2}}> Sort by added date</Text>
                                 </Pressable>
                             </View>
                             }
@@ -185,11 +173,11 @@ export const Home = ({ navigation }) => {
             </View>
 
             <ScrollView width={width-20}>
-            <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color:themeMode.text, fontSize:25,padding:5}}>----uncompleted----</Text>
+            <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color:theme.text, fontSize:25,padding:5}}>----uncompleted----</Text>
                 {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_false).filter(sortedByCategory).map((item)=>(
                     <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
                 ))}
-            <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color: themeMode.text, fontSize:25,padding:5}}>----completed----</Text>
+            <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color:theme.text, fontSize:25,padding:5}}>----completed----</Text>
                 {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_true).filter(sortedByCategory).map((item)=>(
                     <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
                 ))}
@@ -198,14 +186,12 @@ export const Home = ({ navigation }) => {
             <View style={{position:'absolute', bottom: 0, flexDirection:'row', justifyContent:'space-between', paddingBottom: 20}} width={width-60}>
                 <Pressable 
                     onPress={() => navigation.navigate('Add')}
-                    style={{alignItems:'center', justifyContent:'center',borderWidth: 2, borderRadius:90 ,borderColor:themeMode.text, padding:8, margin:0}}>
-                    <Image source={images.add} style={{tintColor: themeMode.text, width: 40, height: 40,padding:0, margin:0}}/>
+                    style={{alignItems:'center', justifyContent:'center',borderWidth: 2, borderRadius:90 ,borderColor:theme.text, padding:8, margin:0}}>
+                    <Image source={images.add} style={{tintColor: theme.text, width: 40, height: 40,padding:0, margin:0}}/>
                 </Pressable>
-                <Switch value={isDark} onValueChange={_toggleSwitch}/>
             </View>
-            
             {select &&
-                <Text width={width} style={{position:'absolute', bottom: 0, textAlign:'center',textAlignVertical:'center',backgroundColor:'#2c2c2c', color: themeMode.text, fontSize:45, width:'100%', height:80, padding:0, margin:0}}>Delete</Text>
+                <Text width={width} style={{position:'absolute', bottom: 0, textAlign:'center',textAlignVertical:'center',backgroundColor:'#2c2c2c', color:theme.text, fontSize:45, width:'100%', height:80, padding:0, margin:0}}>Delete</Text>
             }
         </SafeAreaView>
         </ThemeProvider>

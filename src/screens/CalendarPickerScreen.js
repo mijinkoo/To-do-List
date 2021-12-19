@@ -9,6 +9,8 @@ import { Dimensions } from 'react-native';
 import styled from 'styled-components';
 import { theme } from '../theme';
 import { TextStyle } from 'react-native';
+import { ThemeProvider } from '@react-navigation/native';
+import { lightTheme, darkTheme } from '../theme';
 
 const List = styled.ScrollView`
     width: ${({ width }) => width - 40}px;
@@ -22,7 +24,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 50,
-        backgroundColor: theme.background,
+        //backgroundColor: theme.background,
     },
     box: {
         margin: 20,
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 20,
         fontWeight: '400',
-        color: theme.text,
+        //color: theme.text,
     },
     success: {
         alignItems: 'flex-end',
@@ -152,6 +154,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
         const loadedTasks = await AsyncStorage.getItem('tasks');
         setTasks(JSON.parse(loadedTasks || '{}'));
         console.log('loadTask');
+        //_loadTheme();
         //_successRate(tasks);
     };
 
@@ -173,17 +176,24 @@ export const CalendarPickerScreen = ({ navigation }) => {
         _successRate(tasks);
     },[tasks])
 
+    const [themeMode, setThemeMode] = useState(lightTheme);
+    const _loadTheme = async () => {
+        const loadedThemeMode = await AsyncStorage.getItem('themeMode');
+        setThemeMode(JSON.parse(loadedThemeMode));
+    }
+
     return isReady ? (
-        <View style={styles.container}>
+        <ThemeProvider theme={themeMode}>
+            <View style={[styles.container, {backgroundColor: themeMode.background}]}>
             <CalendarPicker onDateChange={_dateChange} //initialDate={new Date()}
-                            selectedDayColor={theme.main} todayBackgroundColor={theme.main} todayBackgroundColor='yellow'
-                            textStyle={{color: theme.text}} />
+                            selectedDayColor={themeMode.main} todayBackgroundColor={themeMode.main} todayBackgroundColor='yellow'
+                            textStyle={{color: themeMode.text}} />
             <View style={styles.box}>
-                <Text style={styles.text}>{date}</Text>
+                <Text style={[styles.text, {color: themeMode.text}]}>{date}</Text>
                 {itemExist ? (
                     <>
                     <Text style={[styles.emoji]}>{emoji}</Text>
-                    <Text style={[styles.text, styles.success]}>Success {success}%</Text>
+                    <Text style={[styles.text, styles.success, {color: themeMode.text}]}>Success {success}%</Text>
                     </>
                 ) : ( <>
                 </> ) }
@@ -203,9 +213,11 @@ export const CalendarPickerScreen = ({ navigation }) => {
                 ))}
             </List>
         </View>
+        </ThemeProvider>
+        
     ) : (
         <AppLoading
-            startAsync = {_loadTasks}
+            startAsync = {_loadTasks, _loadTheme}
             onFinish = {() => SetIsReady(true)}
             onError = {console.error}
         />

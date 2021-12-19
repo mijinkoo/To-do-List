@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+<<<<<<< HEAD
 import styled from "styled-components/native";
 
 export const Container = styled.SafeAreaView`
@@ -7,6 +8,13 @@ export const Container = styled.SafeAreaView`
     align-items: center;
     justify-content: flex-start;
 `;
+=======
+import { theme } from "./theme";
+import { lightTheme } from "./theme";
+import { useState } from "react";
+
+//const [theme, setTheme] = useState(lightTheme);
+>>>>>>> 7b313bc233a7cfb9bd59a60f04b9aa9a3cda718f
 
 export const ViewStyles = StyleSheet.create({
     container: {

@@ -8,6 +8,7 @@ import AppLoading from "expo-app-loading";
 import { Dimensions } from 'react-native';
 import styled from 'styled-components';
 import { theme } from '../theme';
+import { TextStyle } from 'react-native';
 
 const List = styled.ScrollView`
     width: ${({ width }) => width - 40}px;
@@ -20,8 +21,8 @@ const List = styled.ScrollView`
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 50,
-        backgroundColor: 'white',
+        paddingTop: 50,
+        backgroundColor: theme.background,
     },
     box: {
         margin: 20,
@@ -36,12 +37,15 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 20,
         fontWeight: '400',
+        color: theme.text,
     },
     success: {
         alignItems: 'flex-end',
     },
     emoji: {
         alignItems: 'center',
+        fontSize: 30,
+        fontWeight: '400',
     },
 });
 
@@ -64,12 +68,11 @@ export const CalendarPickerScreen = ({ navigation }) => {
     const [taskList, setTaskList] = useState([]);
     const [isReady, SetIsReady] = useState(false);
     const [itemExist, setItemExist] = useState(false);
-
     const [success, setSuccess] = useState(0);
     
     const [emoji, setEmoji] = useState('');
 
-    const _successRate = tasks => {
+    const _successRate = async tasks => {
         var totalCount = 0;          // 선택한 날짜의 총 task 수
         var completedCount = 0;      // 선택한 날짜의 completed task 수
         
@@ -77,6 +80,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
             {
                 if (item.date == cmpDate || item.date == "D-day") {
                     totalCount += 1;
+                    setItemExist(true);
                     if (item.completed) {
                         completedCount += 1;
                     }  
@@ -91,9 +95,10 @@ export const CalendarPickerScreen = ({ navigation }) => {
         }
     }
 
+    /**
     const _itemExist = tasks => {
         setTaskList(Object.entries(tasks))
-        for(var i=0; i<taskList.length; i++){
+        for(let i=0; i<taskList.length; i++){
             if(taskList[i].date == cmpDate || taskList[i].date == "D-day"){
                 //return true;
                 setItemExist(true);
@@ -102,7 +107,9 @@ export const CalendarPickerScreen = ({ navigation }) => {
         }
         //return false;
         setItemExist(false);
-    }
+    } 
+     */
+    
 
     const _setEmoji = async() => {
         //_successRate(tasks);
@@ -121,8 +128,9 @@ export const CalendarPickerScreen = ({ navigation }) => {
     }
 
     useEffect(()=>{
+        setItemExist(false);
         _successRate(tasks);
-        _itemExist(tasks);
+        //_itemExist(tasks);
         _setEmoji();
     },[date])
 
@@ -156,26 +164,29 @@ export const CalendarPickerScreen = ({ navigation }) => {
     async function _dateChange(d) {
         setDate(d.format('YYYY / MM / DD'));
         setCmpDate(d.format('YYYYMMDD'));
-        _itemExist(tasks);
+        //_itemExist(tasks);
         //_successRate(tasks);
     }
 
     useEffect(()=>{
         _loadTasks();
+        _successRate(tasks);
     },[tasks])
 
     return isReady ? (
         <View style={styles.container}>
             <CalendarPicker onDateChange={_dateChange} //initialDate={new Date()}
-                            selectedDayColor={theme.main} todayBackgroundColor={theme.main} todayBackgroundColor='yellow'/>
+                            selectedDayColor={theme.main} todayBackgroundColor={theme.main} todayBackgroundColor='yellow'
+                            textStyle={{color: theme.text}} />
             <View style={styles.box}>
                 <Text style={styles.text}>{date}</Text>
                 {itemExist ? (
                     <>
-                    <Text style={[styles.text, styles.emoji]}>{emoji}</Text>
+                    <Text style={[styles.emoji]}>{emoji}</Text>
                     <Text style={[styles.text, styles.success]}>Success {success}%</Text>
                     </>
-                ) : ( <></> ) }
+                ) : ( <>
+                </> ) }
             </View>
             <View></View>
             <List width={width}>

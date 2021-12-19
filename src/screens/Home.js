@@ -1,5 +1,10 @@
+<<<<<<< HEAD:src/screens/Home.js
 import React,{useEffect, useState, Component, useContext} from "react";
 import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable } from "react-native"
+=======
+import React,{useEffect, useState, Component} from "react";
+import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable, Switch } from "react-native"
+>>>>>>> 7b313bc233a7cfb9bd59a60f04b9aa9a3cda718f:src/screens/Homejs
 import IconButton from "../components/IconButton";
 import Input from "../components/Input";
 import CategoryPicker from "../components/CategoryPicker";
@@ -11,11 +16,16 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AddTask from "./AddTask";
+<<<<<<< HEAD:src/screens/Home.js
 import { ThemeContext } from "../context/ThemeContext";
 import styled from "styled-components/native";
 import ThemeToggle from "../components/ThemeToggle";
 import { useTheme } from "../context/ThemeContext";
 
+=======
+import { ThemeProvider } from "@react-navigation/native";
+import { lightTheme, darkTheme } from "../theme";
+>>>>>>> 7b313bc233a7cfb9bd59a60f04b9aa9a3cda718f:src/screens/Homejs
 
 export const Home = ({ navigation }) => {
 
@@ -112,6 +122,7 @@ export const Home = ({ navigation }) => {
         _loadTasks();
     },[tasks])
 
+<<<<<<< HEAD:src/screens/Home.js
     const [darkMode, setDarkMode] = useState(false); 
     const _toggleTheme = () => {
         setDarkMode((prev)=> !prev);
@@ -120,10 +131,20 @@ export const Home = ({ navigation }) => {
 
     return isReady ? (
         <Container>
+=======
+   // themeProvider
+   const [isDark, setIsDark] = useState(false);
+   const _toggleSwitch = () => setIsDark(!isDark);
+    
+    return isReady ? (
+        <ThemeProvider theme={theme}>
+            <SafeAreaView style={ViewStyles.container} >
+>>>>>>> 7b313bc233a7cfb9bd59a60f04b9aa9a3cda718f:src/screens/Homejs
             <StatusBar barStyle="light-content" style={barStyles.statusbar}/>
             <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center'}}>
                 <Text style={textStyles.title}>TODO List</Text>
                 <Search  setText={setText} ></Search>
+                {/*<Switch value={isDark} onValueChange={_toggleSwitch}/>*/}
             </View>
             <View style={{flexDirection:'column', zIndex: 2}}>
                 <View style={{flexDirection:'row', marginBottom:5, justifyContent:'space-between', height:40}} width={width-20}>
@@ -188,7 +209,13 @@ export const Home = ({ navigation }) => {
             {select &&
                 <Text width={width} style={{position:'absolute', bottom: 0, textAlign:'center',textAlignVertical:'center',backgroundColor:'#2c2c2c', color:'#fffff1', fontSize:45, width:'100%', height:80, padding:0, margin:0}}>Delete</Text>
             }
+<<<<<<< HEAD:src/screens/Home.js
         </Container>) : (
+=======
+        </SafeAreaView>
+        </ThemeProvider>
+        ) : (
+>>>>>>> 7b313bc233a7cfb9bd59a60f04b9aa9a3cda718f:src/screens/Homejs
         <AppLoading
             startAsync = {_loadTasks}
             onFinish = {() => setIsReady(true)}

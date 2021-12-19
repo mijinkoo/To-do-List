@@ -113,29 +113,32 @@ export const Home = ({ navigation }) => {
     
     return isReady ? (
             <Container>
-            <StatusBar barStyle="light-content" style={barStyles.statusbar}/>
+            <StatusBar hidden={true} />
             <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center'}}>
-                <Text style={textStyles.title}>TODO List</Text>
+                <Header>My Task</Header>
                 <Search  setText={setText} ></Search>
                 {/*<Switch value={isDark} onValueChange={_toggleSwitch}/>*/}
             </View>
             <View style={{flexDirection:'column', zIndex: 2}}>
-                <View style={{flexDirection:'row', marginBottom:5, justifyContent:'space-between', height:40}} width={width-20}>
-                    <CategoryPicker canModify="false" setCategory={setCategory}/>
+                <View style={{flexDirection:'row', marginBottom:5, alignItems:'center',justifyContent:'space-between', height:40}} width={width-20}>
+                    <CategoryPicker canModify="false" setCategory={setCategory} width={110}/>
+                    <ThemeToggle toggle={toggleTheme} mode={ThemeMode}>
+                        <Text>DarkMode</Text>
+                    </ThemeToggle>
                     <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
                         {select && 
                             <Pressable style={{ alignItems:'center',justifyContent:'center', paddingRight:10}}>
-                                <Image source={images.selectAll} style={{tintColor: '#fffff1', width: 30, height: 30,}}></Image>
-                                <Text style={{color:'#fffff1', fontSize: 8.5, paddingTop:2}}>Select All</Text>
+                                <Icon source={images.selectAll}></Icon>
+                                <Text style={{color:'#868d95', fontSize: 8.5, paddingTop:2}}>Select All</Text>
                             </Pressable>
                         }
                         <Pressable onPressOut={_selectTask} style={{ alignItems:'center',justifyContent:'center', paddingRight:10}}>
-                            <Image source={images.select} style={{tintColor: '#fffff1', width: 30, height: 30}}></Image>
-                            <Text style={{color:'#fffff1', fontSize: 10}}>Select</Text>
+                            <Icon source={images.select}></Icon>
+                            <Text style={{color:'#868d95', fontSize: 10}}>Select</Text>
                         </Pressable>
                         <Pressable onPressOut={()=>setSort((prev) => !prev)} style={{ flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
-                            <Image source={images.sort} style={{tintColor: '#fffff1', width: 30, height: 30}}></Image>
-                            <Text style={{color:'#fffff1', fontSize: 10}}>Sort</Text>
+                            <Icon source={images.sort}></Icon>
+                            <Text style={{color:'#868d95', fontSize: 10}}>Sort</Text>
                             {sort && 
                             <View style={{position:'absolute', top:50, right:0, width:150, height:50, borderWidth:1, borderColor:'#ffffff', backgroundColor:'#fffff1'}}>
                                 <Pressable onPressOut={()=> SetIsSortedByDueDate(true)}>
@@ -150,10 +153,6 @@ export const Home = ({ navigation }) => {
                     </View>
                 </View>
             </View>
-
-            <ThemeToggle toggle={toggleTheme} mode={ThemeMode}>
-                <Text>DarkMode</Text>
-            </ThemeToggle>
 
             <ScrollView width={width-20}>
             <View style={{padding: 5, paddingBottom: 10}}>
@@ -195,4 +194,19 @@ const Container = styled.SafeAreaView`
     background: ${props => props.theme.screenBackground};
     align-items: center;
     justify-content: flex-start;
+`;
+
+const Header = styled.Text`
+    height: 50px;
+    font-size: 30px;
+    font-weight: 400;
+    color: ${props => props.theme.text};
+    margin-top: 6px;
+    margin-left: 5px;
+`;
+
+const Icon = styled.Image`
+    tint-color: #868d95; 
+    width: 30px;
+    height: 30px;
 `;

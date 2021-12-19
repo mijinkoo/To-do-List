@@ -5,7 +5,7 @@ import styled from 'styled-components/native';
 function ThemeToggle({ toggle, mode }) {
   return (
     <ToggleWrapper onPressOut={toggle} mode={mode}>
-      <Text>{mode === 'dark' ? '🌚' : '🌝'}</Text>
+      <Text>{mode === 'dark' ? '🌑' : '☀️'}</Text>
     </ToggleWrapper>
   );
 }
@@ -23,9 +23,10 @@ const ToggleWrapper = styled.Pressable`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 96px;
-  height: 48px;
+  width: 80px;
+  height: 35px;
   border-radius: 30px;
+  margin-right: 35px;
 `;
 
 /*box-shadow: ${

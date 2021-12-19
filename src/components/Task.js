@@ -51,17 +51,9 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, n
     const [isSelected, SetIsSelected] = useState(false);
 
     return (
-
             <Container onPressOut={() => select ? _handleUpdateSelect : navigation.navigate('Show', {item: item})}>
-            {select ||
-                (calendarMode === false) ? (
-                <>
-                <View style={{flexDirection:'column'}}>
-                    <Pressable><Image source={images.up} style={{tintColor: 'black', width: 30, height: 30}}></Image></Pressable> 
-                    <Pressable><Image source={images.down} style={{tintColor: 'black', width: 30, height: 30}}></Image></Pressable>
-                </View>
-                <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
-                </>
+            {select ? (
+                <></>
             ) : (
                 <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
             )
@@ -70,7 +62,7 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, n
                 <_Text style={{textDecorationLine: (item.completed? 'line-through': 'none')}}>
                     {item.title}
                 </_Text>          
-                <_Text style={{color: ( timestring === item.date ) ? 'red' : 'gray' }}> 
+                <_Text style={{color: ( timestring === item.date ) ? 'red' : '#424242' }}> 
                     {( timestring === item.date ) ? 'D-day' : item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}
                 </_Text>           
             </View>
@@ -97,7 +89,7 @@ const Container = styled.Pressable`
     height: 65px;
     background: ${({theme}) => theme.taskBackground};
     border-radius: 5px;
-    box-shadow: 0px 0px 3px #bfbfc1;
+    box-shadow: 0px 0px 3px ${({theme}) => theme.shadow};
     shadow-offset: {width: 0, height: 2};
     padding: 5px;
     margin-top: 10px;

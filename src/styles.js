@@ -20,12 +20,6 @@ export const textStyles = StyleSheet.create({
     },
 });
 
-export const barStyles = StyleSheet.create({
-    statusbar: {
-        backgroundColor: '#ffffff',
-    }
-})
-
 export const CalendarStyles = StyleSheet.create({
     date: {
         fontSize: 20,

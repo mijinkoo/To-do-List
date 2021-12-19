@@ -62,16 +62,15 @@ const Category = ({item, deleteCategory, updateCategory, canModify, setLabel}) =
 
 const listStyles = StyleSheet.create({
     item: {
-        backgroundColor: '#eeeeee',
+        backgroundColor: '#d4d6e2',
         flexDirection:'row',
         justifyContent: 'center',
         alignItems:'center',
-        fontSize: 20,
-        height: 50,
+        height: 30,
     },
     text: {
         color: '#fffff1',
-        fontSize: 25,
+        fontSize: 17,
     }
 });
 

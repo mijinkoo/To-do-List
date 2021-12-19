@@ -8,8 +8,9 @@ import IconButton from "./IconButton";
 import Category from "./Category";
 import AppLoading from "expo-app-loading";
 
-const CategoryPicker = ({canModify, setCategory}) => {
+const CategoryPicker = ({canModify, setCategory, width, setIsCategoryOpen}) => {
 
+    const _width = width ? width : null;
     const [newValue, setNewValue] = useState('');
     const [label, setLabel] = useState('Category');
     //const [isEditing, setEditing] = useState(false);
@@ -23,7 +24,8 @@ const CategoryPicker = ({canModify, setCategory}) => {
     });
 
     const _onPressOutCategoryPicker = () =>{
-        setOpen((prev) => !prev)
+        setOpen((prev) => !prev);
+        setIsCategoryOpen(open);
     }
 
     const _updateCategory = item => {
@@ -93,15 +95,15 @@ const CategoryPicker = ({canModify, setCategory}) => {
     },[items])
 
     return  isLoading ? (
-        <View >
+        <View style={{width : _width ? _width : '100%' , position:'relative'}}>
             <Pressable style={pickerStyles.item} onPressOut={(_onPressOutCategoryPicker)}>
                 <Text style={pickerStyles.text}>{label}</Text>
             </Pressable>
         
             {open ? 
-            <View style={{position:'absolute', top:40, width:'100%'}}>
+            <View style={{position:'absolute', top:30, width:'100%'}}>
                 <Pressable style={pickerStyles.item} onPressOut={()=>setLabel("All")}>
-                <Text style={pickerStyles.text}>All</Text>
+                    <Text style={pickerStyles.text}>All</Text>
                 </Pressable>
 
                     {Object.values(items).map(item =>(
@@ -132,18 +134,17 @@ const CategoryPicker = ({canModify, setCategory}) => {
 const pickerStyles = StyleSheet.create({
     
     item: {
-        backgroundColor: '#eeeeee',
+        backgroundColor: '#d4d6e2',
         color: '#fffff1',
         flexDirection:'row',
         justifyContent: 'center',
         alignItems:'center',
         width: '100%',
-        height: 40,
-        paddingLeft:10
+        height: 30,
     },
     text: {
         color: '#fffff1',
-        fontSize: 25,
+        fontSize: 17,
     }
 });
 

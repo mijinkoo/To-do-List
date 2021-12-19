@@ -4,12 +4,13 @@ export const theme = {
 };
 
 export const darkTheme = {
-    screenBackground: "lightgray",
+    screenBackground: "#151821",
     background: '#101010', //black
-    taskBackground: '#313131', //짙은회색
+    taskBackground: '#3c4049', //짙은회색
     main: '#778bdd', // 하늘색
-    text: '#cfcfcf', //하얀색
+    text: '#ffffff', //하얀색
     done: '#616161', //회색
+    shadow: '',
     //tabBackground: '',
     white: '#ffffff',
     opposite: '#ffffff', 
@@ -20,8 +21,9 @@ export const lightTheme = {
     background: '#ffffff', 
     taskBackground: '#ffffff',
     main: '#778bdd', // 하늘색
-    text: '#101010', //하얀색
+    text: '#313131', //하얀색
     done: '#616161', //회색
+    shadow: '#bfbfc1',
     //tabBackground: '',
     white: '#ffffff',
     opposite: '#101010', 

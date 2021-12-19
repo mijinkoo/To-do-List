@@ -33,7 +33,7 @@ const Search = ({setText}) => {
                     <Pressable onPressOut={_onSearchClose}>
                         <Image source={images.close} style={searchStyles.icon}/>
                     </Pressable> 
-                    <Input value={word} onChangeText={_onChangeSearchWord} onSubmitEditing={_onSubmitSearchword} placeholder={"  Enter a search word"}/>
+                    <Input value={word} onChangeText={_onChangeSearchWord} onSubmitEditing={_onSubmitSearchword} placeholder={"Enter a search word"}/>
                     </View>
             }
             <Pressable onPressOut={_onSearch} style={{ position:'absolute',  right:0,}}>
@@ -44,24 +44,22 @@ const Search = ({setText}) => {
 };
 
 const searchStyles = StyleSheet.create({
-
     container: {
-        position:'absolute', top:0, right:0,
+        position:'absolute', top:-3, right:0,
         flexDirection: 'row',
         alignItems: 'center',
-        color: '#fffff1',
+        color: '#868d95',
         width: '100%',
-        height: 50,
-        marginTop: 1.5,
+        height: 65,
+        marginRight: 5
     },
 
     searchbar:{
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        backgroundColor: '#fffff1',
         borderRadius: 10,
-        color: '#fffff1',
+        color: 'black',
         width: '100%',
         height: 50,
         margin: 0,
@@ -70,15 +68,15 @@ const searchStyles = StyleSheet.create({
     },
 
     icon: {
-        tintColor: '#fffff1',
-        width: 40,
-        height: 40,
+        tintColor: '#868d95',
+        width: 35,
+        height: 35,
     },
 
     searchicon: {
-        tintColor: '#fffff1',
-        width: 40,
-        height: 40,
+        tintColor: '#868d95',
+        width: 35,
+        height: 35,
     },
 });
 

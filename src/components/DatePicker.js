@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
-import { View, Button, TouchableOpacity, StyleSheet, TextInput, Dimensions } from 'react-native';
+import { View, Button, TouchableOpacity, StyleSheet, Text, Dimensions } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";'#fffff1'
 
 export default function DatePicker({setDate, item}) {
     
-    const [text, onChangeText] = useState(item ? item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8) : '');
+    const [text, onChangeText] = useState(item ? item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8) : "Due date");
     
     const _toNumber = (string) => {
         switch(string){
@@ -47,15 +47,13 @@ export default function DatePicker({setDate, item}) {
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={showDatePicker}>
-                <TextInput
+                <Text
                     pointerEvents="none"
                     style={styles.textInput}
-                    placeholder="Due date"
-                    placeholderTextColor='#fffff1'
                     underlineColorAndroid="transparent"
                     editable={true}
                     value={text}
-                />
+                >{text}</Text>
                 <DateTimePickerModal
                     //headerTextIOS={placeholder}
                     isVisible={isDatePickerVisible}
@@ -83,7 +81,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         fontSize: 25,
-        color: '#fffff1',
+        color: 'black',
         height: 40, 
         //width: 200,        
     }

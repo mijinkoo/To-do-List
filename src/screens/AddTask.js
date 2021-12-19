@@ -50,7 +50,7 @@ export const AddTask = ({navigation}) => {
         //const ID = Date.now().toString();
         const ID = Object.keys(tasks).length.toString();
         const taskObject = {
-            [ID]: {id: ID, title: title, date: date, category: category, comment: comment, completed: false},
+            [ID]: {id: ID, title: title, date: date, category: category, comment: comment, completed: false, selected: false},
         };
         setTitle('');
         _saveTasks({...tasks, ...taskObject});
@@ -61,20 +61,21 @@ export const AddTask = ({navigation}) => {
     
     const width = Dimensions.get('window').width
 
+    const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+
     return ( isLoading ?
         <SafeAreaView style={ViewStyles.container}>
             <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center'}}>
                 <Text style={textStyles.title}>Add a task</Text>
             </View>
-            <View style={{position:'absolute', top:100, height: 300,}}>
+            <View style={{position:'absolute', top:100, }}>
                 <TextInput name="title" value={title} onChangeText={text => setTitle(text)} placeholder="  Title" placeholderTextColor= 'blue'
                     maxLength={20} keyboardAppearance="light"style={[boxStyles.textInput,{height:40, marginBottom:50}]}>
                 </TextInput>
-
-                <View style={{zIndex: 1}}>
-                    <CategoryPicker canModify="true" item={''} setCategory={setCategory} style={{zIndex: 1}}/>
+                <View style={{zIndex: 10, height: '100%'}}> 
+                    <CategoryPicker canModify="true" item={''} setCategory={setCategory} setIsCategoryOpen={setIsCategoryOpen}/>
                 </View>
-
+                <View style={{position:'absolute', top: 170}}>
                 <DatePicker name="date" setDate={setDate} /*dateChange={_dateChange}*//>
 
                 <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= 'blue'
@@ -84,6 +85,7 @@ export const AddTask = ({navigation}) => {
                 <Pressable onPress={_addTask} >
                     <Text style={[boxStyles.textInput, {color:'blue', paddingLeft:10}]}>Submit</Text>
                 </Pressable>
+                </View>
             </View>
         </SafeAreaView>
        :
@@ -113,3 +115,5 @@ const boxStyles = StyleSheet.create({
 });
 
 export default AddTask;
+
+//category picker height 설정이 문제

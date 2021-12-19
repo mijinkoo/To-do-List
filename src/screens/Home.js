@@ -45,6 +45,12 @@ export const Home = ({ navigation }) => {
         _saveTasks(currentTasks);
     }
 
+    const _toggleSelect = id => {
+        const currentTasks = Object.assign({}, tasks);
+        currentTasks[id]['selected'] = !currentTasks[id]['selected'];
+        _saveTasks(currentTasks);
+    }
+
     const completed_false=(item)=>{
         if(item.completed===false) return item;
     }
@@ -61,9 +67,35 @@ export const Home = ({ navigation }) => {
 
     //Select
     const [select, setSelect] = useState(false);
+    const [allselect, setAllSelect] = useState(false);
 
     const _selectTask = () => {
         setSelect((prev) => !prev);
+    }
+
+    const _selectAllTask = () => {
+        Object.values(tasks).map(item => {
+            item.selected===true;
+        })
+    }
+
+    /*const _deleteSelectedTask = () => {
+        const currentTasks = Object.assign({}, tasks);
+        for(var i=0; i< Object.values(tasks).length; i++){
+            if(currentTasks[i]['selected'] === true) {
+                delete currentTasks[i]
+            }
+        }
+        _saveTasks(currentTasks);
+    }*/
+
+    const _deleteSelectedTask =() => {
+        //const currentTasks = Object.assign({}, tasks);
+        Object.values(tasks).map(item => {
+            if(item.selected === true) {
+                _deleteTask(item.id)
+            }
+        })
     }
 
     //Sort
@@ -81,7 +113,6 @@ export const Home = ({ navigation }) => {
     }
 
     //category
-
     const [category, setCategory] = useState("All");
 
     const sortedByCategory =(item)=>{
@@ -99,7 +130,7 @@ export const Home = ({ navigation }) => {
 
     useEffect(()=>{
         const i = Object.values(tasks).filter(item =>(
-            item.title.toLowerCase().includes(text.toLowerCase())
+            item.title.toLowerCase().includes(text.toLowerCase())||item.date.includes(text)
         ))
         setSearchedTasks(i);
     },[text])
@@ -127,8 +158,8 @@ export const Home = ({ navigation }) => {
                     </ThemeToggle>
                     <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
                         {select && 
-                            <Pressable style={{ alignItems:'center',justifyContent:'center', paddingRight:10}}>
-                                <Icon source={images.selectAll}></Icon>
+                            <Pressable onPressOut={_selectAllTask} style={{ alignItems:'center',justifyContent:'center', paddingRight:10}}>
+                                <Image source={images.selectAll} style={{tintColor: themeMode.text, width: 30, height: 30,}}></Image>
                                 <Text style={{color:'#868d95', fontSize: 8.5, paddingTop:2}}>Select All</Text>
                             </Pressable>
                         }
@@ -158,13 +189,13 @@ export const Home = ({ navigation }) => {
             <View style={{padding: 5, paddingBottom: 10}}>
                 <Text width={width} style={{color:'#474747', fontSize:16,padding:5}}>uncompleted</Text>
                 {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_false).filter(sortedByCategory).map((item)=>(
-                    <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    <Task key={item.id} item={item} toggleSelect={_toggleSelect} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} allselect={allselect} calendarMode="false" navigation={navigation}/>
                 ))}
             </View>
             <View style={{padding: 5}}>
                 <Text width={width} style={{ color:'#474747', fontSize:16,padding:5}}>completed</Text>
                 {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_true).filter(sortedByCategory).map((item)=>(
-                    <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    <Task key={item.id} item={item} toggleSelect={_toggleSelect} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} allselect={allselect} calendarMode="false" navigation={navigation}/>
                 ))}
             </View>
             </ScrollView>
@@ -177,7 +208,9 @@ export const Home = ({ navigation }) => {
                 </Pressable>
             </View>
             {select &&
-                <Text width={width} style={{position:'absolute', bottom: 0, textAlign:'center',textAlignVertical:'center',backgroundColor:'#2c2c2c', color:'#fffff1', fontSize:45, width:'100%', height:80, padding:0, margin:0}}>Delete</Text>
+            <Pressable onPressOut={_deleteSelectedTask} style={{position:'absolute', bottom: 0, textAlign:'center', backgroundColor:'#2c2c2c', width:'100%', height:80, padding:12, margin:0}}>
+                <Text width={width} style={{ textAlign:'center', color:'#fffff1', fontSize:45 ,textAlignVertical:'center'}}>Delete</Text>
+            </Pressable>
             }
         </Container>
         ) : (

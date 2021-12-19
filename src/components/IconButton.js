@@ -1,10 +1,7 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 import { Pressable, StyleSheet, View, Image } from "react-native";
 import PropTypes from 'prop-types';
 import { images } from "../image";
-import { ThemeProvider } from "@react-navigation/native";
-
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const IconButton = ({type, onPressOut, id}) => {

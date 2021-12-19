@@ -67,7 +67,7 @@ export const AddTask = ({navigation}) => {
                 <Text style={textStyles.title}>Add a task</Text>
             </View>
             <View style={{position:'absolute', top:100, height: 300,}}>
-                <TextInput name="title" value={title} onChangeText={text => setTitle(text)} placeholder="  Title" placeholderTextColor= {theme.main}
+                <TextInput name="title" value={title} onChangeText={text => setTitle(text)} placeholder="  Title" placeholderTextColor= 'blue'
                     maxLength={20} keyboardAppearance="light"style={[boxStyles.textInput,{height:40, marginBottom:50}]}>
                 </TextInput>
 
@@ -77,12 +77,12 @@ export const AddTask = ({navigation}) => {
 
                 <DatePicker name="date" setDate={setDate} /*dateChange={_dateChange}*//>
 
-                <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= {theme.main}
+                <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= 'blue'
                     maxLength={20} keyboardAppearance="light"style={boxStyles.textInput}>
                 </TextInput>
 
                 <Pressable onPress={_addTask} >
-                    <Text style={[boxStyles.textInput, {color:theme.main, paddingLeft:10}]}>Submit</Text>
+                    <Text style={[boxStyles.textInput, {color:'blue', paddingLeft:10}]}>Submit</Text>
                 </Pressable>
             </View>
         </SafeAreaView>

@@ -1,16 +1,16 @@
-import { light, dark } from '../theme';
-import { createContext, useState, useContext, useCallback } from 'react';
+import React,{ createContext, useState, useContext, useCallback } from 'react';
 import { ThemeProvider as StyledProvider } from 'styled-components';
+import { lightTheme, darkTheme } from '../theme';
 
 export const ThemeContext = createContext({});
 
 const ThemeProvider = ({children}) => {
   const [ThemeMode, setThemeMode] = useState('light');
-  const themeObject = ThemeMode === 'light' ? light : dark;
+  const themeObject = ThemeMode === 'light' ? lightTheme : darkTheme;
 
   return(
     <ThemeContext.Provider value={{ ThemeMode, setThemeMode }}>
-      <StyledProvider theme={themeObject}> // styled-components에서 제공하는 메서드
+      <StyledProvider theme={themeObject}>
         { children }
       </StyledProvider>      
     </ThemeContext.Provider>

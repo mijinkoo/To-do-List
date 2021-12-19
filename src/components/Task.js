@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import IconButton from "./IconButton";
 import { Image } from "react-native";
 import { images } from "../image";
+import styled from 'styled-components/native';
 import { ThemeProvider } from "@react-navigation/native";
 import { lightTheme, darkTheme } from "../theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -49,26 +50,15 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, n
     // select
     const [isSelected, SetIsSelected] = useState(false);
 
-    const [themeMode, setThemeMode] = useState(lightTheme);
-    const _loadTheme = async () => {
-        const loadedThemeMode = await AsyncStorage.getItem('themeMode');
-        setThemeMode(JSON.parse(loadedThemeMode));
-    }
-
-    useEffect(()=>{
-        _loadTheme();
-    },[])
-
     return (
-        <ThemeProvider>
-            <Pressable onPressOut={() => select ? _handleUpdateSelect : navigation.navigate('Show', {item: item})} 
-                style={[taskStyles.container, {backgroundColor: (select && isSelected) ? themeMode.main : themeMode.itemBackground}]}>
+
+            <Container onPressOut={() => select ? _handleUpdateSelect : navigation.navigate('Show', {item: item})}>
             {select ||
                 (calendarMode === false) ? (
                 <>
                 <View style={{flexDirection:'column'}}>
-                    <Pressable><Image source={images.up} style={{tintColor: themeMode.text, width: 30, height: 30}}></Image></Pressable> 
-                    <Pressable><Image source={images.down} style={{tintColor: themeMode.text, width: 30, height: 30}}></Image></Pressable>
+                    <Pressable><Image source={images.up} style={{tintColor: 'black', width: 30, height: 30}}></Image></Pressable> 
+                    <Pressable><Image source={images.down} style={{tintColor: 'black', width: 30, height: 30}}></Image></Pressable>
                 </View>
                 <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
                 </>
@@ -76,13 +66,13 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, n
                 <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
             )
             }
-            <View style={{flexDirection:'row', alignItems:'center', width:'75%', }}>
-                <Text style={[taskStyles.contents, 
-                    {color: (item.completed ? 'black' : 'grey')},
-                    {textDecorationLine: (item.completed? 'line-through': 'none')}]}>
+            <View style={{flexDirection:'row', justifyContent:'space-between',alignItems:'center', width:'73%', paddingLeft:5}}>
+                <_Text style={{textDecorationLine: (item.completed? 'line-through': 'none')}}>
                     {item.title}
-                </Text>          
-                <Text style={{fontSize: 15, color: ( timestring === item.date ) ? 'red' : 'blue' , marginRight:5,}}> {( timestring === item.date ) ? 'D-day' : item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}</Text>           
+                </_Text>          
+                <_Text style={{color: ( timestring === item.date ) ? 'red' : 'gray' }}> 
+                    {( timestring === item.date ) ? 'D-day' : item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}
+                </_Text>           
             </View>
             <View style={{position:'absolute', right:0,flexDirection:'row'}} calendarMode={calendarMode}>
                 {calendarMode === "false" ? 
@@ -95,8 +85,7 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, n
                  : 
                     <></>}
             </View>
-        </Pressable>
-        </ThemeProvider>
+        </Container>
         
     );
 };
@@ -105,7 +94,7 @@ const Container = styled.Pressable`
     flex-direction: row;
     align-items: center;
     width: 100%;
-    height: 70px;
+    height: 65px;
     background: ${({theme}) => theme.taskBackground};
     border-radius: 5px;
     box-shadow: 0px 0px 3px #bfbfc1;
@@ -115,26 +104,11 @@ const Container = styled.Pressable`
     margin-left: 0px;
 `;
 
-const taskStyles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width:'100%',
-        //height:60,
-        //backgroundColor: theme.itemBackground,
-        borderRadius: 10,
-        padding: 5,
-        marginTop: 3,
-        marginLeft: 0,
-    },
+const _Text = styled.Text`
+    font-size: 15;
+    color: #7d7d7d;
+`;
 
-    contents: {
-        flex: 1,
-        fontSize: 24,
-        //color: theme.text,
-        marginLeft: 5,
-    }
-});
 
 Task.propTypes = {
     item: PropTypes.object.isRequired,

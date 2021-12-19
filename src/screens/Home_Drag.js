@@ -6,7 +6,7 @@ import CategoryPicker from "../components/CategoryPicker";
 import Search from "../components/Search";
 import Task from "../components/Task";
 import { images } from "../image";
-import { theme } from "../theme";
+import { theme } from "../theme/theme";
 import { ViewStyles, textStyles, barStyles } from '../styles';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AppLoading from "expo-app-loading";

@@ -1,21 +1,20 @@
 import React from 'react';
-import styled from 'styled-components';
+import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable, Switch } from "react-native"
+import styled from 'styled-components/native';
 
 function ThemeToggle({ toggle, mode }) {
   return (
-    <ToggleWrapper onClick={toggle} mode={mode}>
-      {mode === 'dark' ? '🌚' : '🌝'}
+    <ToggleWrapper onPressOut={toggle} mode={mode}>
+      <Text>{mode === 'dark' ? '🌚' : '🌝'}</Text>
     </ToggleWrapper>
   );
 }
 
 export default ThemeToggle;
 
-const ToggleWrapper = styled.button`
-  position: fixed;
+const ToggleWrapper = styled.Pressable`
+  position: relative;
   z-index: 999999;
-  bottom: 4%;
-  right: 3%;
 
   background-color: ${props => props.theme.background};
   border: ${props => props.theme.background};
@@ -27,8 +26,9 @@ const ToggleWrapper = styled.button`
   width: 96px;
   height: 48px;
   border-radius: 30px;
-  box-shadow: ${
+`;
+
+/*box-shadow: ${
     props => props.mode === 'dark' ? '0px 5px 10px rgba(40, 40, 40, 1), 0px 2px 4px rgba(40, 40, 40, 1)'
     : '0 5px 10px rgba(100, 100, 100, 0.15), 0 2px 4px rgba(100, 100, 100, 0.15)'
-  }
-`;
+  }*/

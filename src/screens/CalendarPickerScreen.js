@@ -6,7 +6,7 @@ import { Home } from '../screens/Home';
 import Task from '../components/Task';
 import AppLoading from "expo-app-loading";
 import { Dimensions } from 'react-native';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 import { theme } from '../theme';
 import { TextStyle } from 'react-native';
 import { ThemeProvider } from '@react-navigation/native';
@@ -176,24 +176,18 @@ export const CalendarPickerScreen = ({ navigation }) => {
         _successRate(tasks);
     },[tasks])
 
-    const [themeMode, setThemeMode] = useState(lightTheme);
-    const _loadTheme = async () => {
-        const loadedThemeMode = await AsyncStorage.getItem('themeMode');
-        setThemeMode(JSON.parse(loadedThemeMode));
-    }
-
     return isReady ? (
-        <ThemeProvider theme={themeMode}>
-            <View style={[styles.container, {backgroundColor: themeMode.background}]}>
+
+            <View style={[styles.container, {backgroundColor: 'white'}]}>
             <CalendarPicker onDateChange={_dateChange} //initialDate={new Date()}
-                            selectedDayColor={themeMode.main} todayBackgroundColor={themeMode.main} todayBackgroundColor='yellow'
-                            textStyle={{color: themeMode.text}} />
+                            selectedDayColor='blue' todayBackgroundColor='blue' todayBackgroundColor='yellow'
+                            textStyle={{color: 'blue'}} />
             <View style={styles.box}>
-                <Text style={[styles.text, {color: themeMode.text}]}>{date}</Text>
+                <Text style={[styles.text, {color: 'blue'}]}>{date}</Text>
                 {itemExist ? (
                     <>
                     <Text style={[styles.emoji]}>{emoji}</Text>
-                    <Text style={[styles.text, styles.success, {color: themeMode.text}]}>Success {success}%</Text>
+                    <Text style={[styles.text, styles.success, {color: 'blue'}]}>Success {success}%</Text>
                     </>
                 ) : ( <>
                 </> ) }
@@ -214,11 +208,10 @@ export const CalendarPickerScreen = ({ navigation }) => {
                 ))}
             </List>
         </View>
-        </ThemeProvider>
         
     ) : (
         <AppLoading
-            startAsync = {_loadTasks, _loadTheme}
+            startAsync = {_loadTasks}
             onFinish = {() => SetIsReady(true)}
             onError = {console.error}
         />

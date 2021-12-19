@@ -5,7 +5,7 @@ import { theme } from "../theme";
 
 export default function DatePicker({setDate, item}) {
     
-    const [text, onChangeText] = useState(item ? item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8) : '');
+    const [text, onChangeText] = useState(item.date);
     
     const _toNumber = (string) => {
         switch(string){

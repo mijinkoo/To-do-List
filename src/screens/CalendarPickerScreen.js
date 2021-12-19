@@ -42,6 +42,8 @@ const styles = StyleSheet.create({
     },
     emoji: {
         alignItems: 'center',
+        fontSize: 30,
+        fontWeight: '400',
     },
 });
 
@@ -64,7 +66,6 @@ export const CalendarPickerScreen = ({ navigation }) => {
     const [taskList, setTaskList] = useState([]);
     const [isReady, SetIsReady] = useState(false);
     const [itemExist, setItemExist] = useState(false);
-
     const [success, setSuccess] = useState(0);
     
     const [emoji, setEmoji] = useState('');
@@ -77,6 +78,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
             {
                 if (item.date == cmpDate || item.date == "D-day") {
                     totalCount += 1;
+                    setItemExist(true);
                     if (item.completed) {
                         completedCount += 1;
                     }  
@@ -91,9 +93,10 @@ export const CalendarPickerScreen = ({ navigation }) => {
         }
     }
 
+    /**
     const _itemExist = tasks => {
         setTaskList(Object.entries(tasks))
-        for(var i=0; i<taskList.length; i++){
+        for(let i=0; i<taskList.length; i++){
             if(taskList[i].date == cmpDate || taskList[i].date == "D-day"){
                 //return true;
                 setItemExist(true);
@@ -102,7 +105,9 @@ export const CalendarPickerScreen = ({ navigation }) => {
         }
         //return false;
         setItemExist(false);
-    }
+    } 
+     */
+    
 
     const _setEmoji = async() => {
         //_successRate(tasks);
@@ -122,7 +127,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
 
     useEffect(()=>{
         _successRate(tasks);
-        _itemExist(tasks);
+        //_itemExist(tasks);
         _setEmoji();
     },[date])
 
@@ -156,7 +161,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
     async function _dateChange(d) {
         setDate(d.format('YYYY / MM / DD'));
         setCmpDate(d.format('YYYYMMDD'));
-        _itemExist(tasks);
+        //_itemExist(tasks);
         //_successRate(tasks);
     }
 
@@ -172,10 +177,11 @@ export const CalendarPickerScreen = ({ navigation }) => {
                 <Text style={styles.text}>{date}</Text>
                 {itemExist ? (
                     <>
-                    <Text style={[styles.text, styles.emoji]}>{emoji}</Text>
+                    <Text style={[styles.emoji]}>{emoji}</Text>
                     <Text style={[styles.text, styles.success]}>Success {success}%</Text>
                     </>
-                ) : ( <></> ) }
+                ) : ( <>
+                </> ) }
             </View>
             <View></View>
             <List width={width}>

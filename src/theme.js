@@ -47,10 +47,10 @@ export const darkTheme = {
 
 export const lightTheme = {
     background: '#ffffff', 
-    itemBackground: '#c1c1c1',
+    itemBackground: '#e6e6e6',
     main: '#778bdd', // 하늘색
-    text: '#101010', //하얀색
-    done: '#616161', //회색
+    text: '#101010', 
+    done: '#616161', 
     //tabBackground: '',
     white: '#ffffff',
     opposite: '#101010', 

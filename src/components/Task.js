@@ -1,10 +1,12 @@
-import React,{useState} from "react";
+import React,{useState, useEffect} from "react";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import PropTypes from 'prop-types';
 import IconButton from "./IconButton";
 import { Image } from "react-native";
 import { images } from "../image";
-import styled from "styled-components/native";
+import { ThemeProvider } from "@react-navigation/native";
+import { lightTheme, darkTheme } from "../theme";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 /*import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist";*/
 
 
@@ -47,13 +49,26 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, n
     // select
     const [isSelected, SetIsSelected] = useState(false);
 
+    const [themeMode, setThemeMode] = useState(lightTheme);
+    const _loadTheme = async () => {
+        const loadedThemeMode = await AsyncStorage.getItem('themeMode');
+        setThemeMode(JSON.parse(loadedThemeMode));
+    }
+
+    useEffect(()=>{
+        _loadTheme();
+    },[])
+
     return (
-        <Container onPressOut={() => select ? _handleUpdateSelect() : navigation.navigate('Show', {item: item})}>
-            {select || (calendarMode === false) ? (
+        <ThemeProvider>
+            <Pressable onPressOut={() => select ? _handleUpdateSelect : navigation.navigate('Show', {item: item})} 
+                style={[taskStyles.container, {backgroundColor: (select && isSelected) ? themeMode.main : themeMode.itemBackground}]}>
+            {select ||
+                (calendarMode === false) ? (
                 <>
                 <View style={{flexDirection:'column'}}>
-                    <Pressable><Image source={images.up} style={{tintColor: '#1185b4', width: 30, height: 30}}></Image></Pressable> 
-                    <Pressable><Image source={images.down} style={{tintColor: '#1185b4', width: 30, height: 30}}></Image></Pressable>
+                    <Pressable><Image source={images.up} style={{tintColor: themeMode.text, width: 30, height: 30}}></Image></Pressable> 
+                    <Pressable><Image source={images.down} style={{tintColor: themeMode.text, width: 30, height: 30}}></Image></Pressable>
                 </View>
                 <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
                 </>
@@ -80,7 +95,9 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, n
                  : 
                     <></>}
             </View>
-        </Container>
+        </Pressable>
+        </ThemeProvider>
+        
     );
 };
 
@@ -104,7 +121,7 @@ const taskStyles = StyleSheet.create({
         alignItems: 'center',
         width:'100%',
         //height:60,
-        backgroundColor:'#fffff1',
+        //backgroundColor: theme.itemBackground,
         borderRadius: 10,
         padding: 5,
         marginTop: 3,
@@ -114,7 +131,7 @@ const taskStyles = StyleSheet.create({
     contents: {
         flex: 1,
         fontSize: 24,
-        color: '#fffff1',
+        //color: theme.text,
         marginLeft: 5,
     }
 });

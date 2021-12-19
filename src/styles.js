@@ -19,7 +19,11 @@ import { useState } from "react";
 export const ViewStyles = StyleSheet.create({
     container: {
         flex: 1,
+<<<<<<< HEAD
         backgroundColor: '#fffff1',
+=======
+        //backgroundColor: theme.background,
+>>>>>>> c64d434be328756b86e04f58c9cb16fb9d7bade6
         alignItems: 'center',
         justifyContent: 'flex-start',
     },

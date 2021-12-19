@@ -8,9 +8,8 @@ import AppLoading from "expo-app-loading";
 import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 import { theme } from '../theme';
-import { TextStyle } from 'react-native';
-import { ThemeProvider } from '@react-navigation/native';
-import { lightTheme, darkTheme } from '../theme';
+import { darkTheme, lightTheme } from '../theme';
+import { useTheme } from '../context/ThemeContext';
 
 const List = styled.ScrollView`
     width: ${({ width }) => width - 40}px;
@@ -33,15 +32,16 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     datetext: {
-        fontSize: 20,
+        fontSize:17,
         marginVertical: 10,
     },
     text: {
-        fontSize: 20,
+        fontSize: 17,
         fontWeight: '400',
         //color: theme.text,
     },
     success: {
+        fontSize: 17,
         alignItems: 'flex-end',
     },
     emoji: {
@@ -96,22 +96,6 @@ export const CalendarPickerScreen = ({ navigation }) => {
             setSuccess((completedCount/totalCount)*100);
         }
     }
-
-    /**
-    const _itemExist = tasks => {
-        setTaskList(Object.entries(tasks))
-        for(let i=0; i<taskList.length; i++){
-            if(taskList[i].date == cmpDate || taskList[i].date == "D-day"){
-                //return true;
-                setItemExist(true);
-                break;
-            }
-        }
-        //return false;
-        setItemExist(false);
-    } 
-     */
-    
 
     const _setEmoji = async() => {
         //_successRate(tasks);
@@ -176,18 +160,27 @@ export const CalendarPickerScreen = ({ navigation }) => {
         _successRate(tasks);
     },[tasks])
 
+    //theme
+
+    //const initialMode = useTheme();
+    //const [ThemeMode, setThemeMode] = useState(initialMode)
+    const ThemeMode = useTheme();
+    const CurrentMode = ThemeMode[0] === 'light' ? 'light' : 'dark';
+
+
     return isReady ? (
 
-            <View style={[styles.container, {backgroundColor: 'white'}]}>
-            <CalendarPicker onDateChange={_dateChange} //initialDate={new Date()}
-                            selectedDayColor='blue' todayBackgroundColor='blue' todayBackgroundColor='yellow'
-                            textStyle={{color: 'blue'}} />
+            <View style={[styles.container, {backgroundColor: (CurrentMode=== 'light') ? lightTheme.screenBackground : darkTheme.screenBackground}]}>
+            <CalendarPicker textStyle={{color: (CurrentMode=== 'light') ? lightTheme.calendarColor : darkTheme.calendarColor}}
+                            onDateChange={_dateChange} //initialDate={new Date()}
+                            selectedDayColor='#778bdd' todayBackgroundColor='yellow'
+                            />
             <View style={styles.box}>
-                <Text style={[styles.text, {color: 'blue'}]}>{date}</Text>
+                <Text style={[styles.text, {color: (CurrentMode=== 'light') ? 'black' : 'white'}]}>{date}</Text>
                 {itemExist ? (
                     <>
                     <Text style={[styles.emoji]}>{emoji}</Text>
-                    <Text style={[styles.text, styles.success, {color: 'blue'}]}>Success {success}%</Text>
+                    <Text style={[styles.text, styles.success, {color: (CurrentMode=== 'light') ? 'black' : 'white'}]}>Success {success}%</Text>
                     </>
                 ) : ( <>
                 </> ) }

@@ -17,6 +17,7 @@ export const darkTheme = {
     //CategoryPicker
     categoryContainer: '#d2d4e1',
     categoryText: '#6f717d',
+    calendarColor: '#dfdfdf', //회색
 };
 
 export const lightTheme = {
@@ -33,4 +34,5 @@ export const lightTheme = {
     //CategoryPicker
     categoryContainer: '#d4d6e2',
     categoryText: '#646672',
+    calendarColor: '#131313', //회색
 };

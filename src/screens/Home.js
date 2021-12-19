@@ -67,28 +67,37 @@ export const Home = ({ navigation }) => {
 
     //Select
     const [select, setSelect] = useState(false);
+    const [allselect, setAllSelect] = useState(false);
 
     const _selectTask = () => {
         setSelect((prev) => !prev);
     }
 
     const _selectAllTask = () => {
-        const currentTasks = Object.assign({}, tasks);
-        for(id=0; id< Object.values(tasks).length; id++){
-            currentTasks[id]['selected'] = !currentTasks[id]['selected'];
-        }
-        _saveTasks(currentTasks);
+        Object.values(tasks).map(item => {
+            item.selected===true;
+        })
     }
 
-    const _deleteSelectedTask = () => {
+    /*const _deleteSelectedTask = () => {
         const currentTasks = Object.assign({}, tasks);
-        for(id=0; id< Object.values(tasks).length; id++){
-            if(currentTasks[id]['selected'] === true) {
-                delete currentTasks[id]
+        for(var i=0; i< Object.values(tasks).length; i++){
+            if(currentTasks[i]['selected'] === true) {
+                delete currentTasks[i]
             }
         }
         _saveTasks(currentTasks);
+    }*/
+
+    const _deleteSelectedTask =() => {
+        //const currentTasks = Object.assign({}, tasks);
+        Object.values(tasks).map(item => {
+            if(item.selected === true) {
+                _deleteTask(item.id)
+            }
+        })
     }
+
     //Sort
     const [sort, setSort] = useState(false); //sort 상자 열고 닫기
 
@@ -210,11 +219,11 @@ export const Home = ({ navigation }) => {
             <ScrollView width={width-20}>
             <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color:themeMode.text, fontSize:25,padding:5}}>----uncompleted----</Text>
                 {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_false).filter(sortedByCategory).map((item)=>(
-                    <Task key={item.id} item={item} toggleSelect={_toggleSelect} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    <Task key={item.id} item={item} toggleSelect={_toggleSelect} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} allselect={allselect} calendarMode="false" navigation={navigation}/>
                 ))}
             <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color: themeMode.text, fontSize:25,padding:5}}>----completed----</Text>
                 {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_true).filter(sortedByCategory).map((item)=>(
-                    <Task key={item.id} item={item} toggleSelect={_toggleSelect} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    <Task key={item.id} item={item} toggleSelect={_toggleSelect} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} allselect={allselect} calendarMode="false" navigation={navigation}/>
                 ))}
             </ScrollView>
 
@@ -242,30 +251,3 @@ export const Home = ({ navigation }) => {
         />
     );
 }
-
-/*
-{ text ? 
-                <ScrollView width={width-20}>
-                    { sortedByDueDate ?
-                    Object.values(searchedtasks).map((item)=>(
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                    ))
-                    :
-                    Object.values(searchedtasks).sort(Fn).map(item => (
-                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                    ))
-                    }
-                 </ScrollView>
-                :
-                <ScrollView width={width-20}>
-                    { sortedByDueDate ?
-                    Object.values(tasks).map((item)=>(
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                    ))
-                    :
-                    Object.values(tasks).sort(Fn).map(item => (
-                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                    ))
-                    }
-                </ScrollView>
-            }*/

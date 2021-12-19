@@ -1,24 +1,20 @@
-import React,{useState, useEffect} from "react";
+import React,{useState} from "react";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import { theme } from "../theme";
 import PropTypes from 'prop-types';
 import IconButton from "./IconButton";
 import { Image } from "react-native";
 import { images } from "../image";
-import { ThemeProvider } from "@react-navigation/native";
-import { lightTheme, darkTheme } from "../theme";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 /*import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist";*/
 
-const Task = ({item, deleteTask, toggleTask, toggleSelect, updateTask, select, calendarMode, navigation}) => {
+
+const Task = ({item, deleteTask, toggleTask, toggleSelect, updateTask, select, allselect,calendarMode, navigation}) => {
     
     const [isEditing, setIsEditing] = useState(false);
     const [text, setText] = useState(item.text);
-
     const _handleUpdateButtonPress = () => {
         setIsEditing(true);
     }
-
     const _onSubmitEditing = () => {
         if (isEditing) {
             const editedTask = Object.assign({}, item, {text});
@@ -35,7 +31,8 @@ const Task = ({item, deleteTask, toggleTask, toggleSelect, updateTask, select, c
     }
 
     const _handleUpdateSelect = () => {
-        SetIsSelected((pre)=>!pre);
+        SetIsSelected((prev)=>!prev)
+        toggleSelect(item.id);
     }
 
     //let today = (new Date()).format('YYYY / MM / DD'); // 현재 날짜 및 시간
@@ -51,26 +48,15 @@ const Task = ({item, deleteTask, toggleTask, toggleSelect, updateTask, select, c
     // select
     const [isSelected, SetIsSelected] = useState(false);
 
-    const [themeMode, setThemeMode] = useState(lightTheme);
-    const _loadTheme = async () => {
-        const loadedThemeMode = await AsyncStorage.getItem('themeMode');
-        setThemeMode(JSON.parse(loadedThemeMode));
-    }
-
-    useEffect(()=>{
-        _loadTheme();
-    },[])
-
     return (
-        <ThemeProvider>
-            <Pressable onPressOut={() => select ? _handleUpdateSelect : navigation.navigate('Show', {item: item})} 
-                style={[taskStyles.container, {backgroundColor: (select && isSelected) ? themeMode.main : themeMode.itemBackground}]}>
+        <Pressable onPressOut={() => select ? _handleUpdateSelect() : navigation.navigate('Show', {item: item})} 
+        style={[taskStyles.container, {backgroundColor: (select &&  isSelected) ? theme.main : theme.itemBackground }]}>
             {select ||
                 (calendarMode === false) ? (
                 <>
                 <View style={{flexDirection:'column'}}>
-                    <Pressable><Image source={images.up} style={{tintColor: themeMode.text, width: 30, height: 30}}></Image></Pressable> 
-                    <Pressable><Image source={images.down} style={{tintColor: themeMode.text, width: 30, height: 30}}></Image></Pressable>
+                    <Pressable><Image source={images.up} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable> 
+                    <Pressable><Image source={images.down} style={{tintColor: theme.text, width: 30, height: 30}}></Image></Pressable>
                 </View>
                 <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
                 </>
@@ -83,28 +69,28 @@ const Task = ({item, deleteTask, toggleTask, toggleSelect, updateTask, select, c
                 {calendarMode === "false" ? (
                     <View>
                         <Text style={[taskStyles.contents, 
-                            {color: (item.completed ? themeMode.done : themeMode.text)},
+                            {color: (item.completed ? theme.done : theme.text)},
                             {textDecorationLine: (item.completed? 'line-through': 'none')}]}>
                             {item.title}
                         </Text>
                         {( timestring == item.date ) ? (
-                            <Text style={{fontSize: 15, fontWeight: '600', color: 'red', marginRight:5,}}>D-day</Text>
+                            <Text style={{fontSize: 15, color: 'red', marginRight:5,}}>D-day</Text>
                            ) : (
-                            <Text style={{fontSize: 15, color: themeMode.text, marginRight:5,}}>{item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}</Text>
+                            <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}</Text>
                             )}
-                        <Text style={{fontSize: 15, color: themeMode.text, marginRight:5,}}>{item.category}</Text>
-                        <Text style={{fontSize: 15, color: themeMode.text, marginRight:5,}}>{item.comment}</Text>
+                        <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.category}</Text>
+                        <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.comment}</Text>
                     </View>
                 ) : (
                     <View>
                         <Text style={[taskStyles.contents, 
-                            {color: (item.completed ? themeMode.done : themeMode.text)},
+                            {color: (item.completed ? theme.done : theme.text)},
                             {textDecorationLine: (item.completed? 'line-through': 'none')}]}>
                             {item.title}</Text>
                             {( timestring == item.date ) ? (
                                 <Text style={{fontSize: 15, color: 'red', marginRight:5,}}>D-day</Text>
                             ) : (
-                                <Text style={{fontSize: 15, color: themeMode.text, marginRight:5,}}>{item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}</Text>
+                                <Text style={{fontSize: 15, color: theme.text, marginRight:5,}}>{item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}</Text>
                             )}
                     </View>
                 )
@@ -121,8 +107,6 @@ const Task = ({item, deleteTask, toggleTask, toggleSelect, updateTask, select, c
                     <></>}
             </View>
         </Pressable>
-        </ThemeProvider>
-        
     );
 };
 
@@ -132,7 +116,7 @@ const taskStyles = StyleSheet.create({
         alignItems: 'center',
         width:'100%',
         //height:60,
-        //backgroundColor: theme.itemBackground,
+        backgroundColor: theme.itemBackground,
         borderRadius: 10,
         padding: 5,
         marginTop: 3,
@@ -142,7 +126,7 @@ const taskStyles = StyleSheet.create({
     contents: {
         flex: 1,
         fontSize: 24,
-        //color: theme.text,
+        color: theme.text,
         marginLeft: 5,
     }
 });

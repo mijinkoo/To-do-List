@@ -9,6 +9,7 @@ import DatePicker from "../components/DatePicker";
 import DropDownPicker from 'react-native-dropdown-picker';
 import CategoryPicker from "../components/CategoryPicker";
 import { NavigationContainer } from "@react-navigation/native";
+import AppLoading from "expo-app-loading";
 
 export const AddTask = ({navigation}) => {
 
@@ -20,9 +21,9 @@ export const AddTask = ({navigation}) => {
 
     const [tasks, setTasks] = useState({});
 
-    async function _dateChange(d) {
+   /* async function _dateChange(d) {
         setDate(d.format('YYYYMMDD'));  
-    }
+    }*/
 
     const _saveTasks = async tasks => {
         try {
@@ -34,11 +35,6 @@ export const AddTask = ({navigation}) => {
     }
 
     const [isLoading, SetIsLoading] = useState(false);
-
-    useEffect(()=>{
-        _loadTasks();
-        SetIsLoading(true);
-    },[])
     
     const _loadTasks =  async () => {
         const loadedTasks = await AsyncStorage.getItem('tasks');
@@ -47,6 +43,9 @@ export const AddTask = ({navigation}) => {
 
     const _addTask = async() => {
         await _loadTasks();
+        if(!date) {
+            alert('Please choose the due date')
+        }else{
         alert('Add:'+ title);
         //const ID = Date.now().toString();
         const ID = Object.keys(tasks).length.toString();
@@ -56,6 +55,8 @@ export const AddTask = ({navigation}) => {
         setTitle('');
         _saveTasks({...tasks, ...taskObject});
         await AsyncStorage.setItem('taskObject', JSON.stringify(taskObject));
+        navigation.navigate("TODO List")
+        }
     };
     
     const width = Dimensions.get('window').width
@@ -74,19 +75,23 @@ export const AddTask = ({navigation}) => {
                     <CategoryPicker canModify="true" item={''} setCategory={setCategory} style={{zIndex: 1}}/>
                 </View>
 
-                <DatePicker name="date" item={''} /*이래도 괜찮은가..?*/ setDate={setDate} dateChange={_dateChange}/>
+                <DatePicker name="date" item={''} /*이래도 괜찮은가..?*/ setDate={setDate} /*dateChange={_dateChange}*//>
 
                 <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= {theme.main}
                     maxLength={20} keyboardAppearance="light"style={boxStyles.textInput}>
                 </TextInput>
 
-                <Pressable onPress={_addTask} onPressOut={() => navigation.goBack()}>
+                <Pressable onPress={_addTask} >
                     <Text style={[boxStyles.textInput, {color:theme.main, paddingLeft:10}]}>Submit</Text>
                 </Pressable>
             </View>
         </SafeAreaView>
        :
-       <Text>Loading</Text>     
+       <AppLoading
+       startAsync = {_loadTasks}
+       onFinish = {() => SetIsLoading(true)}
+       onError = {console.error}
+        />     
     );
 };
 

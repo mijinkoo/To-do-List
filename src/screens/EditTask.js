@@ -22,10 +22,6 @@ export const EditTask = ({route, navigation}) => {
 
     const [tasks, setTasks] = useState({});
 
-    async function _dateChange(d) {
-        setDate(d.format('YYYYMMDD'));  
-    }
-
     const _saveTasks = async tasks => {
         try {
             await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
@@ -37,11 +33,6 @@ export const EditTask = ({route, navigation}) => {
     }
 
     const [isLoading, SetIsLoading] = useState(false);
-
-    useEffect(()=>{
-        _loadTasks();
-        SetIsLoading(true);
-    },[])
     
     const _loadTasks =  async () => {
         const loadedTasks = await AsyncStorage.getItem('tasks');
@@ -76,7 +67,7 @@ export const EditTask = ({route, navigation}) => {
                     <CategoryPicker value={category} item={item} canModify="true" setCategory={setCategory} style={{zIndex: 1}}/>
                 </View>
 
-                <DatePicker name="date" item={item} setDate={setDate} dateChange={_dateChange}/>
+                <DatePicker name="date" item={item} setDate={setDate}/>
 
                 <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= {theme.main}
                     maxLength={20} keyboardAppearance="light"style={boxStyles.textInput}>
@@ -89,8 +80,8 @@ export const EditTask = ({route, navigation}) => {
         </SafeAreaView>
        :
        <AppLoading
-            startAsync = {_saveTasks}
-            onFinish = {() => SetIsReady(true)}
+            startAsync = {_loadTasks}
+            onFinish = {() => SetIsLoading(true)}
             onError = {console.error}
         />   
     );

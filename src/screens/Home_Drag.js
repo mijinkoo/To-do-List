@@ -11,7 +11,8 @@ import { ViewStyles, textStyles, barStyles } from '../styles';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import AddTask from "./AddTask";
+//import DragSortableView from "../components/DragSortableView";
+import DraggableFlatList from "react-native-draggable-flatlist";
 
 export const Home = ({ navigation }) => {
 
@@ -21,6 +22,9 @@ export const Home = ({ navigation }) => {
     const [searchedtasks, setSearchedTasks] = useState([]);
     const [text, setText] = useState("");
     const [isReady, SetIsReady] = useState(false);
+    const [data, setData] = useState([]);
+
+    const childrenHeight = 60;
 
     const _saveTasks = async tasks => {
         try {
@@ -36,19 +40,11 @@ export const Home = ({ navigation }) => {
         delete currentTasks[id];
         _saveTasks(currentTasks);
     };
-    
+
     const _toggleTask = id => {
         const currentTasks = Object.assign({}, tasks);
         currentTasks[id]['completed'] = !currentTasks[id]['completed'];
         _saveTasks(currentTasks);
-    }
-
-    const completed_false=(item)=>{
-        if(item.completed===false) return item;
-    }
-
-    const completed_true=(item)=>{
-        if(item.completed===true) return item;
     }
 
     const _updateTask = item => {
@@ -93,11 +89,20 @@ export const Home = ({ navigation }) => {
     const _loadTasks =  async () => {
         const loadedTasks = await AsyncStorage.getItem('tasks');
         setTasks(JSON.parse(loadedTasks || '{}'));
+        setData(Object.entries(tasks));
+    }
+
+    const renderItem = () => {
+        return (
+            Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(sortedByCategory).map((item)=>(
+                <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+        ))
+        )
     }
 
     useEffect(()=>{
         const i = Object.values(tasks).filter(item =>(
-            item.title.toLowerCase().includes(text.toLowerCase())
+            item.title.toLowerCase().includes(text.toLowerCase()) //검색text, item text 모두 소문자로 바꿔서 대소문자 상관없이 검색 
         ))
         setSearchedTasks(i);
     },[text])
@@ -105,8 +110,6 @@ export const Home = ({ navigation }) => {
     useEffect(()=>{
         _loadTasks();
     },[tasks])
-
-   
     
     return isReady ? (
         <SafeAreaView style={ViewStyles.container} >
@@ -146,18 +149,12 @@ export const Home = ({ navigation }) => {
                     </View>
                 </View>
             </View>
-
             <ScrollView width={width-20}>
-            <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color:theme.text, fontSize:25,padding:5}}>----uncompleted----</Text>
-                {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_false).filter(sortedByCategory).map((item)=>(
-                    <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                ))}
-            <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color:theme.text, fontSize:25,padding:5}}>----completed----</Text>
-                {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_true).filter(sortedByCategory).map((item)=>(
-                    <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                ))}
+                <DragSortableView 
+                    dataSource={data} renderItem={renderItem}
+                    parentWidth={width-20} childrenHeight={childrenHeight} scaleStatus={'scaleY'}
+                />
             </ScrollView>
-
             <View style={{position:'absolute', bottom: 0, flexDirection:'row', justifyContent:'space-between', paddingBottom: 20}} width={width-60}>
                 <Pressable 
                     onPress={() => navigation.navigate('Add')}
@@ -186,53 +183,6 @@ export const Home = ({ navigation }) => {
                     ))
                     :
                     Object.values(searchedtasks).sort(Fn).map(item => (
-<<<<<<< HEAD
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                    ))
-                    }
-                    <View>
-                        <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color:theme.text, fontSize:25,padding:5}}>----completed----</Text>
-                    </View>
-                 </ScrollView>
-                :
-                <ScrollView width={width-20}>
-                    {isCompleted ?
-                    ( sortedByDueDate ?
-                        Object.values(tasks).map((item)=>(
-                                <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        :
-                        Object.values(tasks).sort(Fn).map(item => (
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        )
-                    :
-                    ( sortedByDueDate ?
-                        Object.values(tasks).map((item)=>(
-                                <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        :
-                        Object.values(tasks).sort(Fn).map(item => (
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        )
-                    }
-                    <View>
-                        <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color:theme.text, fontSize:25,padding:5}}>----completed----</Text>
-                    </View>
-                    {isCompleted ?
-                    ( sortedByDueDate ?
-                        Object.values(tasks).map((item)=>(
-                                <Task key={item.id} completed={item.completed} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        :
-                        Object.values(tasks).sort(Fn).map(item => (
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        )
-                    :
-                    null
-=======
                         <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
                     ))
                     }
@@ -247,7 +197,6 @@ export const Home = ({ navigation }) => {
                     Object.values(tasks).sort(Fn).map(item => (
                         <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
                     ))
->>>>>>> dbf6481810c37736da693225f0400a8e64233abf
                     }
                 </ScrollView>
             }*/

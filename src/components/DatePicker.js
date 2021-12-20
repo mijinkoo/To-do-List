@@ -35,7 +35,6 @@ export default function DatePicker({setDate, item}) {
     };
 
     const handleConfirm = (date) => {
-        //console.warn(date.toString());
         const year = date.toString().substring(11,15)
         const month = _toNumber(date.toString().substring(4,7))
         const day  =date.toString().substring(8,10)

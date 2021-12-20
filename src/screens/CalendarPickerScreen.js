@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems:'center'
     },
     datetext: {
         fontSize:17,
@@ -169,11 +170,12 @@ export const CalendarPickerScreen = ({ navigation }) => {
 
     return isReady ? (
 
-            <View style={[styles.container, {backgroundColor: (CurrentMode=== 'light') ? lightTheme.screenBackground : darkTheme.screenBackground}]}>
-            <CalendarPicker textStyle={{color: (CurrentMode=== 'light') ? lightTheme.calendarColor : darkTheme.calendarColor}}
+            <View style={[styles.container, {backgroundColor: (CurrentMode=== 'light') ? lightTheme.screenBackground : darkTheme.screenBackground,}]}>
+            <CalendarPicker textStyle={{color: 'gray'}}
                             onDateChange={_dateChange} //initialDate={new Date()}
                             selectedDayColor='#778bdd' todayBackgroundColor='yellow'
                             />
+            <View style={{borderWidth: 1, borderColor: 'lightgray',marginTop:20}}/>
             <View style={styles.box}>
                 <Text style={[styles.text, {color: (CurrentMode=== 'light') ? 'black' : 'white'}]}>{date}</Text>
                 {itemExist ? (

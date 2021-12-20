@@ -1,13 +1,11 @@
 import React,{useEffect, useState} from "react";
-import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable, StyleSheet, TextInput } from "react-native"
-import IconButton from "../components/IconButton";
-import { images } from "../image";
+import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable, StyleSheet, TextInput } from "react-native";
 import { ViewStyles, textStyles, barStyles } from '../styles';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DatePicker from "../components/DatePicker";
-import DropDownPicker from 'react-native-dropdown-picker';
 import CategoryPicker from "../components/CategoryPicker";
 import AppLoading from "expo-app-loading";
+import { Container, Header, TextField } from '../styles';
 
 export const EditTask = ({route, navigation}) => {
 
@@ -40,12 +38,10 @@ export const EditTask = ({route, navigation}) => {
 
     const _editTask = async() => {
         await _loadTasks();
-        alert('Edit:'+ title);
         const ID = item.id;
         const taskObject = {
             [ID]: {id: ID, title: title, date: date, category: category, comment: comment, completed: false},
         };
-        setTitle('');
         _saveTasks({...tasks, ...taskObject});
         await AsyncStorage.setItem('taskObject', JSON.stringify(taskObject));
         navigation.navigate("TODO List")
@@ -54,30 +50,30 @@ export const EditTask = ({route, navigation}) => {
     const width = Dimensions.get('window').width
 
     return ( isLoading ?
-        <SafeAreaView style={ViewStyles.container}>
+        <Container>
             <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center'}}>
-                <Text style={textStyles.title}>Edit a task</Text>
+                <Header>Edit a task</Header>
             </View>
-            <View style={{position:'absolute', top:100, height: 300,}}>
-                <TextInput name="title" value={title} onChangeText={text => setTitle(text)} placeholder="  Title" placeholderTextColor= '#fffff1'
-                    maxLength={20} keyboardAppearance="light" style={[boxStyles.textInput,{height:40, marginBottom:50}]}>
-                </TextInput>
+            <View style={{marginTop: 20, width:'80%', alignItems:'center'}}>
+                <TextField name="title" value={title} onChangeText={text => setTitle(text)} placeholder="Title" placeholderTextColor='#646672'
+                    maxLength={20} keyboardAppearance="light">
+                </TextField>
 
-                <View style={{zIndex: 1}}>
-                    <CategoryPicker value={category} item={item} canModify="true" setCategory={setCategory} style={{zIndex: 1}}/>
-                </View>
+                <View style={{height: 30}}/>
+
+                <CategoryPicker value={category} item={item} canModify="true" setCategory={setCategory} style={{zIndex: 1}}/>
 
                 <DatePicker name="date" item={item} setDate={setDate}/>
 
-                <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= '#fffff1'
-                    maxLength={20} keyboardAppearance="light"style={boxStyles.textInput}>
-                </TextInput>
+                <TextField name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="Comment" placeholderTextColor= '#646672'
+                    maxLength={20} keyboardAppearance="light" style={{height:100}}>
+                </TextField>
 
-                <Pressable onPress={_editTask}>
-                    <Text style={[boxStyles.textInput, {color:'#fffff1', paddingLeft:10}]}>Edit</Text>
+                <Pressable onPress={_editTask} style={{backgroundColor: '#1185b4', width:100, height: 40,marginTop: 50, paddingTop: 4, borderRadius:20}}>
+                    <Text style={boxStyles.textInput}>Edit</Text>
                 </Pressable>
             </View>
-        </SafeAreaView>
+        </Container>
        :
        <AppLoading
             startAsync = {_loadTasks}
@@ -90,17 +86,10 @@ export const EditTask = ({route, navigation}) => {
 
 const boxStyles = StyleSheet.create({
     textInput: {
+        textAlign:'center',
+        textAlignVertical:'center',
         fontSize: 25,
-        width: Dimensions.get('window').width-100,
-        height: 40,
-        //marginTop: 10,
-        //marginLeft: 3,
-        //paddingLeft: 15,
-        //paddingTop: 2,
-        marginTop: 50,
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        backgroundColor: '#eeeeee',
+        color: '#ffffff',
     },
 });
 

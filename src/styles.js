@@ -25,6 +25,18 @@ export const CategoryContainer = styled.Pressable`
     background-color: ${props => props.theme.box};
 `;
 
+export const CategoryEditor = styled.TextInput`
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: ${props => props.theme.box};
+    font-size: 20px;
+`;
+
+
 export const smallPicker = StyleSheet.create({ 
     item: {
         justifyContent:'center',
@@ -46,6 +58,18 @@ export const bigPicker = StyleSheet.create({
         fontSize: 20,
     }
 });
+
+export const TextField = styled.TextInput`
+    align-items: center;
+    justify-content: flex-start;
+    background-color: ${props => props.theme.box};
+    fontSize: 20px;
+    width: 100%;
+    height: 40px;
+    margin-top: 30px
+    padding-left: 20px;
+    color:#646672;
+`;
 
 export const ViewStyles = StyleSheet.create({
     container: {

@@ -1,6 +1,6 @@
 import React,{useState} from "react";
-import { Text, View, Dimensions, Pressable, StyleSheet, TextInput } from "react-native"
-import { textStyles, Container, Header } from '../styles';
+import { Text, View, Dimensions, Pressable, StyleSheet } from "react-native"
+import { Container, Header, TextField } from '../styles';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DatePicker from "../components/DatePicker";
 import CategoryPicker from "../components/CategoryPicker";
@@ -73,8 +73,6 @@ export const AddTask = ({navigation}) => {
                 <View style={{height: 30}}/>
 
                 <CategoryPicker canModify="true" setCategory={setCategory} setIsCategoryOpen={setIsCategoryOpen}/>
-                
-
 
                 <DatePicker setDate={setDate}/>
 
@@ -103,21 +101,10 @@ const boxStyles = StyleSheet.create({
         textAlign:'center',
         textAlignVertical:'center',
         fontSize: 25,
-        //backgroundColor: '#1185b4',
         color: '#ffffff',
     },
 });
 
-const TextField = styled.TextInput`
-    align-items: center;
-    justify-content: flex-start;
-    background-color: ${props => props.theme.box};
-    fontSize: 20px;
-    width: 100%;
-    height: 40px;
-    margin-top: 30px
-    padding-left: 20px;
-`;
 
 export default AddTask;
 

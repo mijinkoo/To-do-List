@@ -2,7 +2,7 @@ import React,{useEffect, useRef, useState,} from "react";
 import { Pressable, StyleSheet, View, Image, Text, Dimensions, TextInput, } from "react-native";
 import { images } from "../image";
 import IconButton from "./IconButton";
-import { CategoryContainer, smallPicker, bigPicker } from "../styles";
+import { CategoryContainer, smallPicker, bigPicker, CategoryEditor } from "../styles";
 
 const Category = ({item, deleteCategory, updateCategory, canModify, setLabel, mini}) =>{
 
@@ -26,7 +26,6 @@ const Category = ({item, deleteCategory, updateCategory, canModify, setLabel, mi
     const _onBlur = () => {
         if (isEditing) {
             setIsEditing(false);
-            setText(item.label);
         }
     }
 
@@ -47,18 +46,18 @@ const Category = ({item, deleteCategory, updateCategory, canModify, setLabel, mi
 
     return isEditing ?(
         <>
-            <TextInput value={value} onChangeText={value=>setValue(value)} onSubmitEditing={_onSubmitEditing} onBlur={_onBlur}/>
-            <Text style={{color: '#fffff1',}}>{isEditing}</Text>
+            <CategoryEditor value={value} autoFocus={true} onChangeText={value=>setValue(value)} onSubmitEditing={_onSubmitEditing} onBlur={_onBlur}/>
         </>
         ):(
         <>
-            <CategoryContainer style={itemStyle} onPressOut={()=>setSelected(item.label)}>
+            <CategoryContainer style={[itemStyle, {justifyContent:'space-between'}]} onPressOut={()=>setSelected(item.label)}>
                 <Text style={textStyle}>{item.label}</Text>
-                {(canModify === "true") ?<>
-                <IconButton type={images.update} id={item.id} onPressOut={_handleUpdateButtonPress}/>
-                <IconButton type={images.delete} id={item.id} onPressOut={deleteCategory}/></>
-                :
-                <></>}
+                <View style={{flexDirection:'row'}}>
+                    {(canModify === "true") ?<>
+                        <IconButton type={images.update} id={item.id} onPressOut={_handleUpdateButtonPress}/>
+                        <IconButton type={images.delete} id={item.id} onPressOut={deleteCategory}/></> :<></>
+                    }
+                </View>
             </CategoryContainer>
         </>
     )

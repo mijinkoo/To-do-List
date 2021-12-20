@@ -224,12 +224,12 @@ export const Home = ({ navigation }) => {
                             <Icon source={images.sort}></Icon>
                             <Text style={{color:'#868d95', fontSize: 10}}>Sort</Text>
                             {sort && 
-                            <View style={{position:'absolute', top:50, right:0, width:150, height:50, borderWidth:1, borderColor:'#ffffff', backgroundColor:'#fffff1'}}>
-                                <Pressable onPressOut={()=> SetIsSortedByDueDate(true)}>
-                                    <Text style={{fontSize:15, color:'#ffffff', borderBottomWidth: 1, borderBottomColor:'#ffffff', padding:2}}> Sort by due date</Text>
+                            <View style={{position:'absolute', top:40, right:0, width:150, height:50}}>
+                                <Pressable onPressOut={()=> SetIsSortedByDueDate(true)} style={{alignItems:'center'}}>
+                                    <Text style={{width: 150, fontSize:15, color:'#646672', padding:3, backgroundColor:'#d4d6e2', borderWidth:1, borderColor:'#646672'}}> Sort by due date</Text>
                                 </Pressable>
-                                <Pressable onPressOut={()=> SetIsSortedByDueDate(false)}>
-                                    <Text style={{fontSize:15, color:'#ffffff', padding:2}}> Sort by added date</Text>
+                                <Pressable onPressOut={()=> SetIsSortedByDueDate(false)}  style={{alignItems:'center'}}>
+                                    <Text style={{width: 150, fontSize:15, color:'#646672', padding:3, backgroundColor:'#d4d6e2', borderWidth:1, borderColor:'#646672'}}> Sort by added date</Text>
                                 </Pressable>
                             </View>
                             }

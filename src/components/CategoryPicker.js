@@ -8,13 +8,12 @@ import IconButton from "./IconButton";
 import Category from "./Category";
 import AppLoading from "expo-app-loading";
 import styled from 'styled-components/native';
-import { CategoryContainer, smallPicker, bigPicker } from "../styles";
+import { CategoryContainer, smallPicker, bigPicker, CategoryEditor } from "../styles";
 
 const CategoryPicker = ({canModify, setCategory, mini}) => {
 
     const [newValue, setNewValue] = useState('');
     const [label, setLabel] = useState('Category');
-    //const [isEditing, setEditing] = useState(false);
 
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState({
@@ -56,7 +55,6 @@ const CategoryPicker = ({canModify, setCategory, mini}) => {
         const categoryObject = {
             [ID]: {id: ID, label: newValue, value: newValue},
         };
-        console.warn(categoryObject)
         setAddCategory(false);
         setNewValue('');
         _saveCategories({...items, ...categoryObject});
@@ -115,14 +113,12 @@ const CategoryPicker = ({canModify, setCategory, mini}) => {
                     {Object.values(items).map(item =>(
                         <Category key={item.id} item={item} deleteCategory={_deleteCategory} updateCategory={_updateCategory} setLabel={setLabel} canModify={canModify} mini={mini}/>
                     ))}
-                    {addCategory ? 
-                        <View style={itemStyle}>
-                            <TextInput value={newValue} onChangeText={value=>setNewValue(value)} onSubmitEditing={_addCategory} onBlur={_onBlur} style={{backgroundColor:'#3c5c5a', height: 40, width: 100}}/>
-                        </View>
+                    {addCategory ?
+                        <CategoryEditor value={newValue} autoFocus={true} onChangeText={value=>setNewValue(value)} onSubmitEditing={_addCategory} onBlur={_onBlur}/>
                         :
                         (canModify === "true") ? <CategoryContainer style={itemStyle} onPressOut={_onPressOutAdd} >
                             <Text style={textStyle}>Add</Text> 
-                        </CategoryContainer>: <></>  } 
+                        </CategoryContainer>: <></> } 
             </View>
             :
                 <></>

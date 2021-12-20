@@ -171,13 +171,13 @@ export const Home = ({ navigation }) => {
         
         Object.values(tasks).map(item =>
             {
-                if (item.category == category) {
+                if (item.category === category) {
                     totalCount += 1;
                     setItemExist(true);
                     if (item.completed) {
                         completedCount += 1;
                     }  
-                }        
+                }      
             }
         )
         if (totalCount == 0) {

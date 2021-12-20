@@ -10,10 +10,10 @@ import AppLoading from "expo-app-loading";
 import styled from 'styled-components/native';
 import { CategoryContainer, smallPicker, bigPicker, CategoryEditor } from "../styles";
 
-const CategoryPicker = ({canModify, setCategory, mini}) => {
+const CategoryPicker = ({canModify, setCategory, mini, item}) => {
 
     const [newValue, setNewValue] = useState('');
-    const [label, setLabel] = useState('Category');
+    const [label, setLabel] = useState(item ? item.category :'Category');
 
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState({

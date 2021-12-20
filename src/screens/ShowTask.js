@@ -18,16 +18,16 @@ export const ShowTask = ({route, navigation}) => {
                     <_Text>{item.title}</_Text>
                 </TextField>
                 <TextField>
-                    <_Text>{item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}</_Text>
+                    <_Text>{item.category}</_Text>
                 </TextField>
                 <TextField>
-                    <_Text>{item.category}</_Text>
+                    <_Text>{item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}</_Text>
                 </TextField>
                 <TextField style={{height:100}}>
                     <_Text>{item.comment}</_Text>
                 </TextField>
             </View>
-            <Pressable onPressOut={() => navigation.goBack()} style={{backgroundColor: '#1185b4', width:100, height: 40,marginTop: 50, paddingTop: 4, borderRadius:20}}>
+            <Pressable onPressOut={()=> navigation.navigate('Edit', {item: item})} style={{backgroundColor: '#1185b4', width:100, height: 40,marginTop: 50, paddingTop: 4, borderRadius:20}}>
                     <Text style={[boxStyles.text]}>Edit</Text>
             </Pressable>
         </Container>)

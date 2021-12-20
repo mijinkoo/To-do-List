@@ -70,7 +70,7 @@ export const EditTask = ({route, navigation}) => {
                 </TextField>
 
                 <Pressable onPress={_editTask} style={{backgroundColor: '#1185b4', width:100, height: 40,marginTop: 50, paddingTop: 4, borderRadius:20}}>
-                    <Text style={boxStyles.textInput}>Edit</Text>
+                    <Text style={boxStyles.textInput}>Submit</Text>
                 </Pressable>
             </View>
         </Container>

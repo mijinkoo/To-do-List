@@ -4,6 +4,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Home } from '../screens/Home';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import { CalendarPickerScreen } from '../screens/CalendarPickerScreen';
+import { useTheme } from '../context/ThemeContext';
+import { darkTheme, lightTheme } from '../theme';
 
 const TabStyles = ({
     tabBar: {
@@ -20,12 +22,16 @@ const Tab = createBottomTabNavigator();
 
 
 const TabNavigation = () => {
-    
+
+    //theme
+    const ThemeMode = useTheme();
+    const CurrentMode = ThemeMode[0] === 'light' ? 'light' : 'dark';
+
     return (
         <Tab.Navigator screenOptions={{
             //tabBarActiveTintColor: theme.main,
             tabBarStyle: {
-                backgroundColor: '#ffffff'
+                backgroundColor: (CurrentMode=== 'light') ? lightTheme.screenBackground : darkTheme.screenBackground
             }
         }}>
             <Tab.Screen name="TODO List" component={Home}

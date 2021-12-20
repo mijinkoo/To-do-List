@@ -6,8 +6,10 @@ import { Home } from '../screens/Home';
 import Task from '../components/Task';
 import AppLoading from "expo-app-loading";
 import { Dimensions } from 'react-native';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 import { theme } from '../theme';
+import { darkTheme, lightTheme } from '../theme';
+import { useTheme } from '../context/ThemeContext';
 
 const List = styled.ScrollView`
     width: ${({ width }) => width - 40}px;
@@ -20,24 +22,27 @@ const List = styled.ScrollView`
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 50,
-        backgroundColor: 'white',
+        paddingTop: 50,
+        //backgroundColor: theme.background,
     },
     box: {
         margin: 20,
         marginBottom: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems:'center'
     },
     datetext: {
-        fontSize: 20,
+        fontSize:17,
         marginVertical: 10,
     },
     text: {
-        fontSize: 20,
+        fontSize: 17,
         fontWeight: '400',
+        //color: theme.text,
     },
     success: {
+        fontSize: 17,
         alignItems: 'flex-end',
     },
     emoji: {
@@ -70,7 +75,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
     
     const [emoji, setEmoji] = useState('');
 
-    const _successRate = tasks => {
+    const _successRate = async tasks => {
         var totalCount = 0;          // 선택한 날짜의 총 task 수
         var completedCount = 0;      // 선택한 날짜의 completed task 수
         
@@ -93,22 +98,6 @@ export const CalendarPickerScreen = ({ navigation }) => {
         }
     }
 
-    /**
-    const _itemExist = tasks => {
-        setTaskList(Object.entries(tasks))
-        for(let i=0; i<taskList.length; i++){
-            if(taskList[i].date == cmpDate || taskList[i].date == "D-day"){
-                //return true;
-                setItemExist(true);
-                break;
-            }
-        }
-        //return false;
-        setItemExist(false);
-    } 
-     */
-    
-
     const _setEmoji = async() => {
         //_successRate(tasks);
 
@@ -126,6 +115,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
     }
 
     useEffect(()=>{
+        setItemExist(false);
         _successRate(tasks);
         //_itemExist(tasks);
         _setEmoji();
@@ -148,7 +138,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
     const _loadTasks = async () => {
         const loadedTasks = await AsyncStorage.getItem('tasks');
         setTasks(JSON.parse(loadedTasks || '{}'));
-        console.log('loadTask');
+        //_loadTheme();
         //_successRate(tasks);
     };
 
@@ -167,18 +157,31 @@ export const CalendarPickerScreen = ({ navigation }) => {
 
     useEffect(()=>{
         _loadTasks();
+        _successRate(tasks);
     },[tasks])
 
+    //theme
+
+    //const initialMode = useTheme();
+    //const [ThemeMode, setThemeMode] = useState(initialMode)
+    const ThemeMode = useTheme();
+    const CurrentMode = ThemeMode[0] === 'light' ? 'light' : 'dark';
+
+
     return isReady ? (
-        <View style={styles.container}>
-            <CalendarPicker onDateChange={_dateChange} //initialDate={new Date()}
-                            selectedDayColor={theme.main} todayBackgroundColor={theme.main} todayBackgroundColor='yellow'/>
+
+            <View style={[styles.container, {backgroundColor: (CurrentMode=== 'light') ? lightTheme.screenBackground : darkTheme.screenBackground,}]}>
+            <CalendarPicker textStyle={{color: 'gray'}}
+                            onDateChange={_dateChange} //initialDate={new Date()}
+                            selectedDayColor='#778bdd' todayBackgroundColor='yellow'
+                            />
+            <View style={{borderWidth: 1, borderColor: 'lightgray',marginTop:20}}/>
             <View style={styles.box}>
-                <Text style={styles.text}>{date}</Text>
+                <Text style={[styles.text, {color: (CurrentMode=== 'light') ? 'black' : 'white'}]}>{date}</Text>
                 {itemExist ? (
                     <>
                     <Text style={[styles.emoji]}>{emoji}</Text>
-                    <Text style={[styles.text, styles.success]}>Success {success}%</Text>
+                    <Text style={[styles.text, styles.success, {color: (CurrentMode=== 'light') ? 'black' : 'white'}]}>Success {success}%</Text>
                     </>
                 ) : ( <>
                 </> ) }
@@ -190,7 +193,8 @@ export const CalendarPickerScreen = ({ navigation }) => {
                         <Task
                             key={item.id} item={item}
                             toggleTask={_toggleTask}
-                            calendarMode="true"
+                            calendarMode={true} 
+                            navigation={navigation}
                         />
                     ) : (
                         <></>
@@ -198,6 +202,7 @@ export const CalendarPickerScreen = ({ navigation }) => {
                 ))}
             </List>
         </View>
+        
     ) : (
         <AppLoading
             startAsync = {_loadTasks}

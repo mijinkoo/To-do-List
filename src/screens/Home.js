@@ -1,26 +1,26 @@
 import React,{useEffect, useState, Component} from "react";
-import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable } from "react-native"
-import IconButton from "../components/IconButton";
-import Input from "../components/Input";
+import { StatusBar, Text, View, Dimensions, ScrollView, Image, Pressable,} from "react-native"
 import CategoryPicker from "../components/CategoryPicker";
 import Search from "../components/Search";
 import Task from "../components/Task";
 import { images } from "../image";
-import { theme } from "../theme";
-import { ViewStyles, textStyles, barStyles } from '../styles';
-import DropDownPicker from 'react-native-dropdown-picker';
 import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import AddTask from "./AddTask";
+import { useTheme } from "../context/ThemeContext";
+import ThemeToggle from "../components/ThemeToggle";
+import styled from 'styled-components/native';
+import { Container, Header } from "../styles";
+import { SuccessRate } from "../components/SuccessRate";
 
 export const Home = ({ navigation }) => {
 
     const width = Dimensions.get('window').width;
 
+
     const [tasks, setTasks] = useState({});
     const [searchedtasks, setSearchedTasks] = useState([]);
     const [text, setText] = useState("");
-    const [isReady, SetIsReady] = useState(false);
+    const [isReady, setIsReady] = useState(false);
 
     const _saveTasks = async tasks => {
         try {
@@ -41,6 +41,7 @@ export const Home = ({ navigation }) => {
         const currentTasks = Object.assign({}, tasks);
         currentTasks[id]['completed'] = !currentTasks[id]['completed'];
         _saveTasks(currentTasks);
+        _successRate(currentTasks);
     }
 
     const completed_false=(item)=>{
@@ -59,9 +60,44 @@ export const Home = ({ navigation }) => {
 
     //Select
     const [select, setSelect] = useState(false);
+    const [isSelectedAll, SetIsSelectedAll] = useState(false);
 
     const _selectTask = () => {
+        if(select){
+            Object.values(tasks).forEach(function(item){
+                item.selected = false;
+            })
+            SetIsSelectedAll(false);
+            const currentTasks = Object.assign({}, tasks);
+            _saveTasks(currentTasks);
+        } 
         setSelect((prev) => !prev);
+    }
+
+    const _toggleSelect = id => {
+        const currentTasks = Object.assign({}, tasks);
+        currentTasks[id]['selected'] = !currentTasks[id]['selected'];
+        _saveTasks(currentTasks);
+    }
+    
+
+    const _selectAllTask = () => {
+        Object.values(tasks).forEach(function(item){
+            item.selected = !isSelectedAll;
+        })
+        SetIsSelectedAll((prev)=> !prev);
+        const currentTasks = Object.assign({}, tasks);
+        _saveTasks(currentTasks);
+    }
+
+
+    const _deleteSelectedTask =() => {
+        const currentTasks = Object.assign({}, tasks);
+        Object.values(tasks).map(item => {
+            if(item.selected === true) {
+                _deleteTask(item.id)
+            }
+        })
     }
 
     //Sort
@@ -79,15 +115,12 @@ export const Home = ({ navigation }) => {
     }
 
     //category
-
     const [category, setCategory] = useState("All");
 
     const sortedByCategory =(item)=>{
         if(category === "All" | category === "Category") return item;
         else return item.category === category;
     }
-
-
 
     //Load Data
     const _loadTasks =  async () => {
@@ -97,7 +130,7 @@ export const Home = ({ navigation }) => {
 
     useEffect(()=>{
         const i = Object.values(tasks).filter(item =>(
-            item.title.toLowerCase().includes(text.toLowerCase())
+            item.title.toLowerCase().includes(text.toLowerCase())||item.date.includes(text)
         ))
         setSearchedTasks(i);
     },[text])
@@ -106,148 +139,168 @@ export const Home = ({ navigation }) => {
         _loadTasks();
     },[tasks])
 
-   
+   // themeProvider
+   const [ThemeMode, toggleTheme] = useTheme();
+
+   const CurrentMode = ThemeMode[0] === 'light' ? 'light' : 'dark';
+   const textColor = CurrentMode === 'light' ? '#313131' : '#ffffff'
+
+    const [itemExist, setItemExist] = useState(false);
+    const [emoji, setEmoji] = useState('');
+    const [success, setSuccess] = useState(0);
+    
+    const _setEmoji = () => {
+        //_successRate(tasks);
+
+        if(success >= 80) {
+            setEmoji('😍');
+        } else if(success >= 60) {
+            setEmoji('😚');
+        } else if(success >= 40) {
+            setEmoji('🙂');
+        } else if(success >= 20) {
+            setEmoji('🤔');
+        } else if(success >= 0){
+            setEmoji('😔');
+        }
+    }
+
+    const _successRate = tasks => {
+        var totalCount = 0;          // 선택한 카테고리의 총 task 수
+        var completedCount = 0;      // 선택한 카테고리의 completed task 수
+        
+        Object.values(tasks).map(item =>
+            {
+                if (item.category === category) {
+                    totalCount += 1;
+                    setItemExist(true);
+                    if (item.completed) {
+                        completedCount += 1;
+                    }  
+                }      
+            }
+        )
+        if (totalCount == 0) {
+            setSuccess(0);
+        }
+        else if (totalCount > 0) {
+            setSuccess((completedCount/totalCount)*100);
+        }
+    }
+
+    useEffect(()=>{
+        setItemExist(false);
+        _successRate(tasks);
+    }, [category]);
+
+    useEffect(()=>{
+        _setEmoji();
+    },[success])
     
     return isReady ? (
-        <SafeAreaView style={ViewStyles.container} >
-            <StatusBar barStyle="light-content" style={barStyles.statusbar}/>
-            <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center'}}>
-                <Text style={textStyles.title}>TODO List</Text>
-                <Search  setText={setText} ></Search>
+            <Container>
+            <StatusBar hidden={true} />
+            <View style={{flexDirection: 'row', width: '100%', height: 50 , }}>
+                <View style={{alignItems:'center', justifyContent:'center', width:'100%'}}><Header>My Task</Header></View>
+                <Search setText={setText} ></Search>
             </View>
-            <View style={{flexDirection:'column', zIndex: 2}}>
-                <View style={{flexDirection:'row', marginBottom:5, justifyContent:'space-between', height:40}} width={width-20}>
-                    <CategoryPicker canModify="false" setCategory={setCategory}/>
+                <View style={{flexDirection:'row', marginBottom:5, zIndex: 1, justifyContent:'space-between',width:'95%', height:30, marginTop: 5, paddingLeft:5}}>
+                    
+                    <CategoryPicker canModify="false" setCategory={setCategory} mini={true}/>
+                    <ThemeToggle toggle={toggleTheme} mode={ThemeMode}>
+                        <Text>DarkMode</Text>
+                    </ThemeToggle>
                     <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
                         {select && 
-                            <Pressable style={{ alignItems:'center',justifyContent:'center', paddingRight:10}}>
-                                <Image source={images.selectAll} style={{tintColor: theme.text, width: 30, height: 30,}}></Image>
-                                <Text style={{color:theme.text, fontSize: 8.5, paddingTop:2}}>Select All</Text>
+                            <Pressable onPressOut={_selectAllTask} style={{ alignItems:'center',justifyContent:'center', paddingRight:10, paddingTop:2}}>
+                                <Icon source={images.selectAll}></Icon>
+                                <Text style={{color:'#868d95', fontSize: 10,}}>Select All</Text>
                             </Pressable>
                         }
                         <Pressable onPressOut={_selectTask} style={{ alignItems:'center',justifyContent:'center', paddingRight:10}}>
-                            <Image source={images.select} style={{tintColor: theme.text, width: 30, height: 30}}></Image>
-                            <Text style={{color:theme.text, fontSize: 10}}>Select</Text>
+                            <Icon source={images.select}></Icon>
+                            <Text style={{color:'#868d95', fontSize: 10}}>Select</Text>
                         </Pressable>
                         <Pressable onPressOut={()=>setSort((prev) => !prev)} style={{ flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
-                            <Image source={images.sort} style={{tintColor: theme.text, width: 30, height: 30}}></Image>
-                            <Text style={{color:theme.text, fontSize: 10}}>Sort</Text>
+                            <Icon source={images.sort}></Icon>
+                            <Text style={{color:'#868d95', fontSize: 10}}>Sort</Text>
                             {sort && 
-                            <View style={{position:'absolute', top:50, right:0, width:150, height:50, borderWidth:1, borderColor:'#ffffff', backgroundColor:theme.background}}>
-                                <Pressable onPressOut={()=> SetIsSortedByDueDate(true)}>
-                                    <Text style={{fontSize:15, color:'#ffffff', borderBottomWidth: 1, borderBottomColor:'#ffffff', padding:2}}> Sort by due date</Text>
+                            <View style={{position:'absolute', top:40, right:0, width:150, height:50}}>
+                                <Pressable onPressOut={()=> SetIsSortedByDueDate(true)} style={{alignItems:'center'}}>
+                                    <Text style={{width: 150, fontSize:15, color:'#646672', padding:3, backgroundColor:'#d4d6e2', borderWidth:1, borderColor:'#646672'}}> Sort by due date</Text>
                                 </Pressable>
-                                <Pressable onPressOut={()=> SetIsSortedByDueDate(false)}>
-                                    <Text style={{fontSize:15, color:'#ffffff', padding:2}}> Sort by added date</Text>
+                                <Pressable onPressOut={()=> SetIsSortedByDueDate(false)}  style={{alignItems:'center'}}>
+                                    <Text style={{width: 150, fontSize:15, color:'#646672', padding:3, backgroundColor:'#d4d6e2', borderWidth:1, borderColor:'#646672'}}> Sort by added date</Text>
                                 </Pressable>
                             </View>
                             }
                         </Pressable>                    
                     </View>
                 </View>
-            </View>
 
             <ScrollView width={width-20}>
-            <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color:theme.text, fontSize:25,padding:5}}>----uncompleted----</Text>
+            <View style={{padding: 5, paddingBottom: 10}}>
+                <Text width={width} style={{color:'#474747', fontSize:16,padding:5}}>uncompleted</Text>
                 {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_false).filter(sortedByCategory).map((item)=>(
-                    <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    <Task key={item.id} item={item} toggleSelect={_toggleSelect} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode={false} navigation={navigation}/>
                 ))}
-            <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color:theme.text, fontSize:25,padding:5}}>----completed----</Text>
+            </View>
+            <View style={{padding: 5}}>
+                <Text width={width} style={{ color:'#474747', fontSize:16,padding:5}}>completed</Text>
                 {Object.values(text? searchedtasks : tasks).sort(_sortByDueDate).filter(completed_true).filter(sortedByCategory).map((item)=>(
-                    <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
+                    <Task key={item.id} item={item} toggleSelect={_toggleSelect} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode={false} navigation={navigation}/>
                 ))}
+            </View>
+            <View style={{margin:10, marginTop: 20, alignItems: 'center'}}>
+                {itemExist ? (
+                    <>
+                    <Text style={{fontSize: 30, fontWeight: '400'}}>{emoji}</Text>
+                    {/**
+                     <Text style={[{fontSize: 17, fontWeight: '400', alignItems: 'flex-end'}, {textColor: (CurrentMode == 'light') ? 'black' : 'white'}]}>Success {success}%</Text>
+
+                     */}
+                     </>
+                ) : ( <>
+                </> ) }
+            </View>
             </ScrollView>
 
-            <View style={{position:'absolute', bottom: 0, flexDirection:'row', justifyContent:'space-between', paddingBottom: 20}} width={width-60}>
-                <Pressable 
+            <View style={{position:'absolute', bottom: -12, left:((width-64)/2), flexDirection:'row', justifyContent:'space-between', paddingBottom: 20 }}>
+                <AddButton 
                     onPress={() => navigation.navigate('Add')}
-                    style={{alignItems:'center', justifyContent:'center',borderWidth: 2, borderRadius:90 ,borderColor:theme.text, padding:8, margin:0}}>
-                    <Image source={images.add} style={{tintColor: theme.text, width: 40, height: 40,padding:0, margin:0}}/>
-                </Pressable>
+                    style={{ borderRadius:90, shadowOffset:{width: 0, height: 6}, shadowRadius: 2.7 }}>
+                    <Image source={images.add} style={{tintColor: '#ffffff', width: 40, height: 40,padding:0, margin:0}}/>
+                </AddButton>
             </View>
             {select &&
-                <Text width={width} style={{position:'absolute', bottom: 0, textAlign:'center',textAlignVertical:'center',backgroundColor:'#2c2c2c', color:theme.text, fontSize:45, width:'100%', height:80, padding:0, margin:0}}>Delete</Text>
+            <Pressable onPressOut={_deleteSelectedTask} style={{position:'absolute', bottom: 0, textAlign:'center', backgroundColor:'#2c2c2c', width:'100%', height:70, paddingTop:10}}>
+                <Text width={width} style={{ textAlign:'center', color:'#fffff1', fontSize:38 ,textAlignVertical:'center'}}>Delete</Text>
+            </Pressable>
             }
-        </SafeAreaView>) : (
+        </Container>
+        ) : (
         <AppLoading
             startAsync = {_loadTasks}
-            onFinish = {() => SetIsReady(true)}
+            onFinish = {() => setIsReady(true)}
             onError = {console.error}
         />
     );
 }
 
-/*
-{ text ? 
-                <ScrollView width={width-20}>
-                    { sortedByDueDate ?
-                    Object.values(searchedtasks).map((item)=>(
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                    ))
-                    :
-                    Object.values(searchedtasks).sort(Fn).map(item => (
-<<<<<<< HEAD
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                    ))
-                    }
-                    <View>
-                        <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color:theme.text, fontSize:25,padding:5}}>----completed----</Text>
-                    </View>
-                 </ScrollView>
-                :
-                <ScrollView width={width-20}>
-                    {isCompleted ?
-                    ( sortedByDueDate ?
-                        Object.values(tasks).map((item)=>(
-                                <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        :
-                        Object.values(tasks).sort(Fn).map(item => (
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        )
-                    :
-                    ( sortedByDueDate ?
-                        Object.values(tasks).map((item)=>(
-                                <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        :
-                        Object.values(tasks).sort(Fn).map(item => (
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        )
-                    }
-                    <View>
-                        <Text width={width} style={{textAlign:"center",textAlignVertical:'auto', color:theme.text, fontSize:25,padding:5}}>----completed----</Text>
-                    </View>
-                    {isCompleted ?
-                    ( sortedByDueDate ?
-                        Object.values(tasks).map((item)=>(
-                                <Task key={item.id} completed={item.completed} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        :
-                        Object.values(tasks).sort(Fn).map(item => (
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                        ))
-                        )
-                    :
-                    null
-=======
-                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                    ))
-                    }
-                 </ScrollView>
-                :
-                <ScrollView width={width-20}>
-                    { sortedByDueDate ?
-                    Object.values(tasks).map((item)=>(
-                            <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                    ))
-                    :
-                    Object.values(tasks).sort(Fn).map(item => (
-                        <Task key={item.id} item={item} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode="false" navigation={navigation}/>
-                    ))
->>>>>>> dbf6481810c37736da693225f0400a8e64233abf
-                    }
-                </ScrollView>
-            }*/
+
+const Icon = styled.Image`
+    tint-color: #868d95; 
+    width: 30px;
+    height: 30px;
+`;
+
+const AddButton = styled.Pressable`
+    align-items: center;
+    justify-content: center;
+    background-color: #1185b4;
+    border-width: 2px; 
+    border-color: #1185b4;
+    shadow-color:  ${props => props.theme.shadow}; 
+    shadow-opacity: 0.7; 
+    padding:8px;
+`;

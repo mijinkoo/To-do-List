@@ -1,12 +1,12 @@
 import React from "react";
 import { Dimensions, StyleSheet, TextInput } from "react-native";
-import { theme } from "../theme";
+
 
 const Input = ({value, onChangeText, onSubmitEditing, onBlur, placeholder}) => {
     return (
         <TextInput style={inputStyles.textInput}
             placeholder={placeholder}
-            placeholderTextColor= {theme.main}
+            placeholderTextColor= 'black'
             maxLength={20}
             keyboardAppearance="light"
             value={value}
@@ -19,16 +19,13 @@ const Input = ({value, onChangeText, onSubmitEditing, onBlur, placeholder}) => {
 
 const inputStyles = StyleSheet.create({
     textInput: {
-        fontSize: 25,
+        fontSize: 20,
         width: Dimensions.get('window').width-100,
-        height: 30,
-        //marginTop: 10,
-        //marginLeft: 3,
-        //paddingLeft: 15,
-        //paddingTop: 2,
+        height: 40,
+        paddingLeft: 15,
         borderRadius: 10,
-        backgroundColor: theme.itemBackground,
-        color: theme.text,
+        backgroundColor: '#ffffff',
+        color: 'black',
     },
 });
 

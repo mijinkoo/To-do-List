@@ -1,19 +1,19 @@
 import React,{useState, useEffect} from "react";
 import { Pressable, StyleSheet, View, Image, Text, Dimensions, TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { theme } from "../theme";
 import PropTypes from 'prop-types';
 import Input from "./Input";
 import { images } from "../image";
 import IconButton from "./IconButton";
 import Category from "./Category";
 import AppLoading from "expo-app-loading";
+import styled from 'styled-components/native';
+import { CategoryContainer, smallPicker, bigPicker, CategoryEditor } from "../styles";
 
-const CategoryPicker = ({canModify, setCategory}) => {
+const CategoryPicker = ({canModify, setCategory, mini, item}) => {
 
     const [newValue, setNewValue] = useState('');
-    const [label, setLabel] = useState('Category');
-    //const [isEditing, setEditing] = useState(false);
+    const [label, setLabel] = useState(item ? item.category :'Category');
 
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState({
@@ -24,7 +24,8 @@ const CategoryPicker = ({canModify, setCategory}) => {
     });
 
     const _onPressOutCategoryPicker = () =>{
-        setOpen((prev) => !prev)
+        setOpen((prev) => !prev);
+        /*setIsCategoryOpen(open);*/
     }
 
     const _updateCategory = item => {
@@ -54,7 +55,6 @@ const CategoryPicker = ({canModify, setCategory}) => {
         const categoryObject = {
             [ID]: {id: ID, label: newValue, value: newValue},
         };
-        console.warn(categoryObject)
         setAddCategory(false);
         setNewValue('');
         _saveCategories({...items, ...categoryObject});
@@ -93,29 +93,34 @@ const CategoryPicker = ({canModify, setCategory}) => {
         _loadCategories();
     },[items])
 
+    const itemStyle = mini ? smallPicker.item : bigPicker.item;
+    const textStyle = mini ? smallPicker.text : bigPicker.text;
+
+    const height = (Object.values(items).length + 3) * (mini ? 30 : 40)
+
     return  isLoading ? (
-        <View >
-            <Pressable style={pickerStyles.item} onPressOut={(_onPressOutCategoryPicker)}>
-                <Text style={pickerStyles.text}>{label}</Text>
-            </Pressable>
+        <View style={{width : mini ? 110 : '100%', zIndex:100, height: open ? height : mini ? 30 : 40}}>
+            <CategoryContainer onPressOut={(_onPressOutCategoryPicker)} style={itemStyle}>
+                <Text style={textStyle}>{label}</Text>
+            </CategoryContainer>
         
             {open ? 
-            <View style={{position:'absolute', top:40, width:'100%'}}>
-                <Pressable style={pickerStyles.item} onPressOut={()=>setLabel("All")}>
-                <Text style={pickerStyles.text}>All</Text>
-                </Pressable>
+            <View style={{position:'absolute', top: mini ? 30: 40, width:'100%'}}>
+                <CategoryContainer onPressOut={()=>setLabel("All")} style={itemStyle}>
+                    <Text style={textStyle}>All</Text>
+                </CategoryContainer>
 
-                    {Object.values(items).map(item =>(
-                        <Category key={item.id} item={item} deleteCategory={_deleteCategory} updateCategory={_updateCategory} setLabel={setLabel} canModify={canModify}/>
-                    ))}
-                    {addCategory ? 
-                        <View style={pickerStyles.item}>
-                            <TextInput value={newValue} onChangeText={value=>setNewValue(value)} onSubmitEditing={_addCategory} onBlur={_onBlur} style={{backgroundColor:'#3c5c5a', height: 40, width: 100}}/>
-                        </View>
-                        :
-                        (canModify === "true") ? <Pressable style={pickerStyles.item} onPressOut={_onPressOutAdd} >
-                            <Text style={pickerStyles.text}>Add</Text> 
-                        </Pressable>: <></>  } 
+                {Object.values(items).map(item =>(
+                    <Category key={item.id} item={item} deleteCategory={_deleteCategory} updateCategory={_updateCategory} setLabel={setLabel} canModify={canModify} mini={mini}/>
+                ))}
+                {addCategory ?
+                    <CategoryEditor value={newValue} autoFocus={true} onChangeText={value=>setNewValue(value)} onSubmitEditing={_addCategory} onBlur={_onBlur}/>
+                    :
+                    (canModify === "true") ? 
+                        <CategoryContainer style={itemStyle} onPressOut={_onPressOutAdd} >
+                            <Text style={textStyle}>Add</Text> 
+                        </CategoryContainer>: <></> 
+                } 
             </View>
             :
                 <></>
@@ -130,22 +135,7 @@ const CategoryPicker = ({canModify, setCategory}) => {
     />
 };
 
-const pickerStyles = StyleSheet.create({
-    
-    item: {
-        backgroundColor: '#eeeeee',
-        color: theme.main,
-        flexDirection:'row',
-        justifyContent: 'center',
-        alignItems:'center',
-        width: '100%',
-        height: 40,
-        paddingLeft:10
-    },
-    text: {
-        color: theme.main,
-        fontSize: 25,
-    }
-});
+
+
 
 export default CategoryPicker;

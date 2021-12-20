@@ -1,10 +1,10 @@
 import React,{useEffect, useRef, useState,} from "react";
 import { Pressable, StyleSheet, View, Image, Text, Dimensions, TextInput, } from "react-native";
 import { images } from "../image";
-import { theme } from "../theme";
 import IconButton from "./IconButton";
+import { CategoryContainer, smallPicker, bigPicker, CategoryEditor } from "../styles";
 
-const Category = ({item, deleteCategory, updateCategory, canModify, setLabel}) =>{
+const Category = ({item, deleteCategory, updateCategory, canModify, setLabel, mini}) =>{
 
     const [value, setValue] = useState("");
     const [isEditing, setIsEditing] = useState(false);
@@ -26,7 +26,6 @@ const Category = ({item, deleteCategory, updateCategory, canModify, setLabel}) =
     const _onBlur = () => {
         if (isEditing) {
             setIsEditing(false);
-            setText(item.label);
         }
     }
 
@@ -42,37 +41,39 @@ const Category = ({item, deleteCategory, updateCategory, canModify, setLabel}) =
         }
     },[selected])
 
+    const itemStyle = mini ? smallPicker.item : bigPicker.item;
+    const textStyle = mini ? smallPicker.text : bigPicker.text;
+
     return isEditing ?(
         <>
-            <TextInput value={value} onChangeText={value=>setValue(value)} onSubmitEditing={_onSubmitEditing} onBlur={_onBlur}/>
-            <Text style={{color: theme.main,}}>{isEditing}</Text>
+            <CategoryEditor value={value} autoFocus={true} onChangeText={value=>setValue(value)} onSubmitEditing={_onSubmitEditing} onBlur={_onBlur}/>
         </>
         ):(
         <>
-            <Pressable style={listStyles.item} onPressOut={()=>setSelected(item.label)}>
-                <Text style={listStyles.text}>{item.label}</Text>
-                {(canModify === "true") ?<>
-                <IconButton type={images.update} id={item.id} onPressOut={_handleUpdateButtonPress}/>
-                <IconButton type={images.delete} id={item.id} onPressOut={deleteCategory}/></>
-                :
-                <></>}
-            </Pressable>
+            <CategoryContainer style={[itemStyle]} onPressOut={()=>setSelected(item.label)}>
+                <Text style={textStyle}>{item.label}</Text>
+                {(canModify === "true") ?
+                    <View style={{flexDirection:'row'}}>
+                        <IconButton type={images.update} id={item.id} onPressOut={_handleUpdateButtonPress}/>
+                        <IconButton type={images.delete} id={item.id} onPressOut={deleteCategory}/>
+                    </View> :<></>
+                }
+            </CategoryContainer>
         </>
     )
 }
 
 const listStyles = StyleSheet.create({
     item: {
-        backgroundColor: '#eeeeee',
+        backgroundColor: '#d4d6e2',
         flexDirection:'row',
         justifyContent: 'center',
         alignItems:'center',
-        fontSize: 20,
-        height: 50,
+        height: 30,
     },
     text: {
-        color: theme.main,
-        fontSize: 25,
+        color: '#646672',
+        fontSize: 17,
     }
 });
 

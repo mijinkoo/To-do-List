@@ -1,63 +1,60 @@
-import React,{useEffect, useState, Component} from "react";
-import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable, StyleSheet, TextInput } from "react-native"
-import IconButton from "../components/IconButton";
-import { images } from "../image";
-import { theme } from "../theme";
+import React,{ useState} from "react";
+import { SafeAreaView, Text, View, Dimensions, Pressable, StyleSheet, TextInput } from "react-native"
 import { ViewStyles, textStyles, barStyles } from '../styles';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import DatePicker from "../components/DatePicker";
-import DropDownPicker from 'react-native-dropdown-picker';
-import CategoryPicker from "../components/CategoryPicker";
-import { NavigationContainer } from "@react-navigation/native";
+import styled from "styled-components/native";
+import { Container, Header } from '../styles';
 
 export const ShowTask = ({route, navigation}) => {
 
     const {item} = route.params;
 
     return (
-        <SafeAreaView style={ViewStyles.container}>
+        <Container>
             <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center'}}>
-                <Text style={textStyles.title}>Show a task</Text>
+                <Header>Show a task</Header>
             </View>
-            <View style={{flexDirection:'column'}}>
-                <View style={[boxStyles.container, ]}>
-                    <Text style={boxStyles.text}>{item.title}</Text>
-                </View>
-                <View style={[boxStyles.container, ]}>
-                    <Text style={boxStyles.text}>{item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}</Text>
-                </View>
-                <View style={[boxStyles.container, ]}>
-                    <Text style={boxStyles.text}>{item.category}</Text>
-                </View>
-                <View style={[boxStyles.container, ]}>
-                    <Text style={boxStyles.text}>{item.comment}</Text>
-                </View>
+            <View style={{marginTop: 20, width:'80%', alignItems:'center'}}>
+                <TextField>
+                    <_Text>{item.title}</_Text>
+                </TextField>
+                <TextField>
+                    <_Text>{item.category}</_Text>
+                </TextField>
+                <TextField>
+                    <_Text>{item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}</_Text>
+                </TextField>
+                <TextField style={{height:100}}>
+                    <_Text>{item.comment}</_Text>
+                </TextField>
             </View>
-            <Pressable onPressOut={() => navigation.goBack()} style={{backgroundColor:'#eeeeee', marginTop:20, width:70, height:50, justifyContent:'center',alignItems:'center'}}>
+            <Pressable onPressOut={()=> navigation.navigate('Edit', {item: item})} style={{backgroundColor: '#1185b4', width:100, height: 40,marginTop: 50, paddingTop: 4, borderRadius:20}}>
                     <Text style={[boxStyles.text]}>Edit</Text>
             </Pressable>
-        </SafeAreaView>)
+        </Container>)
 };
 
 
 const boxStyles = StyleSheet.create({
-    container: {
-        fontSize: 25,
-        width: Dimensions.get('window').width-100,
-        height: 40,
-        //marginTop: 10,
-        //marginLeft: 3,
-        //paddingLeft: 15,
-        //paddingTop: 2,
-        marginTop: 50,
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        backgroundColor: '#eeeeee',
-    },
     text: {
-        color: theme.main,
+        textAlign:'center',
+        textAlignVertical:'center',
         fontSize: 25,
+        color: '#ffffff',
     }
 });
+
+const TextField = styled.View`
+    justify-content: center;
+    background-color: ${props => props.theme.box};
+    width: 100%;
+    height: 40px;
+    margin-top: 30px
+    padding-left: 20px;
+`;
+
+const _Text = styled.Text`
+    color: #646672;
+    font-size: 20px;
+`;
 
 export default ShowTask;

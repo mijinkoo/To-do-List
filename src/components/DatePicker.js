@@ -1,11 +1,11 @@
 import React, {useState} from 'react'
-import { View, Button, TouchableOpacity, StyleSheet, TextInput, Dimensions } from 'react-native';
+import { View, Button, TouchableOpacity, StyleSheet, Text, Dimensions } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { theme } from "../theme";
+import styled from 'styled-components/native';
 
 export default function DatePicker({setDate, item}) {
     
-    const [text, onChangeText] = useState(item.date);
+    const [text, onChangeText] = useState(item ? item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8) : "Due date");
     
     const _toNumber = (string) => {
         switch(string){
@@ -35,7 +35,6 @@ export default function DatePicker({setDate, item}) {
     };
 
     const handleConfirm = (date) => {
-        //console.warn(date.toString());
         const year = date.toString().substring(11,15)
         const month = _toNumber(date.toString().substring(4,7))
         const day  =date.toString().substring(8,10)
@@ -46,17 +45,14 @@ export default function DatePicker({setDate, item}) {
     };
 
     return (
-        <View style={styles.container}>
+        <Container>
             <TouchableOpacity onPress={showDatePicker}>
-                <TextInput
+                <_Text
                     pointerEvents="none"
-                    style={styles.textInput}
-                    placeholder="Due date"
-                    placeholderTextColor={theme.main}
                     underlineColorAndroid="transparent"
                     editable={true}
                     value={text}
-                />
+                >{text}</_Text>
                 <DateTimePickerModal
                     //headerTextIOS={placeholder}
                     isVisible={isDatePickerVisible}
@@ -67,24 +63,36 @@ export default function DatePicker({setDate, item}) {
                     textColor="black"
                 />
             </TouchableOpacity>	
-        </View>	
+        </Container>	
   );
 }
 
+const Container = styled.View`
+    background-color: ${props => props.theme.box};
+    width: 100%;
+    height: 40px;
+    margin-top: 30px
+    padding-left: 20px;
+`;
+
+const _Text = styled.Text`
+    color: ${props => props.theme.boxContent};
+    font-size: 20px;
+    padding-top: 7px;
+`;
+
+
 const styles = StyleSheet.create({ 
     container: {
-        //flex: 1,
         width:Dimensions.get('window').width-100,
         height:40,
-        //justifyContent: 'center',
-        //alignItems: 'center',
         backgroundColor: '#eeeeee',
-        paddingLeft:10,
+        paddingLeft:20,
         marginTop: 50,
     },
     textInput: {
         fontSize: 25,
-        color: theme.main,
+        color: 'black',
         height: 40, 
         //width: 200,        
     }

@@ -1,10 +1,80 @@
 import { StyleSheet } from "react-native";
-import { theme } from "./theme";
+
+import styled from "styled-components/native";
+
+export const Container = styled.SafeAreaView`
+    flex: 1;
+    background-color: ${props => props.theme.screenBackground};
+    align-items: center;
+    justify-content: flex-start;
+`;
+
+export const Header = styled.Text`
+    font-size: 30px;
+    font-weight: 400;
+    color: ${props => props.theme.text};
+    margin-left: 5px;
+`;
+
+export const CategoryContainer = styled.Pressable`
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: ${props => props.theme.box};
+`;
+
+export const CategoryEditor = styled.TextInput`
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: ${props => props.theme.box};
+    font-size: 20px;
+`;
+
+
+export const smallPicker = StyleSheet.create({ 
+    item: {
+        justifyContent:'center',
+        height: 30,
+    },
+    text: {
+        color: '#646672',
+        fontSize: 17,
+    }
+});
+
+export const bigPicker = StyleSheet.create({ 
+    item: {
+        justifyContent:'flex-start',
+        height: 40,
+    },
+    text: {
+        color: '#646672',
+        fontSize: 20,
+    }
+});
+
+export const TextField = styled.TextInput`
+    align-items: center;
+    justify-content: flex-start;
+    background-color: ${props => props.theme.box};
+    fontSize: 20px;
+    width: 100%;
+    height: 40px;
+    margin-top: 30px
+    padding-left: 20px;
+    color:#646672;
+`;
 
 export const ViewStyles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: theme.background,
+        backgroundColor: '#fffff1',
         alignItems: 'center',
         justifyContent: 'flex-start',
     },
@@ -14,18 +84,12 @@ export const textStyles = StyleSheet.create({
     title: {
         fontSize: 40,
         fontWeight: '600',
-        color: theme.main,
+        color: 'red',
         alignItems: 'flex-start',
         marginTop: 0,
         marginLeft: 0,
     },
 });
-
-export const barStyles = StyleSheet.create({
-    statusbar: {
-        backgroundColor: theme.background,
-    }
-})
 
 export const CalendarStyles = StyleSheet.create({
     date: {

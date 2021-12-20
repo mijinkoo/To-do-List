@@ -21,7 +21,7 @@ const inputStyles = StyleSheet.create({
     textInput: {
         fontSize: 20,
         width: Dimensions.get('window').width-100,
-        height: 35,
+        height: 40,
         paddingLeft: 15,
         borderRadius: 10,
         backgroundColor: '#ffffff',

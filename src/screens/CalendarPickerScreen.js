@@ -153,7 +153,6 @@ export const CalendarPickerScreen = ({ navigation }) => {
     const _loadTasks = async () => {
         const loadedTasks = await AsyncStorage.getItem('tasks');
         setTasks(JSON.parse(loadedTasks || '{}'));
-        console.log('loadTask');
         //_loadTheme();
         //_successRate(tasks);
     };

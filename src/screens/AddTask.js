@@ -1,15 +1,11 @@
-import React,{useEffect, useState} from "react";
-import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable, StyleSheet, TextInput } from "react-native"
-import IconButton from "../components/IconButton";
-import { images } from "../image";
-import { theme } from "../theme";
-import { ViewStyles, textStyles, barStyles } from '../styles';
+import React,{useState} from "react";
+import { Text, View, Dimensions, Pressable, StyleSheet, TextInput } from "react-native"
+import { textStyles, Container, Header } from '../styles';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DatePicker from "../components/DatePicker";
-import DropDownPicker from 'react-native-dropdown-picker';
 import CategoryPicker from "../components/CategoryPicker";
-import { NavigationContainer } from "@react-navigation/native";
 import AppLoading from "expo-app-loading";
+import styled from "styled-components/native";
 
 export const AddTask = ({navigation}) => {
 
@@ -64,31 +60,34 @@ export const AddTask = ({navigation}) => {
     const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 
     return ( isLoading ?
-        <SafeAreaView style={ViewStyles.container}>
-            <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center'}}>
-                <Text style={textStyles.title}>Add a task</Text>
+        <Container>
+            <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center',}}>
+                <Header>Add a task</Header>
             </View>
-            <View style={{position:'absolute', top:100, }}>
-                <TextInput name="title" value={title} onChangeText={text => setTitle(text)} placeholder="  Title" placeholderTextColor= 'blue'
-                    maxLength={20} keyboardAppearance="light"style={[boxStyles.textInput,{height:40, marginBottom:50}]}>
-                </TextInput>
-                <View style={{zIndex: 10, /*height: '100%'*/}}> 
-                    <CategoryPicker canModify="true" item={''} setCategory={setCategory} setIsCategoryOpen={setIsCategoryOpen}/>
-                </View>
-                <View style={{position:'absolute', top: 170}}>
-                    
-                <DatePicker name="date" setDate={setDate} /*dateChange={_dateChange}*//>
+            <View style={{marginTop: 20, width:'80%', alignItems:'center'}}>
 
-                <TextInput name="comment" value={comment} onChangeText={text => setComment(text)} placeholder="  Comment" placeholderTextColor= 'blue'
-                    maxLength={20} keyboardAppearance="light"style={boxStyles.textInput}>
-                </TextInput>
+                <TextField value={title} onChangeText={text => setTitle(text)} placeholder="Title" placeholderTextColor= '#646672'
+                    maxLength={20} keyboardAppearance="light">
+                </TextField>
 
-                <Pressable onPress={_addTask} >
-                    <Text style={[boxStyles.textInput, {color:'blue', paddingLeft:10}]}>Submit</Text>
+                <View style={{height: 30}}/>
+
+                <CategoryPicker canModify="true" setCategory={setCategory} setIsCategoryOpen={setIsCategoryOpen}/>
+                
+
+
+                <DatePicker setDate={setDate}/>
+
+                <TextField value={comment} onChangeText={text => setComment(text)} placeholder="Comment" placeholderTextColor= '#646672'
+                    maxLength={50} keyboardAppearance="light" style={{height:100}}>
+                </TextField>
+
+                <Pressable onPress={_addTask} style={{backgroundColor: '#1185b4', width:100, height: 40,marginTop: 50, paddingTop: 4, borderRadius:20}}>
+                    <Text style={boxStyles.textInput}>Submit</Text>
                 </Pressable>
-                </View>
+
             </View>
-        </SafeAreaView>
+        </Container>
        :
        <AppLoading
        startAsync = {_loadTasks}
@@ -101,20 +100,26 @@ export const AddTask = ({navigation}) => {
 
 const boxStyles = StyleSheet.create({
     textInput: {
+        textAlign:'center',
+        textAlignVertical:'center',
         fontSize: 25,
-        width: Dimensions.get('window').width-100,
-        height: 40,
-        //marginTop: 10,
-        //marginLeft: 3,
-        //paddingLeft: 15,
-        //paddingTop: 2,
-        marginTop: 50,
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        backgroundColor: '#eeeeee',
+        //backgroundColor: '#1185b4',
+        color: '#ffffff',
     },
 });
 
+const TextField = styled.TextInput`
+    align-items: center;
+    justify-content: flex-start;
+    background-color: ${props => props.theme.box};
+    fontSize: 20px;
+    width: 100%;
+    height: 40px;
+    margin-top: 30px
+    padding-left: 20px;
+`;
+
 export default AddTask;
+
 
 //category picker height 설정이 문제

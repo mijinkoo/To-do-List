@@ -8,10 +8,10 @@ import IconButton from "./IconButton";
 import Category from "./Category";
 import AppLoading from "expo-app-loading";
 import styled from 'styled-components/native';
+import { CategoryContainer, smallPicker, bigPicker } from "../styles";
 
-const CategoryPicker = ({canModify, setCategory, width, setIsCategoryOpen}) => {
+const CategoryPicker = ({canModify, setCategory, mini}) => {
 
-    const _width = width ? width : null;
     const [newValue, setNewValue] = useState('');
     const [label, setLabel] = useState('Category');
     //const [isEditing, setEditing] = useState(false);
@@ -95,29 +95,34 @@ const CategoryPicker = ({canModify, setCategory, width, setIsCategoryOpen}) => {
         _loadCategories();
     },[items])
 
+    const itemStyle = mini ? smallPicker.item : bigPicker.item;
+    const textStyle = mini ? smallPicker.text : bigPicker.text;
+
+    const height = (Object.values(items).length + 3) * (mini ? 30 : 40)
+
     return  isLoading ? (
-        <View style={{width : _width ? _width : '100%' , position:'relative'}}>
-            <CategoryContainer onPressOut={(_onPressOutCategoryPicker)}>
-                <Text style={pickerStyles.text}>{label}</Text>
+        <View style={{width : mini ? 110 : '100%', zIndex:100, height: open ? height : mini ? 30 : 40}}>
+            <CategoryContainer onPressOut={(_onPressOutCategoryPicker)} style={itemStyle}>
+                <Text style={textStyle}>{label}</Text>
             </CategoryContainer>
         
             {open ? 
-            <View style={{position:'absolute', top:30, width:'100%'}}>
-                <Pressable style={pickerStyles.item} onPressOut={()=>setLabel("All")}>
-                    <Text style={pickerStyles.text}>All</Text>
-                </Pressable>
+            <View style={{position:'absolute', top: mini ? 30: 40, width:'100%'}}>
+                <CategoryContainer onPressOut={()=>setLabel("All")} style={itemStyle}>
+                    <Text style={textStyle}>All</Text>
+                </CategoryContainer>
 
                     {Object.values(items).map(item =>(
-                        <Category key={item.id} item={item} deleteCategory={_deleteCategory} updateCategory={_updateCategory} setLabel={setLabel} canModify={canModify}/>
+                        <Category key={item.id} item={item} deleteCategory={_deleteCategory} updateCategory={_updateCategory} setLabel={setLabel} canModify={canModify} mini={mini}/>
                     ))}
                     {addCategory ? 
-                        <View style={pickerStyles.item}>
+                        <View style={itemStyle}>
                             <TextInput value={newValue} onChangeText={value=>setNewValue(value)} onSubmitEditing={_addCategory} onBlur={_onBlur} style={{backgroundColor:'#3c5c5a', height: 40, width: 100}}/>
                         </View>
                         :
-                        (canModify === "true") ? <Pressable style={pickerStyles.item} onPressOut={_onPressOutAdd} >
-                            <Text style={pickerStyles.text}>Add</Text> 
-                        </Pressable>: <></>  } 
+                        (canModify === "true") ? <CategoryContainer style={itemStyle} onPressOut={_onPressOutAdd} >
+                            <Text style={textStyle}>Add</Text> 
+                        </CategoryContainer>: <></>  } 
             </View>
             :
                 <></>
@@ -132,29 +137,7 @@ const CategoryPicker = ({canModify, setCategory, width, setIsCategoryOpen}) => {
     />
 };
 
-const pickerStyles = StyleSheet.create({
-    
-    item: {
-        backgroundColor: '#d4d6e2',
-        flexDirection:'row',
-        justifyContent: 'center',
-        alignItems:'center',
-        width: '100%',
-        height: 30,
-    },
-    text: {
-        color: '#646672',
-        fontSize: 17,
-    }
-});
 
-export const CategoryContainer = styled.Pressable`
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 30px;
-    background-color: ${props => props.theme.categoryContainer};
-`;
+
 
 export default CategoryPicker;

@@ -1,18 +1,15 @@
 import React,{useEffect, useState, Component} from "react";
-import { StatusBar, SafeAreaView, Text, View, Dimensions, ScrollView, Image, Pressable, Switch } from "react-native"
-import IconButton from "../components/IconButton";
-import Input from "../components/Input";
+import { StatusBar, Text, View, Dimensions, ScrollView, Image, Pressable,} from "react-native"
 import CategoryPicker from "../components/CategoryPicker";
 import Search from "../components/Search";
 import Task from "../components/Task";
 import { images } from "../image";
-import { ViewStyles, textStyles, barStyles,  } from '../styles';
-import DropDownPicker from 'react-native-dropdown-picker';
 import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../context/ThemeContext";
 import ThemeToggle from "../components/ThemeToggle";
 import styled from 'styled-components/native';
+import { Container, Header } from "../styles";
 
 export const Home = ({ navigation }) => {
 
@@ -148,14 +145,13 @@ export const Home = ({ navigation }) => {
     return isReady ? (
             <Container>
             <StatusBar hidden={true} />
-            <View style={{flexDirection: 'row', width: '100%' , justifyContent:'center'}}>
-                <Header>My Task</Header>
+            <View style={{flexDirection: 'row', width: '100%', height: 50 , }}>
+                <View style={{alignItems:'center', justifyContent:'center', width:'100%'}}><Header>My Task</Header></View>
                 <Search setText={setText} ></Search>
-                {/*<Switch value={isDark} onValueChange={_toggleSwitch}/>*/}
             </View>
             <View style={{flexDirection:'column', zIndex: 2}}>
-                <View style={{flexDirection:'row', marginBottom:5, alignItems:'center',justifyContent:'space-between', height:40}} width={width-20}>
-                    <CategoryPicker canModify="false" setCategory={setCategory} width={110}/>
+                <View style={{flexDirection:'row', marginBottom:5, alignItems:'center',justifyContent:'space-between', height:30, marginTop: 5}} width={width-20}>
+                    <CategoryPicker canModify="false" setCategory={setCategory} mini={true}/>
                     <ThemeToggle toggle={toggleTheme} mode={ThemeMode}>
                         <Text>DarkMode</Text>
                     </ThemeToggle>
@@ -204,15 +200,15 @@ export const Home = ({ navigation }) => {
             </ScrollView>
 
             <View style={{position:'absolute', bottom: -12, left:((width-64)/2), flexDirection:'row', justifyContent:'space-between', paddingBottom: 20 }}>
-                <Pressable 
+                <AddButton 
                     onPress={() => navigation.navigate('Add')}
-                    style={{alignItems:'center', justifyContent:'center',backgroundColor: '#1185b4',borderWidth: 2, borderRadius:90 ,borderColor:'#1185b4',shadowColor:'#bfbfc1', shadowOffset:{width: 0, height: 6}, shadowOpacity: 0.7, shadowRadius: 2.7, padding:8, margin:0}}>
+                    style={{ borderRadius:90, shadowOffset:{width: 0, height: 6}, shadowRadius: 2.7 }}>
                     <Image source={images.add} style={{tintColor: '#ffffff', width: 40, height: 40,padding:0, margin:0}}/>
-                </Pressable>
+                </AddButton>
             </View>
             {select &&
-            <Pressable onPressOut={_deleteSelectedTask} style={{position:'absolute', bottom: 0, textAlign:'center', backgroundColor:'#2c2c2c', width:'100%', height:80, padding:12, margin:0}}>
-                <Text width={width} style={{ textAlign:'center', color:'#fffff1', fontSize:45 ,textAlignVertical:'center'}}>Delete</Text>
+            <Pressable onPressOut={_deleteSelectedTask} style={{position:'absolute', bottom: 0, textAlign:'center', backgroundColor:'#2c2c2c', width:'100%', height:70, paddingTop:10}}>
+                <Text width={width} style={{ textAlign:'center', color:'#fffff1', fontSize:38 ,textAlignVertical:'center'}}>Delete</Text>
             </Pressable>
             }
         </Container>
@@ -225,24 +221,20 @@ export const Home = ({ navigation }) => {
     );
 }
 
-const Container = styled.SafeAreaView`
-    flex: 1;
-    background: ${props => props.theme.screenBackground};
-    align-items: center;
-    justify-content: flex-start;
-`;
-
-const Header = styled.Text`
-    height: 50px;
-    font-size: 30px;
-    font-weight: 400;
-    color: ${props => props.theme.text};
-    margin-top: 6px;
-    margin-left: 5px;
-`;
 
 const Icon = styled.Image`
     tint-color: #868d95; 
     width: 30px;
     height: 30px;
+`;
+
+const AddButton = styled.Pressable`
+    align-items: center;
+    justify-content: center;
+    background-color: #1185b4;
+    border-width: 2px; 
+    border-color: #1185b4;
+    shadow-color:  ${props => props.theme.shadow}; 
+    shadow-opacity: 0.7; 
+    padding:8px;
 `;

@@ -44,13 +44,17 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, n
     const ThemeMode = useTheme();
     const CurrentMode = ThemeMode[0] === 'light' ? 'light' : 'dark';
 
-    //
+    //tmp
+    const makeDateString = (text) => {
+        var tmp = ""+text;
+        return tmp.substring(0,4)+" / "+tmp.substring(4,6)+" / "+tmp.substring(6,8);
+    }
 
 
     return (
             <Container onPressOut={() => select ? toggleSelect(item.id) : navigation.navigate('Show', {item: item})} style={{backgroundColor: (select && item.selected) ? (CurrentMode=== 'light') ? '#1185b4' : '#cdcdcd' : (CurrentMode=== 'light') ? '#ffffff' : '#3c4049'}}>
             {select ? (
-                <></>
+                <View style={{width:40}}/>
             ) : (
                 <IconButton type={item.completed ? images.completed : images.uncompleted} id={item.id} onPressOut={toggleTask} completed={item.completed}/>
             )
@@ -60,7 +64,7 @@ const Task = ({item, deleteTask, toggleTask, updateTask, select, calendarMode, n
                     {item.title}
                 </_Text>          
                 <_Text style={{color: ( timestring === item.date ) ? '#F91919' : (CurrentMode=== 'light') ? '#424242' : '#babdc4' }}> 
-                    {( timestring === item.date ) ? 'D-day' : item.date.substring(0,4)+" / "+item.date.substring(4,6)+" / "+item.date.substring(6,8)}
+                    {( timestring === item.date ) ? 'D-day' : makeDateString(item.date)}
                 </_Text>           
             </View>
             <View style={{position:'absolute', right:0,flexDirection:'row'}} calendarMode={calendarMode}>
@@ -84,7 +88,7 @@ const Container = styled.Pressable`
     align-items: center;
     width: 100%;
     height: 65px;
-    background: ${props => props.theme.taskBackground};
+    background-color: ${props => props.theme.taskBackground};
     border-radius: 5px;
     box-shadow: 0px 0px 3px ${props => props.theme.shadow};
     shadow-offset: {width: 0, height: 2};

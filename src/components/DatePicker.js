@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import { View, Button, TouchableOpacity, StyleSheet, Text, Dimensions } from 'react-native';
-import DateTimePickerModal from "react-native-modal-datetime-picker";'#fffff1'
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import styled from 'styled-components/native';
 
 export default function DatePicker({setDate, item}) {
     
@@ -45,15 +46,14 @@ export default function DatePicker({setDate, item}) {
     };
 
     return (
-        <View style={styles.container}>
+        <Container>
             <TouchableOpacity onPress={showDatePicker}>
-                <Text
+                <_Text
                     pointerEvents="none"
-                    style={styles.textInput}
                     underlineColorAndroid="transparent"
                     editable={true}
                     value={text}
-                >{text}</Text>
+                >{text}</_Text>
                 <DateTimePickerModal
                     //headerTextIOS={placeholder}
                     isVisible={isDatePickerVisible}
@@ -64,19 +64,31 @@ export default function DatePicker({setDate, item}) {
                     textColor="black"
                 />
             </TouchableOpacity>	
-        </View>	
+        </Container>	
   );
 }
 
+const Container = styled.View`
+    background-color: ${props => props.theme.box};
+    width: 100%;
+    height: 40px;
+    margin-top: 30px
+    padding-left: 20px;
+`;
+
+const _Text = styled.Text`
+    color: ${props => props.theme.boxContent};
+    font-size: 20px;
+    padding-top: 7px;
+`;
+
+
 const styles = StyleSheet.create({ 
     container: {
-        //flex: 1,
         width:Dimensions.get('window').width-100,
         height:40,
-        //justifyContent: 'center',
-        //alignItems: 'center',
         backgroundColor: '#eeeeee',
-        paddingLeft:10,
+        paddingLeft:20,
         marginTop: 50,
     },
     textInput: {

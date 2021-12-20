@@ -50,14 +50,14 @@ const Category = ({item, deleteCategory, updateCategory, canModify, setLabel, mi
         </>
         ):(
         <>
-            <CategoryContainer style={[itemStyle, {justifyContent:'space-between'}]} onPressOut={()=>setSelected(item.label)}>
+            <CategoryContainer style={[itemStyle]} onPressOut={()=>setSelected(item.label)}>
                 <Text style={textStyle}>{item.label}</Text>
-                <View style={{flexDirection:'row'}}>
-                    {(canModify === "true") ?<>
+                {(canModify === "true") ?
+                    <View style={{flexDirection:'row'}}>
                         <IconButton type={images.update} id={item.id} onPressOut={_handleUpdateButtonPress}/>
-                        <IconButton type={images.delete} id={item.id} onPressOut={deleteCategory}/></> :<></>
-                    }
-                </View>
+                        <IconButton type={images.delete} id={item.id} onPressOut={deleteCategory}/>
+                    </View> :<></>
+                }
             </CategoryContainer>
         </>
     )

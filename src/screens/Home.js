@@ -203,8 +203,8 @@ export const Home = ({ navigation }) => {
                 <View style={{alignItems:'center', justifyContent:'center', width:'100%'}}><Header>My Task</Header></View>
                 <Search setText={setText} ></Search>
             </View>
-            <View style={{flexDirection:'column', zIndex: 2}}>
-                <View style={{flexDirection:'row', marginBottom:5, alignItems:'center',justifyContent:'space-between', height:30, marginTop: 5}} width={width-20}>
+                <View style={{flexDirection:'row', marginBottom:5, zIndex: 1, justifyContent:'space-between',width:'95%', height:30, marginTop: 5, paddingLeft:5}}>
+                    
                     <CategoryPicker canModify="false" setCategory={setCategory} mini={true}/>
                     <ThemeToggle toggle={toggleTheme} mode={ThemeMode}>
                         <Text>DarkMode</Text>
@@ -236,7 +236,6 @@ export const Home = ({ navigation }) => {
                         </Pressable>                    
                     </View>
                 </View>
-            </View>
 
             <ScrollView width={width-20}>
             <View style={{padding: 5, paddingBottom: 10}}>

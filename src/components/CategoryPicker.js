@@ -110,15 +110,17 @@ const CategoryPicker = ({canModify, setCategory, mini}) => {
                     <Text style={textStyle}>All</Text>
                 </CategoryContainer>
 
-                    {Object.values(items).map(item =>(
-                        <Category key={item.id} item={item} deleteCategory={_deleteCategory} updateCategory={_updateCategory} setLabel={setLabel} canModify={canModify} mini={mini}/>
-                    ))}
-                    {addCategory ?
-                        <CategoryEditor value={newValue} autoFocus={true} onChangeText={value=>setNewValue(value)} onSubmitEditing={_addCategory} onBlur={_onBlur}/>
-                        :
-                        (canModify === "true") ? <CategoryContainer style={itemStyle} onPressOut={_onPressOutAdd} >
+                {Object.values(items).map(item =>(
+                    <Category key={item.id} item={item} deleteCategory={_deleteCategory} updateCategory={_updateCategory} setLabel={setLabel} canModify={canModify} mini={mini}/>
+                ))}
+                {addCategory ?
+                    <CategoryEditor value={newValue} autoFocus={true} onChangeText={value=>setNewValue(value)} onSubmitEditing={_addCategory} onBlur={_onBlur}/>
+                    :
+                    (canModify === "true") ? 
+                        <CategoryContainer style={itemStyle} onPressOut={_onPressOutAdd} >
                             <Text style={textStyle}>Add</Text> 
-                        </CategoryContainer>: <></> } 
+                        </CategoryContainer>: <></> 
+                } 
             </View>
             :
                 <></>

@@ -41,6 +41,7 @@ export const Home = ({ navigation }) => {
         const currentTasks = Object.assign({}, tasks);
         currentTasks[id]['completed'] = !currentTasks[id]['completed'];
         _saveTasks(currentTasks);
+        _successRate(currentTasks);
     }
 
     const completed_false=(item)=>{
@@ -250,12 +251,15 @@ export const Home = ({ navigation }) => {
                     <Task key={item.id} item={item} toggleSelect={_toggleSelect} deleteTask={_deleteTask} toggleTask={_toggleTask} updateTask={_updateTask} select={select} calendarMode={false} navigation={navigation}/>
                 ))}
             </View>
-            <View style={{padding: 5}}>
+            <View style={{margin:10, marginTop: 20, alignItems: 'center'}}>
                 {itemExist ? (
                     <>
-                    <Text>{emoji}</Text>
-                    <Text>Success {success}%</Text>
-                    </>
+                    <Text style={{fontSize: 30, fontWeight: '400'}}>{emoji}</Text>
+                    {/**
+                     <Text style={[{fontSize: 17, fontWeight: '400', alignItems: 'flex-end'}, {textColor: (CurrentMode == 'light') ? 'black' : 'white'}]}>Success {success}%</Text>
+
+                     */}
+                     </>
                 ) : ( <>
                 </> ) }
             </View>
